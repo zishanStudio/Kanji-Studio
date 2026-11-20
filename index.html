@@ -858,6 +858,33 @@
     </div>
   </div>
 
+  <!-- Quiz Paused Modal -->
+  <div id="quizPausedModal" class="hidden fixed inset-0 z-[60] bg-slate-900/55 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 p-5 text-center space-y-4">
+      <h3 class="text-base font-bold text-slate-900">Quiz Paused</h3>
+      <p class="text-xs text-slate-500">Do you want to finish this quiz or resume?</p>
+      <div class="grid grid-cols-2 gap-2.5 pt-1">
+        <button id="quizPauseFinishBtn" class="py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 transition">FINISH</button>
+        <button id="quizPauseResumeBtn" class="py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-bold text-white shadow-sm transition">RESUME</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exit App Confirmation Modal (on Home Back press) -->
+  <div id="exitConfirmModal" class="hidden fixed inset-0 z-[80] bg-slate-900/55 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 p-5 text-center space-y-4">
+      <div class="w-12 h-12 mx-auto rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center kanji-font text-2xl font-bold">漢</div>
+      <div>
+        <h3 class="text-base font-bold text-slate-900">Do you want to exit?</h3>
+        <p class="text-xs text-slate-500 mt-1">Are you sure you want to close Kanji Studio?</p>
+      </div>
+      <div class="grid grid-cols-2 gap-2.5 pt-1">
+        <button id="exitNoBtn" class="py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 transition">No</button>
+        <button id="exitYesBtn" class="py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-xs font-bold text-white shadow-sm transition">Yes, Exit</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div id="toast" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-semibold shadow-lg"></div>
 
@@ -2297,7 +2324,12 @@
       return ALL_KANJI.filter(k => k.level === state.activeLevel);
     }
 
+    function pushUserNav() {
+      try { history.pushState({ kanjiStudioStep: true, ts: Date.now() }, ""); } catch (e) {}
+    }
+
     function openStudyPicker(label, chars, setKey) {
+      pushUserNav();
       state.activeSetKey = setKey || null;
       state.activeSetLabel = label;
       state.activeSetChars = chars;
@@ -2377,6 +2409,7 @@
             showToast(`First reach Pink ★ (Seen) on all ${prevLvl} Kanji to unlock ${lvl}!`);
             return;
           }
+          pushUserNav();
           state.activeKanjiLevel = lvl;
           state.activeLevel = lvl;
           state.activeMode = "browse";
@@ -2970,6 +3003,7 @@
     }
 
     function startQuiz() {
+      pushUserNav();
       const pool = getActiveStudyPool();
       const distractorPool = ALL_KANJI.filter(k => k.level === state.activeLevel);
       const count = Math.min(state.quizCount, pool.length);
@@ -3243,6 +3277,7 @@
       });
 
       document.getElementById("wcStartSessionBtn").addEventListener("click", () => {
+        pushUserNav();
         wcCorrect = 0; wcWrong = 0; wcHints = 0; wcSessionWritings = 0;
         document.getElementById("wcCorrectCount").textContent = "0";
         document.getElementById("wcWrongCount").textContent = "0";
@@ -3276,6 +3311,7 @@
           document.getElementById("studyPickerModal").classList.add("hidden");
           state.fcIndex = 0;
           state.wcIndex = 0;
+          pushUserNav();
           state.activeMode = btn.dataset.pick;
           renderActiveView();
         });
@@ -3293,6 +3329,7 @@
           } else if (sec === "Hiragana" || sec === "Katakana") {
             state.activeLevel = sec;
           }
+          pushUserNav();
           saveState();
           renderActiveView();
         });
@@ -3308,7 +3345,25 @@
         document.getElementById("wcPauseAcc").textContent = `${acc}%`;
         document.getElementById("wcPausedModal").classList.remove("hidden");
       });
-      ["svBackBtn", "fcBackBtn", "quizBackTopBtn"].forEach(id => {
+      document.getElementById("quizBackTopBtn").addEventListener("click", () => {
+        const qActive = document.getElementById("quizActive");
+        if (qActive && !qActive.classList.contains("hidden")) {
+          document.getElementById("quizPausedModal").classList.remove("hidden");
+        } else {
+          state.activeMode = "browse";
+          renderActiveView();
+        }
+      });
+      document.getElementById("quizPauseResumeBtn").addEventListener("click", () => {
+        document.getElementById("quizPausedModal").classList.add("hidden");
+      });
+      document.getElementById("quizPauseFinishBtn").addEventListener("click", () => {
+        document.getElementById("quizPausedModal").classList.add("hidden");
+        state.activeMode = "browse";
+        renderActiveView();
+      });
+
+      ["svBackBtn", "fcBackBtn"].forEach(id => {
         document.getElementById(id).addEventListener("click", () => {
           state.activeMode = "browse";
           renderActiveView();
@@ -3981,6 +4036,100 @@
         menuDrop.classList.add("hidden");
         usersModal.classList.remove("hidden");
         loadDesignerUsersList();
+      });
+
+      // =====================================================================
+      // NATIVE ANDROID STEP-BY-STEP BACK NAVIGATION & EXIT CONFIRMATION
+      // =====================================================================
+      let allowExit = false;
+      let guardPushed = false;
+      function pushNavGuard() {
+        try {
+          history.pushState({ kanjiStudioGuard: true, ts: Date.now() }, "");
+          guardPushed = true;
+        } catch (e) {}
+      }
+      // Chrome/Android PWA requires a real user gesture for history.pushState to not be skipped by History Manipulation Intervention
+      pushNavGuard();
+      document.addEventListener("pointerdown", () => {
+        if (!guardPushed) pushNavGuard();
+      }, { passive: true });
+
+      const exitModal = document.getElementById("exitConfirmModal");
+      document.getElementById("exitNoBtn").addEventListener("click", () => {
+        exitModal.classList.add("hidden");
+      });
+      document.getElementById("exitYesBtn").addEventListener("click", () => {
+        exitModal.classList.add("hidden");
+        allowExit = true;
+        try {
+          window.close();
+          history.go(-2);
+        } catch (e) {}
+      });
+
+      function handleStepBack() {
+        // 1. Close open utility modals first
+        const modalIds = ["wcPausedModal", "quizPausedModal", "unlockAllModal", "resetConfirmModal", "usersAdminModal", "searchOverlayModal", "studyPickerModal"];
+        for (const mid of modalIds) {
+          const el = document.getElementById(mid);
+          if (el && !el.classList.contains("hidden")) {
+            el.classList.add("hidden");
+            return;
+          }
+        }
+
+        // 2. If exit modal is already open, close it
+        if (!exitModal.classList.contains("hidden")) {
+          exitModal.classList.add("hidden");
+          return;
+        }
+
+        // 3. If in Active Writing Challenge -> trigger Session Paused modal
+        const wcActiveEl = document.getElementById("wcActiveSession");
+        if (state.activeMode === "writing" && wcActiveEl && !wcActiveEl.classList.contains("hidden")) {
+          document.getElementById("wcBackBtn").click();
+          return;
+        }
+
+        // 4. If in Active MCQ Quiz -> trigger Quiz Paused modal
+        const qActiveEl = document.getElementById("quizActive");
+        if (state.activeMode === "quiz" && qActiveEl && !qActiveEl.classList.contains("hidden")) {
+          document.getElementById("quizPausedModal").classList.remove("hidden");
+          return;
+        }
+
+        // 5. Step back through sub-pages
+        if (state.activeMode === "detail") {
+          state.activeMode = state.detailReturnMode || "browse";
+          renderActiveView();
+          return;
+        }
+        if (state.activeMode !== "browse") {
+          state.activeMode = "browse";
+          renderActiveView();
+          return;
+        }
+        if (state.activeTab === "kanji" && state.activeKanjiLevel) {
+          state.activeKanjiLevel = null;
+          renderActiveView();
+          return;
+        }
+        if (state.activeTab !== "home") {
+          state.activeTab = "home";
+          renderActiveView();
+          return;
+        }
+
+        // 6. Already on Home -> Ask "Do you want to exit?"
+        exitModal.classList.remove("hidden");
+      }
+
+      window.addEventListener("popstate", () => {
+        if (allowExit) return;
+        guardPushed = false;
+        pushNavGuard();
+        handleStepBack();
       });
 
       // Initial render
