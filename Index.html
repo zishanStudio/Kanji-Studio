@@ -2324,7 +2324,12 @@
       return ALL_KANJI.filter(k => k.level === state.activeLevel);
     }
 
+    function pushUserNav() {
+      try { history.pushState({ kanjiStudioStep: true, ts: Date.now() }, ""); } catch (e) {}
+    }
+
     function openStudyPicker(label, chars, setKey) {
+      pushUserNav();
       state.activeSetKey = setKey || null;
       state.activeSetLabel = label;
       state.activeSetChars = chars;
@@ -2404,6 +2409,7 @@
             showToast(`First reach Pink ★ (Seen) on all ${prevLvl} Kanji to unlock ${lvl}!`);
             return;
           }
+          pushUserNav();
           state.activeKanjiLevel = lvl;
           state.activeLevel = lvl;
           state.activeMode = "browse";
@@ -2997,6 +3003,7 @@
     }
 
     function startQuiz() {
+      pushUserNav();
       const pool = getActiveStudyPool();
       const distractorPool = ALL_KANJI.filter(k => k.level === state.activeLevel);
       const count = Math.min(state.quizCount, pool.length);
@@ -3270,6 +3277,7 @@
       });
 
       document.getElementById("wcStartSessionBtn").addEventListener("click", () => {
+        pushUserNav();
         wcCorrect = 0; wcWrong = 0; wcHints = 0; wcSessionWritings = 0;
         document.getElementById("wcCorrectCount").textContent = "0";
         document.getElementById("wcWrongCount").textContent = "0";
@@ -3303,6 +3311,7 @@
           document.getElementById("studyPickerModal").classList.add("hidden");
           state.fcIndex = 0;
           state.wcIndex = 0;
+          pushUserNav();
           state.activeMode = btn.dataset.pick;
           renderActiveView();
         });
@@ -3320,6 +3329,7 @@
           } else if (sec === "Hiragana" || sec === "Katakana") {
             state.activeLevel = sec;
           }
+          pushUserNav();
           saveState();
           renderActiveView();
         });
@@ -4032,12 +4042,18 @@
       // NATIVE ANDROID STEP-BY-STEP BACK NAVIGATION & EXIT CONFIRMATION
       // =====================================================================
       let allowExit = false;
+      let guardPushed = false;
       function pushNavGuard() {
         try {
-          history.pushState({ kanjiStudioGuard: true }, "");
+          history.pushState({ kanjiStudioGuard: true, ts: Date.now() }, "");
+          guardPushed = true;
         } catch (e) {}
       }
+      // Chrome/Android PWA requires a real user gesture for history.pushState to not be skipped by History Manipulation Intervention
       pushNavGuard();
+      document.addEventListener("pointerdown", () => {
+        if (!guardPushed) pushNavGuard();
+      }, { passive: true });
 
       const exitModal = document.getElementById("exitConfirmModal");
       document.getElementById("exitNoBtn").addEventListener("click", () => {
@@ -4111,6 +4127,7 @@
 
       window.addEventListener("popstate", () => {
         if (allowExit) return;
+        guardPushed = false;
         pushNavGuard();
         handleStepBack();
       });
