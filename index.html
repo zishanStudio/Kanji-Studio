@@ -671,7 +671,7 @@
   </main>
 
   <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6">
-    Kanji Studio (<span class="kanji-font">漢字学習</span>) · Created by <span class="font-semibold text-slate-700">Zishan</span>
+    Kanji Studio (<span class="kanji-font">漢字学習</span>) · <span class="font-semibold text-indigo-500">v2.2</span> · Created by <span class="font-semibold text-slate-700">Zishan</span>
   </footer>
 
   <!-- Bottom Navigation Bar (Home | Hiragana | Katakana | Kanji) -->
@@ -2324,8 +2324,42 @@
       return ALL_KANJI.filter(k => k.level === state.activeLevel);
     }
 
-    function pushUserNav() {
-      try { history.pushState({ kanjiStudioStep: true, ts: Date.now() }, ""); } catch (e) {}
+    let ksAllowExit = false;
+    let ksCurrentIdx = 0;
+    let ksLastPushTs = 0;
+
+    function ksBaseUrl() {
+      return location.pathname + location.search;
+    }
+
+    function initHistoryBase() {
+      try {
+        const st = history.state;
+        if (st && typeof st.ksIdx === "number") {
+          ksCurrentIdx = st.ksIdx;
+        } else {
+          ksCurrentIdx = 0;
+          history.replaceState({ ksIdx: 0, ksBase: true }, "", ksBaseUrl() + "#ks-0");
+        }
+      } catch (e) {}
+    }
+
+    function pushUserNav(force) {
+      const now = Date.now();
+      // Prevent duplicate pushState within the same single tap (pointerdown + click),
+      // which Chrome's History Manipulation Intervention can flag as skippable.
+      if (!force && now - ksLastPushTs < 150) return;
+      try {
+        ksCurrentIdx += 1;
+        ksLastPushTs = now;
+        history.pushState({ ksIdx: ksCurrentIdx, ts: now }, "", ksBaseUrl() + "#ks-" + ksCurrentIdx);
+      } catch (e) {}
+    }
+
+    function ensureNavGuard() {
+      if (ksCurrentIdx <= 0) {
+        pushUserNav(true);
+      }
     }
 
     function openStudyPicker(label, chars, setKey) {
@@ -2876,6 +2910,7 @@
       updateModalButtons();
       if (modalPad) modalPad.setKanji(char);
       if (state.activeMode !== "detail") {
+        pushUserNav();
         state.detailReturnMode = state.activeMode;
         state.activeMode = "detail";
         renderModeTabs();
@@ -3290,6 +3325,7 @@
 
       document.getElementById("wcPauseResumeBtn").addEventListener("click", () => {
         document.getElementById("wcPausedModal").classList.add("hidden");
+        pushUserNav();
       });
       document.getElementById("wcPauseFinishBtn").addEventListener("click", () => {
         document.getElementById("wcPausedModal").classList.add("hidden");
@@ -3356,6 +3392,7 @@
       });
       document.getElementById("quizPauseResumeBtn").addEventListener("click", () => {
         document.getElementById("quizPausedModal").classList.add("hidden");
+        pushUserNav();
       });
       document.getElementById("quizPauseFinishBtn").addEventListener("click", () => {
         document.getElementById("quizPausedModal").classList.add("hidden");
@@ -3403,6 +3440,7 @@
       document.querySelectorAll(".home-jump-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           const j = btn.dataset.jump;
+          pushUserNav();
           state.activeTab = j;
           state.activeMode = "browse";
           if (j === "kanji") state.activeKanjiLevel = null;
@@ -3426,6 +3464,7 @@
       const overlayInput = document.getElementById("overlaySearchInput");
       const overlayResults = document.getElementById("overlaySearchResults");
       function openOverlaySearch() {
+        pushUserNav();
         searchModal.classList.remove("hidden");
         overlayInput.value = "";
         overlayResults.innerHTML = '<div class="col-span-full text-center text-xs text-slate-400 py-6">Type a kanji, meaning, or reading to search</div>';
@@ -3638,6 +3677,7 @@
         unlockUser.value = "";
         unlockPass.value = "";
         unlockErr.classList.add("hidden");
+        pushUserNav();
         unlockModal.classList.remove("hidden");
         setTimeout(() => unlockUser.focus(), 50);
       });
@@ -3687,6 +3727,7 @@
       const resetModal = document.getElementById("resetConfirmModal");
       document.getElementById("resetProgressBtn").addEventListener("click", () => {
         menuDrop.classList.add("hidden");
+        pushUserNav();
         resetModal.classList.remove("hidden");
       });
       document.getElementById("resetCancelBtn").addEventListener("click", () => {
@@ -4034,6 +4075,7 @@
 
       document.getElementById("designerUsersMenuBtn").addEventListener("click", () => {
         menuDrop.classList.add("hidden");
+        pushUserNav();
         usersModal.classList.remove("hidden");
         loadDesignerUsersList();
       });
@@ -4041,34 +4083,51 @@
       // =====================================================================
       // NATIVE ANDROID STEP-BY-STEP BACK NAVIGATION & EXIT CONFIRMATION
       // =====================================================================
-      let allowExit = false;
-      let guardPushed = false;
-      function pushNavGuard() {
-        try {
-          history.pushState({ kanjiStudioGuard: true, ts: Date.now() }, "");
-          guardPushed = true;
-        } catch (e) {}
-      }
-      // Chrome/Android PWA requires a real user gesture for history.pushState to not be skipped by History Manipulation Intervention
-      pushNavGuard();
+      // Tag base entry at index 0 WITHOUT calling pushState on load (no un-gestured entry).
+      initHistoryBase();
+
+      // Arm the exit guard ONLY on a real user gesture so Chrome's History Manipulation Intervention never skips it.
       document.addEventListener("pointerdown", () => {
-        if (!guardPushed) pushNavGuard();
-      }, { passive: true });
+        if (ksAllowExit) return;
+        ensureNavGuard();
+      }, { capture: true, passive: true });
+      document.addEventListener("keydown", () => {
+        if (ksAllowExit) return;
+        ensureNavGuard();
+      }, { capture: true, passive: true });
 
       const exitModal = document.getElementById("exitConfirmModal");
-      document.getElementById("exitNoBtn").addEventListener("click", () => {
+      function closeExitModalAndRearm() {
         exitModal.classList.add("hidden");
+        ensureNavGuard();
+      }
+      document.getElementById("exitNoBtn").addEventListener("click", closeExitModalAndRearm);
+      exitModal.addEventListener("click", (e) => {
+        if (e.target.id === "exitConfirmModal") closeExitModalAndRearm();
       });
       document.getElementById("exitYesBtn").addEventListener("click", () => {
         exitModal.classList.add("hidden");
-        allowExit = true;
-        try {
-          window.close();
-          history.go(-2);
-        } catch (e) {}
+        ksAllowExit = true;
+        const stepsBack = Math.max(1, ksCurrentIdx + 1);
+        try { window.close(); } catch (e) {}
+        try { history.go(-stepsBack); } catch (e) {}
+        // If running in a fresh browser tab with no prior history and window.close() is blocked by Chrome,
+        // recover gracefully after a brief delay.
+        setTimeout(() => {
+          if (!document.hidden) {
+            ksAllowExit = false;
+            showToast("Press Back again or close tab to exit.");
+          }
+        }, 450);
       });
 
       function handleStepBack() {
+        // 0. Close header dropdown menu if open
+        if (menuDrop && !menuDrop.classList.contains("hidden")) {
+          menuDrop.classList.add("hidden");
+          return;
+        }
+
         // 1. Close open utility modals first
         const modalIds = ["wcPausedModal", "quizPausedModal", "unlockAllModal", "resetConfirmModal", "usersAdminModal", "searchOverlayModal", "studyPickerModal"];
         for (const mid of modalIds) {
@@ -4125,10 +4184,14 @@
         exitModal.classList.remove("hidden");
       }
 
-      window.addEventListener("popstate", () => {
-        if (allowExit) return;
-        guardPushed = false;
-        pushNavGuard();
+      window.addEventListener("popstate", (e) => {
+        if (ksAllowExit) return;
+        if (e.state && typeof e.state.ksIdx === "number") {
+          ksCurrentIdx = e.state.ksIdx;
+        } else {
+          ksCurrentIdx = Math.max(0, ksCurrentIdx - 1);
+        }
+        // Do NOT call history.pushState() inside popstate (no user gesture -> Chrome skips it).
         handleStepBack();
       });
 
