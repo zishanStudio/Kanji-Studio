@@ -1,5 +1,5 @@
-const CACHE_NAME = 'kanji-studio-v2';
-const ASSETS = ['./', './index.html', './manifest.json', './icon.svg'];
+const CACHE_NAME = 'kanji-studio-v3';
+const ASSETS = ["./", "./index.html", "./manifest.json", "./icon.svg", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
