@@ -1144,7 +1144,7 @@
   </main>
 
   <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6">
-    Kanji Studio (<span class="kanji-font">漢字学習</span>) · <span class="font-semibold text-indigo-500">v4.1</span> · Created by <span class="font-semibold text-slate-700">Zishan</span>
+    Kanji Studio (<span class="kanji-font">漢字学習</span>) · <span class="font-semibold text-indigo-500">v4.2</span> · Created by <span class="font-semibold text-slate-700">Zishan</span>
   </footer>
 
   <!-- Bottom Navigation Bar (Home | Hiragana | Katakana | Kanji) -->
@@ -4518,8 +4518,8 @@
           if (!lastTs) lastTs = ts;
           const dt = Math.min(0.05, (ts - lastTs) / 1000);
           lastTs = ts;
-          hintProgress += dt * 0.85;
-          if (hintProgress > 1.35) hintProgress = 0;
+          hintProgress += dt * 0.78;
+          if (hintProgress > 1.45) hintProgress = 0;
           redraw(ts);
           hintAnimId = requestAnimationFrame(step);
         }
@@ -4651,26 +4651,63 @@
             }
           }
 
-          // 2. Animated hint stroke (after 3rd wrong attempt or manual Hint)
+          // 2. Kanji Study style smooth grey stroke-by-stroke ghost track (v4.2 — all sets)
           if (hintActive && confirmedCount < targetStrokes.length) {
-            const refPts = targetStrokes[confirmedCount].points.map(p => ({ x: p.x * toCanvas, y: p.y * toCanvas }));
-            drawPointPath(refPts, "rgba(79, 70, 229, 0.22)", STROKE_WIDTH + 1);
+            const curRef = targetStrokes[confirmedCount];
+            const refPts = curRef.points.map(p => ({ x: p.x * toCanvas, y: p.y * toCanvas }));
+            const trackCol = state.darkMode ? "rgba(148, 163, 184, 0.24)" : "rgba(148, 163, 184, 0.34)";
+            const sweepCol = state.darkMode ? "rgba(203, 213, 225, 0.62)" : "rgba(100, 116, 139, 0.58)";
+            const dotCol = state.darkMode ? "rgba(226, 232, 240, 0.78)" : "rgba(71, 85, 105, 0.72)";
+            const ringCol = state.darkMode ? "rgba(203, 213, 225, 0.40)" : "rgba(100, 116, 139, 0.36)";
+
+            // Subtle full-stroke grey ghost base track (vector crisp)
+            drawKanjiVGStroke(curRef, toCanvas, trackCol, STROKE_WIDTH + 1);
+
+            // Soft fade-out at end of each cycle (1.05 -> 1.45)
+            const fadeAlpha = hintProgress <= 1.05 ? 1 : Math.max(0, 1 - (hintProgress - 1.05) / 0.40);
+
+            // Subtle start-point ring indicator
             ctx.save();
-            ctx.fillStyle = "#10b981";
+            ctx.globalAlpha = 0.85;
+            ctx.strokeStyle = ringCol;
+            ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.arc(refPts[0].x, refPts[0].y, 6, 0, Math.PI * 2);
+            ctx.arc(refPts[0].x, refPts[0].y, Math.max(6, STROKE_WIDTH * 0.48), 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.fillStyle = dotCol;
+            ctx.beginPath();
+            ctx.arc(refPts[0].x, refPts[0].y, Math.max(2.5, STROKE_WIDTH * 0.2), 0, Math.PI * 2);
             ctx.fill();
             ctx.restore();
-            const frac = Math.min(1, hintProgress);
-            const maxIdx = Math.max(1, Math.floor(frac * (refPts.length - 1)));
-            drawPointPath(refPts.slice(0, maxIdx + 1), "#10b981", STROKE_WIDTH);
-            const tip = refPts[maxIdx];
-            ctx.save();
-            ctx.fillStyle = "#4338ca";
-            ctx.beginPath();
-            ctx.arc(tip.x, tip.y, 5, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
+
+            // Smooth eased stroke-by-stroke ghost sweep with sub-segment interpolation
+            const rawFrac = Math.min(1, hintProgress);
+            const eased = rawFrac < 0.5
+              ? 2 * rawFrac * rawFrac
+              : 1 - Math.pow(-2 * rawFrac + 2, 2) / 2;
+            const exactIdx = eased * (refPts.length - 1);
+            const baseIdx = Math.floor(exactIdx);
+            const segT = exactIdx - baseIdx;
+            const partialPts = refPts.slice(0, baseIdx + 1);
+            let tip = refPts[baseIdx];
+            if (baseIdx < refPts.length - 1) {
+              tip = {
+                x: refPts[baseIdx].x + (refPts[baseIdx + 1].x - refPts[baseIdx].x) * segT,
+                y: refPts[baseIdx].y + (refPts[baseIdx + 1].y - refPts[baseIdx].y) * segT
+              };
+              partialPts.push(tip);
+            }
+
+            if (fadeAlpha > 0.01) {
+              drawPointPath(partialPts, sweepCol, STROKE_WIDTH, fadeAlpha);
+              ctx.save();
+              ctx.globalAlpha = fadeAlpha;
+              ctx.fillStyle = dotCol;
+              ctx.beginPath();
+              ctx.arc(tip.x, tip.y, Math.max(3.5, STROKE_WIDTH * 0.28), 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+            }
           }
         } else {
           // Freehand strokes
@@ -4787,7 +4824,7 @@
           } else if (wrongAttempts === 2) {
             setStatusBanner(`✗ Wrong stroke (2/3) — One more try before hint!`, "error");
           } else {
-            setStatusBanner(`💡 3rd wrong attempt — Follow the animated stroke ${confirmedCount + 1}!`, "warn");
+            setStatusBanner(`💡 Follow the grey stroke guide (${confirmedCount + 1} of ${targetStrokes.length})`, "warn");
             startHintAnim();
           }
         }
@@ -4849,7 +4886,7 @@
             return;
           }
           if (typeof onEventCb === "function") onEventCb("hint", confirmedCount, targetStrokes.length);
-          setStatusBanner(`💡 Follow the animated stroke ${confirmedCount + 1}`, "warn");
+          setStatusBanner(`💡 Follow the grey stroke guide (${confirmedCount + 1} of ${targetStrokes.length})`, "warn");
           startHintAnim();
         });
       }
