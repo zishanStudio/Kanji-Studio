@@ -418,6 +418,35 @@
     html[data-theme].ks-on-kanji #view-browse .ks-map-label {
       color: var(--ks-home-accent) !important;
     }
+    /* Learn by Reading Mode — Ruby Furigana Styling (v4.7) */
+    .ks-reading-ruby ruby {
+      ruby-position: over;
+      margin: 0 0.04em;
+    }
+    .ks-reading-ruby rt {
+      font-size: 0.44em;
+      font-weight: 600;
+      color: #6366f1;
+      letter-spacing: 0.02em;
+      transition: opacity 0.2s ease;
+    }
+    html.dark .ks-reading-ruby rt {
+      color: #a5b4fc;
+    }
+    .ks-reading-ruby.hide-furigana rt {
+      opacity: 0;
+      user-select: none;
+    }
+    .ks-target-hl {
+      color: #4f46e5;
+      background: rgba(99, 102, 241, 0.12);
+      border-radius: 6px;
+      padding: 0 3px;
+    }
+    html.dark .ks-target-hl {
+      color: #a5b4fc;
+      background: rgba(129, 140, 248, 0.22);
+    }
   </style>
   <script src="strokes-data.js" defer></script>
 </head>
@@ -1300,6 +1329,83 @@
       </div>
     </section>
 
+    <!-- MODE 5: LEARN BY READING (v4.7) -->
+    <section id="view-reading" class="hidden max-w-xl mx-auto space-y-4">
+      <div class="flex items-center justify-between gap-2">
+        <button id="rdBackBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition">← Back to Sets</button>
+        <div class="flex items-center gap-2">
+          <span id="rdSetBadge" class="text-xs font-bold px-2.5 py-1 rounded-full bg-teal-50 text-teal-700">N5 · Set 1</span>
+          <span id="rdCounter" class="text-xs font-bold text-slate-500">1 / 10</span>
+        </div>
+      </div>
+
+      <!-- Reading Controls Bar -->
+      <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-1.5">
+          <button id="rdFuriganaBtn" type="button" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow-xs transition">Furigana: ON</button>
+          <button id="rdMeaningBtn" type="button" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-xs transition">Meaning: ON</button>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button id="rdSlowBtn" type="button" class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 transition" title="Slow Audio">🐢 Slow</button>
+          <button id="rdSpeakBtn" type="button" class="px-3 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold shadow-xs transition" title="Listen">🔊 Listen</button>
+        </div>
+      </div>
+
+      <!-- Main Reading Sentence Card -->
+      <div class="bg-white rounded-3xl border border-slate-200 p-5 shadow-sm space-y-4">
+        <!-- Focus Character Header -->
+        <div class="flex items-center justify-between gap-3 pb-3 border-b border-slate-100">
+          <button id="rdOpenDetailBtn" type="button" class="flex items-center gap-3 text-left group min-w-0">
+            <div id="rdFocusChar" class="kanji-font w-14 h-14 rounded-2xl bg-teal-50 border border-teal-200 flex items-center justify-center text-3xl font-black text-teal-700 shrink-0 group-hover:scale-105 transition">日</div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5">
+                <span id="rdFocusLevel" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600">N5</span>
+                <span class="text-[10px] font-semibold text-slate-400">Tap to practice strokes →</span>
+              </div>
+              <div id="rdFocusMeaning" class="text-sm font-bold text-slate-900 truncate mt-0.5">day, sun, Japan</div>
+              <div id="rdFocusReading" class="text-xs text-slate-500 truncate kanji-font">nichi, hi</div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Japanese Sentence with Ruby Furigana -->
+        <div class="bg-slate-50 rounded-2xl border border-slate-200 p-4 sm:p-5 space-y-2.5 text-center">
+          <div id="rdSentenceRuby" class="ks-reading-ruby kanji-font text-2xl sm:text-3xl font-bold text-slate-900 leading-[2.1] tracking-wide break-words"></div>
+          <div id="rdSentenceKana" class="kanji-font text-xs sm:text-sm font-medium text-indigo-600"></div>
+        </div>
+
+        <!-- English & Hindi Translation Box -->
+        <div id="rdMeaningBox" class="rounded-2xl bg-emerald-50/60 border border-emerald-200/80 p-3.5 space-y-1.5">
+          <div class="flex items-start gap-2 text-xs sm:text-sm">
+            <span class="font-bold text-emerald-700 shrink-0">EN:</span>
+            <span id="rdMeaningEn" class="font-semibold text-slate-800"></span>
+          </div>
+          <div class="flex items-start gap-2 text-xs sm:text-sm">
+            <span class="font-bold text-amber-700 shrink-0">HI:</span>
+            <span id="rdMeaningHi" class="font-medium text-slate-700"></span>
+          </div>
+        </div>
+
+        <!-- Key Words Spotlight (Tap to pronounce) -->
+        <div id="rdWordsWrap" class="hidden space-y-1.5 pt-1">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Key Words in Context (Tap to Listen)</div>
+          <div id="rdWordsRow" class="flex flex-wrap gap-1.5"></div>
+        </div>
+      </div>
+
+      <!-- Set Character Quick-Jump Strip -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-3 shadow-sm">
+        <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Sentences in This Set</div>
+        <div id="rdCharStrip" class="flex flex-wrap gap-1.5"></div>
+      </div>
+
+      <!-- Navigation Controls -->
+      <div class="grid grid-cols-2 gap-3">
+        <button id="rdPrevBtn" class="py-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-sm font-bold text-slate-700 transition">← Prev</button>
+        <button id="rdNextBtn" class="py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-sm font-bold text-white shadow-sm transition">Next ›</button>
+      </div>
+    </section>
+
     <!-- FULL-SCREEN CHARACTER DETAIL & PRACTICE PAGE -->
     <section id="view-detail" class="hidden max-w-2xl mx-auto space-y-3 pb-4">
       <div class="flex items-center justify-between gap-2 bg-indigo-600 text-white px-3 py-2.5 rounded-2xl shadow-sm">
@@ -1450,7 +1556,7 @@
   </main>
 
   <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6">
-    Kanji Studio (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v4.6</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan</span>
+    Kanji Studio (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v4.7</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan</span>
   </footer>
 
   <!-- Bottom Navigation Bar (Home | Hiragana | Katakana | Kanji) -->
@@ -1526,6 +1632,13 @@
           <div>
             <div class="text-sm font-bold text-slate-900">Writing Challenge</div>
             <div class="text-xs text-slate-500">Draw each kanji with live stroke checking</div>
+          </div>
+        </button>
+        <button data-pick="reading" class="study-pick-btn w-full p-4 rounded-2xl border border-slate-200 hover:border-teal-300 hover:bg-teal-50/50 flex items-center gap-3.5 text-left transition">
+          <div class="w-11 h-11 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center font-bold text-lg shrink-0">📚</div>
+          <div>
+            <div class="text-sm font-bold text-slate-900">Learn by Reading</div>
+            <div class="text-xs text-slate-500">Easy Japanese sentences · Furigana · EN/HI · Audio</div>
           </div>
         </button>
       </div>
@@ -4186,7 +4299,11 @@
       quizAnswered: false,
       // Writing Challenge state
       wcIndex: 0,
-      wcRevealed: false
+      wcRevealed: false,
+      // Learn by Reading state (v4.7)
+      rdIndex: 0,
+      rdShowFurigana: true,
+      rdShowMeaning: true
     };
 
     function loadState() {
@@ -4538,7 +4655,7 @@
     // =========================================================================
     // SPEECH SYNTHESIS (ja-JP)
     // =========================================================================
-    function speakJapanese(text) {
+    function speakJapanese(text, customRate) {
       try {
         if (!("speechSynthesis" in window)) {
           showToast("Audio pronunciation is not supported in this browser.");
@@ -4549,7 +4666,7 @@
         const clean = text.split(",")[0].replace(/[()\-]/g, "").trim();
         const utter = new SpeechSynthesisUtterance(clean);
         utter.lang = "ja-JP";
-        utter.rate = 0.85;
+        utter.rate = typeof customRate === "number" ? customRate : 0.85;
         window.speechSynthesis.speak(utter);
       } catch (e) {
         showToast("Could not play audio.");
@@ -5354,7 +5471,7 @@
     }
 
     function renderModeTabs() {
-      ["home", "kanji-folders", "radicals", "customsets", "lookalikes", "speedwrite", "browse", "setview", "detail", "flashcards", "quiz", "writing"].forEach(m => {
+      ["home", "kanji-folders", "radicals", "customsets", "lookalikes", "speedwrite", "browse", "setview", "detail", "flashcards", "quiz", "writing", "reading"].forEach(m => {
         const sec = document.getElementById(`view-${m}`);
         if (sec) sec.classList.add("hidden");
       });
@@ -5594,6 +5711,9 @@
       } else if (state.activeMode === "writing") {
         document.getElementById("wcSetBadge").textContent = state.activeSetLabel;
         openWritingPreStart();
+      } else if (state.activeMode === "reading") {
+        document.getElementById("rdSetBadge").textContent = state.activeSetLabel;
+        renderReadingView();
       }
     }
 
@@ -6499,6 +6619,342 @@
     }
 
     // =========================================================================
+    // MODE 5: LEARN BY READING ENGINE (v4.7 — 100% OFFLINE FOR ALL 2,279 CHARS)
+    // =========================================================================
+    // [word, romaji/reading, english, hindi, sentenceJp, sentenceRead, sentenceEn, sentenceHi]
+    const KANA_READING_BANK = {
+      "あ": ["あさ", "asa", "morning", "सुबह", "あさ ごはんを たべます。", "asa gohan o tabemasu.", "I eat breakfast in the morning.", "मैं सुबह नाश्ता करता हूँ।"],
+      "い": ["いぬ", "inu", "dog", "कुत्ता", "かわいい いぬが います。", "kawaii inu ga imasu.", "There is a cute dog.", "एक प्यारा कुत्ता है।"],
+      "う": ["うみ", "umi", "sea", "समुद्र", "うみは あおくて きれいです。", "umi wa aokute kirei desu.", "The sea is blue and beautiful.", "समुद्र नीला और सुंदर है।"],
+      "え": ["えき", "eki", "station", "स्टेशन", "えきまで あるきます。", "eki made arukimasu.", "I walk to the station.", "मैं स्टेशन तक पैदल चलता हूँ।"],
+      "お": ["おちゃ", "ocha", "tea", "चाय", "あつい おちゃを のみます。", "atsui ocha o nomimasu.", "I drink hot tea.", "मैं गरम चाय पीता हूँ।"],
+      "か": ["かさ", "kasa", "umbrella", "छाता", "あめなので かさを さします。", "ame na node kasa o sashimasu.", "Because it's raining, I use an umbrella.", "बारिश हो रही है इसलिए मैं छाता लगाता हूँ।"],
+      "き": ["き", "ki", "tree", "पेड़", "こうえんに おおきい きが あります。", "kouen ni ookii ki ga arimasu.", "There is a big tree in the park.", "पार्क में एक बड़ा पेड़ है।"],
+      "く": ["くつ", "kutsu", "shoes", "जूते", "あたらしい くつを かいました。", "atarashii kutsu o kaimashita.", "I bought new shoes.", "मैंने नए जूते खरीदे।"],
+      "け": ["けさ", "kesa", "this morning", "आज सुबह", "けさ はやく おきました。", "kesa hayaku okimashita.", "I woke up early this morning.", "मैं आज सुबह जल्दी उठा।"],
+      "こ": ["こども", "kodomo", "child", "बच्चा", "こどもが げんきに あそびます。", "kodomo ga genki ni asobimasu.", "Children play energetically.", "बच्चे खुशी से खेलते हैं।"],
+      "さ": ["さかな", "sakana", "fish", "मछली", "さかなが かわを およぎます。", "sakana ga kawa o oyogimasu.", "Fish swim in the river.", "मछलियाँ नदी में तैरती हैं।"],
+      "し": ["しろ", "shiro", "white", "सफ़ेद", "しろい くもが みえます。", "shiroi kumo ga miemasu.", "I can see white clouds.", "सफ़ेद बादल दिखाई देते हैं।"],
+      "す": ["すし", "sushi", "sushi", "सुशी", "すしが だいすき です。", "sushi ga daisuki desu.", "I love sushi.", "मुझे सुशी बहुत पसंद है।"],
+      "せ": ["せんせい", "sensei", "teacher", "शिक्षक", "せんせいは やさしい です。", "sensei wa yasashii desu.", "The teacher is kind.", "शिक्षक बहुत दयालु हैं।"],
+      "そ": ["そら", "sora", "sky", "आसमान", "きょうの そらは はれです。", "kyou no sora wa hare desu.", "Today's sky is clear.", "आज आसमान साफ़ है।"],
+      "た": ["たべる", "taberu", "to eat", "खाना", "りんごを たべます。", "ringo o tabemasu.", "I eat an apple.", "मैं सेब खाता हूँ।"],
+      "ち": ["ちず", "chizu", "map", "नक्शा", "ちずを みて いきます。", "chizu o mite ikimasu.", "I look at the map and go.", "मैं नक्शा देखकर जाता हूँ।"],
+      "つ": ["つき", "tsuki", "moon", "चाँद", "よるに つきが でます。", "yoru ni tsuki ga demasu.", "The moon comes out at night.", "रात में चाँद निकलता है।"],
+      "て": ["てがみ", "tegami", "letter", "चिट्ठी", "ともだちに てがみを かきます。", "tomodachi ni tegami o kakimasu.", "I write a letter to my friend.", "मैं दोस्त को चिट्ठी लिखता हूँ।"],
+      "と": ["とり", "tori", "bird", "पक्षी", "とりが そらを とびます。", "tori ga sora o tobimasu.", "Birds fly in the sky.", "पक्षी आसमान में उड़ते हैं।"],
+      "な": ["なつ", "natsu", "summer", "गर्मी", "なつは とても あつい です。", "natsu wa totemo atsui desu.", "Summer is very hot.", "गर्मी बहुत तेज़ होती है।"],
+      "に": ["にほん", "nihon", "Japan", "जापान", "にほんごを べんきょう します。", "nihongo o benkyou shimasu.", "I study Japanese.", "मैं जापानी पढ़ता हूँ।"],
+      "ぬ": ["ぬの", "nuno", "cloth", "कपड़ा", "やわらかい ぬの です。", "yawarakai nuno desu.", "It is a soft cloth.", "यह एक मुलायम कपड़ा है।"],
+      "ね": ["ねこ", "neko", "cat", "बिल्ली", "ねこが いすで ねています。", "neko ga isu de neteimasu.", "The cat is sleeping on the chair.", "बिल्ली कुर्सी पर सो रही है।"],
+      "の": ["のむ", "nomu", "to drink", "पीना", "つめたい みずを のみます。", "tsumetai mizu o nomimasu.", "I drink cold water.", "मैं ठंडा पानी पीता हूँ।"],
+      "は": ["はな", "hana", "flower", "फूल", "にわに はなが さきました。", "niwa ni hana ga sakimashita.", "Flowers bloomed in the garden.", "बगीचे में फूल खिले।"],
+      "ひ": ["ひる", "hiru", "noon / daytime", "दोपहर", "ひるごはんを いっしょに たべましょう。", "hirugohan o issho ni tabemashou.", "Let's eat lunch together.", "चलो साथ में दोपहर का खाना खाएँ।"],
+      "ふ": ["ふゆ", "fuyu", "winter", "सर्दी", "ふゆは ゆきが ふります。", "fuyu wa yuki ga furimasu.", "It snows in winter.", "सर्दी में बर्फ़ गिरती है।"],
+      "へ": ["へや", "heya", "room", "कमरा", "わたしの へやは あかるい です。", "watashi no heya wa akarui desu.", "My room is bright.", "मेरा कमरा उजाला है।"],
+      "ほ": ["ほん", "hon", "book", "किताब", "まいにち ほんを よみます。", "mainichi hon o yomimasu.", "I read a book every day.", "मैं रोज़ किताब पढ़ता हूँ।"],
+      "ま": ["まど", "mado", "window", "खिड़की", "あさ まどを あけます。", "asa mado o akemasu.", "I open the window in the morning.", "मैं सुबह खिड़की खोलता हूँ।"],
+      "み": ["みず", "mizu", "water", "पानी", "みずを いっぱい ください。", "mizu o ippai kudasai.", "Please give me a glass of water.", "कृपया एक गिलास पानी दीजिए।"],
+      "む": ["むし", "mushi", "insect", "कीड़ा", "ちいさい むしが います。", "chiisai mushi ga imasu.", "There is a small insect.", "एक छोटा कीड़ा है।"],
+      "め": ["めがね", "megane", "glasses", "चश्मा", "あたらしい めがねを かけます。", "atarashii megane o kakemasu.", "I wear new glasses.", "मैं नया चश्मा पहनता हूँ।"],
+      "も": ["もり", "mori", "forest", "जंगल", "もりは しずかで すずしい です。", "mori wa shizuka de suzushii desu.", "The forest is quiet and cool.", "जंगल शांत और ठंडा है।"],
+      "や": ["やま", "yama", "mountain", "पहाड़", "たかい やまに のぼります。", "takai yama ni noborimasu.", "I climb a tall mountain.", "मैं एक ऊँचे पहाड़ पर चढ़ता हूँ।"],
+      "ゆ": ["ゆき", "yuki", "snow", "बर्फ़", "しろい ゆきが ふっています。", "shiroi yuki ga futteimasu.", "White snow is falling.", "सफ़ेद बर्फ़ गिर रही है।"],
+      "よ": ["よる", "yoru", "night", "रात", "よる ほしが きれい です。", "yoru hoshi ga kirei desu.", "The stars are pretty at night.", "रात में तारे सुंदर लगते हैं।"],
+      "ら": ["らいねん", "rainen", "next year", "अगले साल", "らいねん にほんへ いきます。", "rainen nihon e ikimasu.", "I will go to Japan next year.", "मैं अगले साल जापान जाऊँगा।"],
+      "り": ["りんご", "ringo", "apple", "सेब", "あかい りんごは あまい です。", "akai ringo wa amai desu.", "Red apples are sweet.", "लाल सेब मीठे होते हैं।"],
+      "る": ["るす", "rusu", "away from home", "घर पर न होना", "いま ちちは るす です。", "ima chichi wa rusu desu.", "My father is away right now.", "अभी पिताजी घर पर नहीं हैं।"],
+      "れ": ["れきし", "rekishi", "history", "इतिहास", "にほんの れきしが すき です。", "nihon no rekishi ga suki desu.", "I like Japanese history.", "मुझे जापान का इतिहास पसंद है।"],
+      "ろ": ["ろく", "roku", "six", "छह", "ろくじに おきます。", "rokuji ni okimasu.", "I wake up at six o'clock.", "मैं छह बजे उठता हूँ।"],
+      "わ": ["わたし", "watashi", "I / me", "मैं", "わたしは がくせい です。", "watashi wa gakusei desu.", "I am a student.", "मैं एक छात्र हूँ।"],
+      "を": ["ほんを よむ", "hon o yomu", "read a book", "किताब पढ़ना", "にほんごを まいにち まなびます。", "nihongo o mainichi manabimasu.", "I learn Japanese every day.", "मैं रोज़ जापानी सीखता हूँ।"],
+      "ん": ["にほん", "nihon", "Japan", "जापान", "げんきに べんきょう しましょう。", "genki ni benkyou shimashou.", "Let's study energetically!", "चलो उत्साह से पढ़ाई करें!"],
+      "ア": ["アイス", "aisu", "ice cream", "आइसक्रीम", "なつに アイスを たべます。", "natsu ni aisu o tabemasu.", "I eat ice cream in summer.", "मैं गर्मी में आइसक्रीम खाता हूँ।"],
+      "イ": ["インド", "indo", "India", "भारत", "わたしは インドから きました。", "watashi wa indo kara kimashita.", "I came from India.", "मैं भारत से आया हूँ।"],
+      "ウ": ["ウサギ", "usagi", "rabbit", "खरगोश", "しろい ウサギが はねます。", "shiroi usagi ga hanemasu.", "A white rabbit hops.", "सफ़ेद खरगोश उछलता है।"],
+      "エ": ["エアコン", "eakon", "air conditioner", "एसी", "へやの エアコンを つけます。", "heya no eakon o tsukemasu.", "I turn on the room AC.", "मैं कमरे का एसी चलाता हूँ।"],
+      "オ": ["オレンジ", "orenji", "orange", "संतरा", "オレンジジュースが すき です。", "orenji juusu ga suki desu.", "I like orange juice.", "मुझे संतरे का जूस पसंद है।"],
+      "カ": ["カメラ", "kamera", "camera", "कैमरा", "カメラで しゃしんを とります。", "kamera de shashin o torimasu.", "I take photos with a camera.", "मैं कैमरे से फ़ोटो खींचता हूँ।"],
+      "キ": ["キーボード", "kiiboodo", "keyboard", "कीबोर्ड", "キーボードで にほんごを うちます。", "kiiboodo de nihongo o uchimasu.", "I type Japanese on the keyboard.", "मैं कीबोर्ड से जापानी टाइप करता हूँ।"],
+      "ク": ["クラス", "kurasu", "class", "कक्षा", "あたらしい クラスは たのしい です。", "atarashii kurasu wa tanoshii desu.", "The new class is fun.", "नई कक्षा मज़ेदार है।"],
+      "ケ": ["ケーキ", "keeki", "cake", "केक", "たんじょうびに ケーキを たべます。", "tanjoubi ni keeki o tabemasu.", "I eat cake on my birthday.", "मैं जन्मदिन पर केक खाता हूँ।"],
+      "コ": ["コーヒー", "koohii", "coffee", "कॉफ़ी", "あさ コーヒーを のみます。", "asa koohii o nomimasu.", "I drink coffee in the morning.", "मैं सुबह कॉफ़ी पीता हूँ।"],
+      "サ": ["サッカー", "sakkaa", "soccer", "फ़ुटबॉल", "ともだちと サッカーを します。", "tomodachi to sakkaa o shimasu.", "I play soccer with friends.", "मैं दोस्तों के साथ फ़ुटबॉल खेलता हूँ।"],
+      "シ": ["シャツ", "shatsu", "shirt", "शर्ट", "しろい シャツを きています。", "shiroi shatsu o kiteimasu.", "I am wearing a white shirt.", "मैंने सफ़ेद शर्ट पहनी है।"],
+      "ス": ["スマホ", "sumaho", "smartphone", "स्मार्टफ़ोन", "スマホで かんじを べんきょう します。", "sumaho de kanji o benkyou shimasu.", "I study Kanji on my smartphone.", "मैं स्मार्टफ़ोन पर कांजी पढ़ता हूँ।"],
+      "セ": ["セーター", "seetaa", "sweater", "स्वेटर", "さむいので セーターを きます。", "samui node seetaa o kimasu.", "It's cold so I wear a sweater.", "ठंड है इसलिए मैं स्वेटर पहनता हूँ।"],
+      "ソ": ["ソファ", "sofa", "sofa", "सोफ़ा", "ソファで ほんを よみます。", "sofa de hon o yomimasu.", "I read a book on the sofa.", "मैं सोफ़े पर बैठकर किताब पढ़ता हूँ।"],
+      "タ": ["タクシー", "takushii", "taxi", "टैक्सी", "えきまで タクシーで いきます。", "eki made takushii de ikimasu.", "I go to the station by taxi.", "मैं टैक्सी से स्टेशन जाता हूँ।"],
+      "チ": ["チーズ", "chiizu", "cheese", "पनीर/चीज़", "チーズが たっぷり あります。", "chiizu ga tappuri arimasu.", "There is plenty of cheese.", "यहाँ बहुत सारा चीज़ है।"],
+      "ツ": ["ツアー", "tsuaa", "tour", "टूर", "きょうと ツアーに さんか します。", "kyouto tsuaa ni sanka shimasu.", "I join a Kyoto tour.", "मैं क्योटो टूर में शामिल होता हूँ।"],
+      "テ": ["テレビ", "terebi", "TV", "टीवी", "よる テレビを みます。", "yoru terebi o mimasu.", "I watch TV at night.", "मैं रात में टीवी देखता हूँ।"],
+      "ト": ["トマト", "tomato", "tomato", "टमाटर", "あかい トマトを かいました。", "akai tomato o kaimashita.", "I bought red tomatoes.", "मैंने लाल टमाटर खरीदे।"],
+      "ナ": ["ナイフ", "naifu", "knife", "चाकू", "ナイフで りんごを きります。", "naifu de ringo o kirimasu.", "I cut an apple with a knife.", "मैं चाकू से सेब काटता हूँ।"],
+      "ニ": ["ニュース", "nyuusu", "news", "समाचार", "まいあさ ニュースを ききます。", "maiasa nyuusu o kikimasu.", "I listen to the news every morning.", "मैं हर सुबह समाचार सुनता हूँ।"],
+      "ヌ": ["ヌードル", "nuudoru", "noodles", "नूडल्स", "あつい ヌードルが おいしい です。", "atsui nuudoru ga oishii desu.", "Hot noodles are delicious.", "गरम नूडल्स स्वादिष्ट हैं।"],
+      "ネ": ["ネクタイ", "nekutai", "necktie", "टाई", "あおい ネクタイを しめます。", "aoi nekutai o shimemasu.", "I wear a blue tie.", "मैं नीली टाई पहनता हूँ।"],
+      "ノ": ["ノート", "nooto", "notebook", "नोटबुक", "ノートに かんじを かきます。", "nooto ni kanji o kakimasu.", "I write Kanji in my notebook.", "मैं नोटबुक में कांजी लिखता हूँ।"],
+      "ハ": ["ハンバーガー", "hanbaagaa", "hamburger", "बर्गर", "ひるに ハンバーガーを たべます。", "hiru ni hanbaagaa o tabemasu.", "I eat a hamburger at noon.", "मैं दोपहर में बर्गर खाता हूँ।"],
+      "ヒ": ["ヒント", "hinto", "hint", "संकेत", "むずかしい ときは ヒントを みます。", "muzukashii toki wa hinto o mimasu.", "When it's hard, I check a hint.", "कठिन होने पर मैं हिंट देखता हूँ।"],
+      "フ": ["フルーツ", "furuutsu", "fruit", "फल", "しんせんな フルーツが すき です。", "shinsen na furuutsu ga suki desu.", "I like fresh fruit.", "मुझे ताज़े फल पसंद हैं।"],
+      "ヘ": ["ヘルメット", "herumetto", "helmet", "हेलमेट", "あんぜんのため ヘルメットを かぶります。", "anzen no tame herumetto o kaburimasu.", "I wear a helmet for safety.", "मैं सुरक्षा के लिए हेलमेट पहनता हूँ।"],
+      "ホ": ["ホテル", "hoteru", "hotel", "होटल", "えきの ちかくの ホテルに とまります。", "eki no chikaku no hoteru ni tomarimasu.", "I stay at a hotel near the station.", "मैं स्टेशन के पास एक होटल में ठहरता हूँ।"],
+      "マ": ["マンガ", "manga", "manga", "मांगा", "にほんの マンガを よみます。", "nihon no manga o yomimasu.", "I read Japanese manga.", "मैं जापानी मांगा पढ़ता हूँ।"],
+      "ミ": ["ミルク", "miruku", "milk", "दूध", "あたたかい ミルクを のみます。", "atatakai miruku o nomimasu.", "I drink warm milk.", "मैं गुनगुना दूध पीता हूँ।"],
+      "ム": ["ムード", "muudo", "mood", "माहौल", "たのしい ムードに なりました。", "tanoshii muudo ni narimashita.", "It became a fun mood.", "माहौल बहुत खुशनुमा हो गया।"],
+      "メ": ["メモ", "memo", "memo / note", "नोट", "だいじな ことを メモ します。", "daijina koto o memo shimasu.", "I take notes of important things.", "मैं ज़रूरी बातें नोट करता हूँ।"],
+      "モ": ["モデル", "moderu", "model", "मॉडल", "あたらしい モデルが でました。", "atarashii moderu ga demashita.", "A new model came out.", "एक नया मॉडल आया है।"],
+      "ヤ": ["ヤシ", "yashi", "palm tree", "ताड़ का पेड़", "みなみの しまに ヤシの きが あります。", "minami no shima ni yashi no ki ga arimasu.", "There are palm trees on the southern island.", "दक्षिणी द्वीप पर ताड़ के पेड़ हैं।"],
+      "ユ": ["ユニフォーム", "yunifoomu", "uniform", "वर्दी", "チームの ユニフォームを きます。", "chiimu no yunifoomu o kimasu.", "I wear the team uniform.", "मैं टीम की वर्दी पहनता हूँ।"],
+      "ヨ": ["ヨガ", "yoga", "yoga", "योग", "まいあさ ヨガを れんしゅう します。", "maiasa yoga o renshuu shimasu.", "I practice yoga every morning.", "मैं हर सुबह योग का अभ्यास करता हूँ।"],
+      "ラ": ["ラーメン", "raamen", "ramen", "रामेन", "きょうは ラーメンを たべたい です。", "kyou wa raamen o tabetai desu.", "I want to eat ramen today.", "आज मैं रामेन खाना चाहता हूँ।"],
+      "リ": ["リズム", "rizumu", "rhythm", "लय", "おんがくの リズムが たのしい です。", "ongaku no rizumu ga tanoshii desu.", "The rhythm of the music is fun.", "संगीत की लय मज़ेदार है।"],
+      "ル": ["ルール", "ruuru", "rule", "नियम", "みんなで ルールを まもります。", "minna de ruuru o mamorimasu.", "Everyone follows the rules.", "सब लोग नियमों का पालन करते हैं।"],
+      "レ": ["レストラン", "resutoran", "restaurant", "रेस्टोरेंट", "かぞくと レストランへ いきます。", "kazoku to resutoran e ikimasu.", "I go to a restaurant with my family.", "मैं परिवार के साथ रेस्टोरेंट जाता हूँ।"],
+      "ロ": ["ロボット", "robotto", "robot", "रोबोट", "にほんの ロボットは すごい です。", "nihon no robotto wa sugoi desu.", "Japanese robots are amazing.", "जापान के रोबोट कमाल के हैं।"],
+      "ワ": ["ワイン", "wain", "wine", "वाइन", "グラスに ワインが あります。", "gurasu ni wain ga arimasu.", "There is wine in the glass.", "गिलास में वाइन है।"],
+      "ヲ": ["カメラヲ", "kamera o", "object marker", "कर्म कारक", "カタカナの ヲを おぼえます。", "katakana no wo o oboemasu.", "I memorize Katakana Wo.", "मैं काताकाना 'ヲ' याद करता हूँ।"],
+      "ン": ["パン", "pan", "bread", "ब्रेड/पाव", "あさ パンと コーヒーを たべます。", "asa pan to koohii o tabemasu.", "I eat bread and coffee in the morning.", "मैं सुबह ब्रेड और कॉफ़ी लेता हूँ।"]
+    };
+
+    const RUBY_DICT = [
+      ["日本語", "にほんご"], ["毎日", "まいにち"], ["今日", "きょう"], ["明日", "あした"], ["来年", "らいねん"],
+      ["今年", "ことし"], ["天気", "てんき"], ["学校", "がっこう"], ["高校生", "こうこうせい"], ["学生", "がくせい"],
+      ["先生", "せんせい"], ["友達", "ともだち"], ["質問", "しつもん"], ["勉強", "べんきょう"], ["漢字", "かんじ"],
+      ["富士山", "ふじさん"], ["北海道", "ほっかいどう"], ["公園", "こうえん"], ["電車", "でんしゃ"], ["仕事", "しごと"],
+      ["音楽", "おんがく"], ["映画", "えいが"], ["花火", "はなび"], ["夏休み", "なつやすみ"], ["新学期", "しんがっき"],
+      ["金曜日", "きんようび"], ["土曜日", "どようび"], ["太陽", "たいよう"], ["電話", "でんわ"], ["部屋", "へや"],
+      ["名前", "なまえ"], ["子供", "こども"], ["大人", "おとな"], ["料理", "りょうり"], ["切符", "きっぷ"],
+      ["心配", "しんぱい"], ["元気", "げんき"], ["今夜", "こんや"], ["毎朝", "まいあさ"], ["午後", "ごご"],
+      ["午前", "ごぜん"], ["何時", "なんじ"], ["七時", "しちじ"], ["八時", "はちじ"], ["九時", "くじ"],
+      ["十時", "じゅうじ"], ["三時", "さんじ"], ["六時", "ろくじ"], ["二時", "にじ"], ["五分", "ごふん"],
+      ["十分", "じゅっぷん"], ["四月", "しがつ"], ["七月", "しちがつ"], ["百円", "ひゃくえん"], ["千円", "せんえん"],
+      ["一万円", "いちまんえん"], ["百点", "ひゃくてん"], ["半分", "はんぶん"], ["一緒", "いっしょ"], ["少し", "すこし"],
+      ["一つ", "ひとつ"], ["二つ", "ふたつ"], ["男の人", "おとこのひと"], ["朝ごはん", "あさごはん"], ["お茶", "おちゃ"],
+      ["意味", "いみ"], ["読み方", "よみかた"], ["練習", "れんしゅう"], ["大事", "だいじ"], ["言葉", "ことば"],
+      ["日本", "にほん"], ["外国", "がいこく"], ["中国", "ちゅうごく"], ["時間", "じかん"], ["時計", "とけい"],
+      ["旅行", "りょこう"], ["銀行", "ぎんこう"], ["私", "わたし"], ["今", "いま"], ["本", "ほん"],
+      ["水", "みず"], ["国", "くに"], ["人", "ひと"], ["川", "かわ"], ["山", "やま"], ["木", "き"],
+      ["花", "はな"], ["雨", "あめ"], ["海", "うみ"], ["駅", "えき"], ["家", "いえ"], ["店", "みせ"],
+      ["車", "くるま"], ["犬", "いぬ"], ["母", "はは"], ["父", "ちち"], ["月", "つき"], ["外", "そと"],
+      ["東", "ひがし"], ["西", "にし"], ["南", "みなみ"], ["北", "きた"], ["右", "みぎ"], ["左", "ひだり"],
+      ["前", "まえ"], ["後", "あと"], ["上", "うえ"], ["下", "した"], ["中", "なか"], ["間", "あいだ"],
+      ["白", "しろ"], ["赤", "あか"], ["青", "あお"], ["黒", "くろ"], ["春", "はる"], ["夏", "なつ"],
+      ["秋", "あき"], ["冬", "ふゆ"], ["朝", "あさ"], ["昼", "ひる"], ["夜", "よる"], ["手", "て"],
+      ["目", "め"], ["口", "くち"], ["耳", "みみ"], ["足", "あし"], ["心", "こころ"], ["体", "からだ"],
+      ["机", "つくえ"], ["庭", "にわ"], ["島", "しま"], ["町", "まち"], ["角", "かど"], ["靴", "くつ"],
+      ["彼女", "かのじょ"], ["親切", "しんせつ"], ["新", "あたら"], ["大", "おお"], ["小", "ちい"],
+      ["長", "なが"], ["高", "たか"], ["明", "あか"], ["冷", "つめ"], ["暑", "あつ"], ["近", "ちか"],
+      ["行", "い"], ["見", "み"], ["分", "わ"], ["出", "で"], ["入", "はい"], ["来", "き"],
+      ["話", "はな"], ["書", "か"], ["読", "よ"], ["聞", "き"], ["食", "た"], ["飲", "の"],
+      ["買", "か"], ["売", "う"], ["待", "ま"], ["持", "も"], ["休", "やす"], ["働", "はたら"],
+      ["歩", "ある"], ["起", "お"], ["寝", "ね"], ["降", "ふ"], ["咲", "さ"], ["洗", "あら"],
+      ["閉", "と"], ["開", "あ"], ["思", "おも"], ["考", "かんが"], ["泳", "およ"], ["曲", "ま"],
+      ["昇", "のぼ"], ["沈", "しず"], ["取", "と"], ["始", "はじ"], ["学", "まな"], ["楽", "たの"],
+      ["着", "き"], ["何", "なん"], ["好", "す"], ["多", "おお"], ["少", "すこ"]
+    ];
+
+    function extractFirstKana(readingStr) {
+      if (!readingStr || readingStr === "—") return "";
+      const m = readingStr.match(/\(([^)]+)\)/);
+      if (m && m[1]) {
+        return m[1].split(",")[0].replace(/[()\-]/g, "").trim();
+      }
+      return readingStr.split(",")[0].trim();
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function buildRubyHtml(sentence, focusChar, focusKana, extraWords) {
+      let htmlOut = "";
+      const dict = [];
+      if (Array.isArray(extraWords)) {
+        extraWords.forEach(([w, rd]) => { if (w && rd) dict.push([w, rd]); });
+      }
+      RUBY_DICT.forEach(pair => dict.push(pair));
+      dict.sort((a, b) => b[0].length - a[0].length);
+
+      let i = 0;
+      while (i < sentence.length) {
+        let matched = null;
+        for (let j = 0; j < dict.length; j++) {
+          const [w, rd] = dict[j];
+          if (sentence.startsWith(w, i)) {
+            matched = [w, rd];
+            break;
+          }
+        }
+        if (matched) {
+          const [w, rd] = matched;
+          const hasFocus = focusChar && w.includes(focusChar);
+          const inner = hasFocus
+            ? escapeHtml(w).split(escapeHtml(focusChar)).join(`<span class="ks-target-hl">${escapeHtml(focusChar)}</span>`)
+            : escapeHtml(w);
+          htmlOut += `<ruby>${inner}<rt>${escapeHtml(rd)}</rt></ruby>`;
+          i += w.length;
+        } else {
+          const ch = sentence[i];
+          if (ch === focusChar && focusKana && !/[ぁ-んァ-ン]/.test(ch)) {
+            htmlOut += `<ruby><span class="ks-target-hl">${escapeHtml(ch)}</span><rt>${escapeHtml(focusKana)}</rt></ruby>`;
+          } else if (ch === focusChar) {
+            htmlOut += `<span class="ks-target-hl">${escapeHtml(ch)}</span>`;
+          } else {
+            htmlOut += escapeHtml(ch);
+          }
+          i++;
+        }
+      }
+      return htmlOut;
+    }
+
+    function getReadingItemData(k) {
+      const primaryMeaning = (k.meaning || "").split(",")[0].trim();
+      // 1. Hiragana / Katakana curated beginner sentences
+      if (k.isKana) {
+        const entry = KANA_READING_BANK[k.char];
+        if (entry) {
+          return {
+            jp: entry[4],
+            rubyHtml: buildRubyHtml(entry[4], k.char, "", null),
+            kana: entry[5],
+            en: entry[6],
+            hi: entry[7],
+            words: [[entry[0], entry[1], `${entry[2]} (${entry[3]})`]]
+          };
+        }
+        // Fallback for dakuten/handakuten kana
+        const jp = `「${k.char}」は「${k.on}」と よみます。`;
+        return {
+          jp,
+          rubyHtml: buildRubyHtml(jp, k.char, "", null),
+          kana: `"${k.char}" wa "${k.on}" to yomimasu.`,
+          en: `"${k.char}" is read as "${k.on}" (${k.kun}).`,
+          hi: `"${k.char}" को जापानी में "${k.on}" पढ़ा जाता है।`,
+          words: [[k.char, k.on, k.kun]]
+        };
+      }
+
+      // 2. Built-in rich OFFLINE_NOTES sentences (N5/N4)
+      const note = OFFLINE_NOTES[k.char];
+      const bestKana = extractFirstKana(k.kun) || extractFirstKana(k.on) || "";
+      if (note && note.s && note.s.length >= 4) {
+        return {
+          jp: note.s[0],
+          rubyHtml: buildRubyHtml(note.s[0], k.char, bestKana, note.w || []),
+          kana: note.s[1],
+          en: note.s[2],
+          hi: note.s[3],
+          words: note.w || []
+        };
+      }
+
+      // 3. Clean offline sentence template for all remaining N4-N1 Kanji (100% coverage, 0s load)
+      const onKana = extractFirstKana(k.on);
+      const kunKana = extractFirstKana(k.kun);
+      const readingShow = kunKana || onKana || "かんじ";
+      const jp = `「${k.char}」は「${primaryMeaning}」という意味の大事な漢字です。`;
+      const kanaLine = `「${readingShow}」は「${primaryMeaning}」という いみの だいじな かんじ です。`;
+      const en = `"${k.char}" (${readingShow}) is an important JLPT ${k.level} kanji meaning "${k.meaning}".`;
+      const hi = `"${k.char}" (${readingShow}) JLPT ${k.level} की एक महत्वपूर्ण कांजी है जिसका अर्थ "${primaryMeaning}" होता है।`;
+      const words = [];
+      if (onKana) words.push([k.char, onKana, `On'yomi · ${primaryMeaning}`]);
+      if (kunKana) words.push([k.char, kunKana, `Kun'yomi · ${primaryMeaning}`]);
+      return {
+        jp,
+        rubyHtml: buildRubyHtml(jp, k.char, readingShow, []),
+        kana: kanaLine,
+        en,
+        hi,
+        words
+      };
+    }
+
+    function renderReadingView() {
+      const pool = getActiveStudyPool();
+      if (!pool.length) return;
+      if (state.rdIndex >= pool.length) state.rdIndex = 0;
+      if (state.rdIndex < 0) state.rdIndex = pool.length - 1;
+      const k = pool[state.rdIndex];
+      const data = getReadingItemData(k);
+
+      document.getElementById("rdCounter").textContent = `${state.rdIndex + 1} / ${pool.length}`;
+      document.getElementById("rdFocusChar").textContent = k.char;
+      document.getElementById("rdFocusLevel").textContent = k.isKana ? k.level : `JLPT ${k.level}`;
+      document.getElementById("rdFocusMeaning").textContent = k.isKana ? `Romaji: "${k.meaning}"` : k.meaning;
+      document.getElementById("rdFocusReading").textContent = k.isKana ? `${k.kun}` : `${k.on}${k.kun !== "—" ? " · " + k.kun : ""}`;
+
+      const rubyEl = document.getElementById("rdSentenceRuby");
+      rubyEl.innerHTML = data.rubyHtml;
+      rubyEl.classList.toggle("hide-furigana", !state.rdShowFurigana);
+
+      const kanaEl = document.getElementById("rdSentenceKana");
+      kanaEl.textContent = data.kana;
+      kanaEl.classList.toggle("hidden", !state.rdShowFurigana);
+
+      document.getElementById("rdMeaningEn").textContent = data.en;
+      document.getElementById("rdMeaningHi").textContent = data.hi;
+      document.getElementById("rdMeaningBox").classList.toggle("hidden", !state.rdShowMeaning);
+
+      // Update toggle buttons styling
+      const fBtn = document.getElementById("rdFuriganaBtn");
+      fBtn.textContent = state.rdShowFurigana ? "Furigana: ON" : "Furigana: OFF";
+      fBtn.className = state.rdShowFurigana
+        ? "px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 text-white shadow-xs transition"
+        : "px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 transition";
+
+      const mBtn = document.getElementById("rdMeaningBtn");
+      mBtn.textContent = state.rdShowMeaning ? "Meaning: ON" : "Meaning: OFF";
+      mBtn.className = state.rdShowMeaning
+        ? "px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-xs transition"
+        : "px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 transition";
+
+      // Audio buttons
+      document.getElementById("rdSpeakBtn").onclick = () => speakJapanese(data.jp, 0.9);
+      document.getElementById("rdSlowBtn").onclick = () => speakJapanese(data.jp, 0.65);
+      document.getElementById("rdOpenDetailBtn").onclick = () => openKanjiModal(k.char);
+
+      // Key Words row
+      const wWrap = document.getElementById("rdWordsWrap");
+      const wRow = document.getElementById("rdWordsRow");
+      if (data.words && data.words.length) {
+        wRow.innerHTML = "";
+        data.words.forEach(([w, rd, mn]) => {
+          const chip = document.createElement("button");
+          chip.type = "button";
+          chip.className = "inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-50 hover:bg-teal-50 border border-slate-200 hover:border-teal-300 text-xs transition";
+          chip.innerHTML = `<span class="kanji-font font-bold text-slate-900">${escapeHtml(w)}</span><span class="text-teal-600 font-semibold">(${escapeHtml(rd)})</span><span class="text-slate-500">· ${escapeHtml(mn)}</span><span>🔊</span>`;
+          chip.addEventListener("click", () => speakJapanese(w, 0.85));
+          wRow.appendChild(chip);
+        });
+        wWrap.classList.remove("hidden");
+      } else {
+        wWrap.classList.add("hidden");
+      }
+
+      // Quick-jump character strip
+      const strip = document.getElementById("rdCharStrip");
+      strip.innerHTML = "";
+      pool.forEach((item, idx) => {
+        const active = idx === state.rdIndex;
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = `kanji-font w-9 h-9 rounded-xl border text-base font-bold flex items-center justify-center transition ${
+          active
+            ? "bg-teal-600 border-teal-600 text-white shadow-xs scale-105"
+            : "bg-slate-50 border-slate-200 text-slate-700 hover:border-teal-300"
+        }`;
+        b.textContent = item.char;
+        b.addEventListener("click", () => {
+          state.rdIndex = idx;
+          renderReadingView();
+        });
+        strip.appendChild(b);
+      });
+    }
+
+    // =========================================================================
     // EVENT BINDINGS & INIT
     // =========================================================================
     window.addEventListener("DOMContentLoaded", () => {
@@ -6568,6 +7024,7 @@
           document.getElementById("studyPickerModal").classList.add("hidden");
           state.fcIndex = 0;
           state.wcIndex = 0;
+          state.rdIndex = 0;
           pushUserNav();
           state.activeMode = btn.dataset.pick;
           renderActiveView();
@@ -6581,6 +7038,7 @@
           state.activeSetChars = null;
           state.fcIndex = 0;
           state.wcIndex = 0;
+          state.rdIndex = 0;
           if (sec === "kanji") {
             state.activeKanjiLevel = null; // Always show N5-N1 folders when tapping Kanji tab
           } else if (sec === "Hiragana" || sec === "Katakana") {
@@ -6621,7 +7079,7 @@
         renderActiveView();
       });
 
-      ["svBackBtn", "fcBackBtn"].forEach(id => {
+      ["svBackBtn", "fcBackBtn", "rdBackBtn"].forEach(id => {
         document.getElementById(id).addEventListener("click", () => {
           state.activeMode = "browse";
           renderActiveView();
@@ -6779,6 +7237,30 @@
         sfx.flip();
         state.fcIndex = (state.fcIndex + 1) % deck.length;
         renderFlashcard();
+      });
+
+      // Learn by Reading controls (v4.7)
+      document.getElementById("rdFuriganaBtn").addEventListener("click", () => {
+        state.rdShowFurigana = !state.rdShowFurigana;
+        renderReadingView();
+      });
+      document.getElementById("rdMeaningBtn").addEventListener("click", () => {
+        state.rdShowMeaning = !state.rdShowMeaning;
+        renderReadingView();
+      });
+      document.getElementById("rdPrevBtn").addEventListener("click", () => {
+        const pool = getActiveStudyPool();
+        if (!pool.length) return;
+        state.rdIndex = (state.rdIndex - 1 + pool.length) % pool.length;
+        renderReadingView();
+      });
+      document.getElementById("rdNextBtn").addEventListener("click", () => {
+        const pool = getActiveStudyPool();
+        if (!pool.length) return;
+        sfx.flip();
+        bumpTodayActivity();
+        state.rdIndex = (state.rdIndex + 1) % pool.length;
+        renderReadingView();
       });
 
       // Quiz events
