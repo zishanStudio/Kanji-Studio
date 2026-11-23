@@ -1,8 +1,9 @@
-const CACHE_NAME = 'kanji-studio-v4';
-const RUNTIME_CACHE = 'kanji-studio-runtime-v4';
+const CACHE_NAME = 'kanji-studio-v4.0';
+const RUNTIME_CACHE = 'kanji-studio-runtime-v4.0';
 const CORE_ASSETS = [
   './',
   './index.html',
+  './strokes-data.js',
   './manifest.json',
   './icon.svg',
   './icon-192.png',
@@ -43,8 +44,9 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache-First for KanjiVG stroke SVGs, Google Fonts, and Tailwind CDN (instant & offline-ready!)
+  // Cache-First for offline strokes-data.js, KanjiVG SVGs, Google Fonts, and Tailwind CDN (0s instant load!)
   if (
+    url.includes('strokes-data.js') ||
     url.includes('cdn.jsdelivr.net/gh/KanjiVG') ||
     url.includes('fonts.googleapis.com') ||
     url.includes('fonts.gstatic.com') ||
@@ -54,14 +56,17 @@ self.addEventListener('fetch', (event) => {
       caches.open(RUNTIME_CACHE).then((cache) =>
         cache.match(req).then((cached) => {
           if (cached) return cached;
-          return fetch(req)
-            .then((res) => {
-              if (res && (res.status === 200 || res.type === 'opaque')) {
-                cache.put(req, res.clone()).catch(() => {});
-              }
-              return res;
-            })
-            .catch(() => cached);
+          return caches.match(req).then((coreCached) => {
+            if (coreCached) return coreCached;
+            return fetch(req)
+              .then((res) => {
+                if (res && (res.status === 200 || res.type === 'opaque')) {
+                  cache.put(req, res.clone()).catch(() => {});
+                }
+                return res;
+              })
+              .catch(() => cached || coreCached);
+          });
         })
       )
     );

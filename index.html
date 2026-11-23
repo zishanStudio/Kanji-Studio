@@ -92,6 +92,7 @@
     html.dark .bg-rose-50 { background-color: rgba(244, 63, 94, 0.14) !important; }
     html.dark #modalTraceChar { color: rgba(148, 163, 184, 0.22) !important; }
   </style>
+  <script src="strokes-data.js" defer></script>
 </head>
 <body class="min-h-screen flex flex-col">
 
@@ -1094,7 +1095,7 @@
   </main>
 
   <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6">
-    Kanji Studio (<span class="kanji-font">漢字学習</span>) · <span class="font-semibold text-indigo-500">v3.9</span> · Created by <span class="font-semibold text-slate-700">Zishan</span>
+    Kanji Studio (<span class="kanji-font">漢字学習</span>) · <span class="font-semibold text-indigo-500">v4.0</span> · Created by <span class="font-semibold text-slate-700">Zishan</span>
   </footer>
 
   <!-- Bottom Navigation Bar (Home | Hiragana | Katakana | Kanji) -->
@@ -4147,9 +4148,56 @@
     // =========================================================================
     const strokeCache = {};
     const SAMPLE_N = 24;
+    let _measureSvg = null;
+
+    function parseStrokePathStrings(pathStrings) {
+      const svgNS = "http://www.w3.org/2000/svg";
+      if (!_measureSvg) {
+        _measureSvg = document.createElementNS(svgNS, "svg");
+        _measureSvg.setAttribute("viewBox", "0 0 109 109");
+        _measureSvg.style.position = "absolute";
+        _measureSvg.style.width = "0";
+        _measureSvg.style.height = "0";
+        _measureSvg.style.opacity = "0";
+        _measureSvg.style.pointerEvents = "none";
+        document.body.appendChild(_measureSvg);
+      }
+
+      const strokes = [];
+      for (let idx = 0; idx < pathStrings.length; idx++) {
+        const d = pathStrings[idx];
+        if (!d) continue;
+        const el = document.createElementNS(svgNS, "path");
+        el.setAttribute("d", d);
+        _measureSvg.appendChild(el);
+        try {
+          const len = el.getTotalLength();
+          const pts = [];
+          for (let i = 0; i < SAMPLE_N; i++) {
+            const pt = el.getPointAtLength((i / (SAMPLE_N - 1)) * len);
+            pts.push({ x: pt.x, y: pt.y });
+          }
+          strokes.push({ d, points: pts, length: len });
+        } finally {
+          _measureSvg.removeChild(el);
+        }
+      }
+      return strokes;
+    }
 
     async function fetchKanjiStrokes(char) {
       if (strokeCache[char]) return strokeCache[char];
+
+      // v4.0: 0ms Built-in Offline KanjiVG Strokes (strokes-data.js)
+      if (window.KANJI_STROKES && Array.isArray(window.KANJI_STROKES[char]) && window.KANJI_STROKES[char].length) {
+        const strokes = parseStrokePathStrings(window.KANJI_STROKES[char]);
+        if (strokes.length) {
+          strokeCache[char] = strokes;
+          return strokes;
+        }
+      }
+
+      // Fallback: Online KanjiVG CDN (only if strokes-data.js is not uploaded yet)
       const hex = char.codePointAt(0).toString(16).padStart(5, "0");
       const url = `https://cdn.jsdelivr.net/gh/KanjiVG/kanjivg@master/kanji/${hex}.svg`;
       const res = await fetch(url);
@@ -4159,36 +4207,13 @@
       let pathEls = doc.querySelectorAll('g[id^="kvg:StrokePaths_"] path');
       if (!pathEls.length) pathEls = doc.querySelectorAll("path");
 
-      const svgNS = "http://www.w3.org/2000/svg";
-      const tempSvg = document.createElementNS(svgNS, "svg");
-      tempSvg.setAttribute("viewBox", "0 0 109 109");
-      tempSvg.style.position = "absolute";
-      tempSvg.style.width = "0";
-      tempSvg.style.height = "0";
-      tempSvg.style.opacity = "0";
-      tempSvg.style.pointerEvents = "none";
-      document.body.appendChild(tempSvg);
+      const pathStrings = [];
+      pathEls.forEach(p => {
+        const d = p.getAttribute("d");
+        if (d) pathStrings.push(d);
+      });
 
-      const strokes = [];
-      try {
-        pathEls.forEach(p => {
-          const d = p.getAttribute("d");
-          if (!d) return;
-          const el = document.createElementNS(svgNS, "path");
-          el.setAttribute("d", d);
-          tempSvg.appendChild(el);
-          const len = el.getTotalLength();
-          const pts = [];
-          for (let i = 0; i < SAMPLE_N; i++) {
-            const pt = el.getPointAtLength((i / (SAMPLE_N - 1)) * len);
-            pts.push({ x: pt.x, y: pt.y });
-          }
-          strokes.push({ d, points: pts, length: len });
-        });
-      } finally {
-        document.body.removeChild(tempSvg);
-      }
-
+      const strokes = parseStrokePathStrings(pathStrings);
       strokeCache[char] = strokes;
       return strokes;
     }
