@@ -1,5 +1,5 @@
-const CACHE_NAME = 'kanji-studio-v4.0';
-const RUNTIME_CACHE = 'kanji-studio-runtime-v4.0';
+const CACHE_NAME = 'kanji-studio-v4.1';
+const RUNTIME_CACHE = 'kanji-studio-runtime-v4.1';
 const CORE_ASSETS = [
   './',
   './index.html',
