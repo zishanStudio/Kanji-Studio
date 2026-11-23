@@ -140,6 +140,68 @@
     html.dark .hover\:bg-slate-100:hover { background-color: #32323c !important; }
     html.dark #modalTraceChar { color: rgba(148, 163, 184, 0.22) !important; }
     html.dark #wcTargetChar { color: rgba(129, 140, 248, 0.28) !important; }
+    /* Built-in 10-Theme Chrome System (v4.3: Top Header, Bottom Nav, Footer) */
+    :root {
+      --ks-chrome-bg: rgba(255, 255, 255, 0.95);
+      --ks-chrome-border: #e2e8f0;
+      --ks-chrome-text: #0f172a;
+      --ks-chrome-muted: #64748b;
+      --ks-chrome-accent: #4f46e5;
+      --ks-chrome-accent-fg: #ffffff;
+      --ks-chrome-nav-active-bg: #eef2ff;
+      --ks-chrome-nav-active-text: #4338ca;
+      --ks-chrome-btn-border: #e2e8f0;
+      --ks-chrome-btn-hover: rgba(148, 163, 184, 0.14);
+      --ks-chrome-progress-track: #e2e8f0;
+    }
+    html[data-theme] #appHeader {
+      background-color: var(--ks-chrome-bg) !important;
+      border-color: var(--ks-chrome-border) !important;
+    }
+    html[data-theme] #appHeader h1 { color: var(--ks-chrome-text) !important; }
+    html[data-theme] #appHeader h1 span { color: var(--ks-chrome-accent) !important; }
+    html[data-theme] #appHeader p { color: var(--ks-chrome-muted) !important; }
+    html[data-theme] #appHeader p span { color: var(--ks-chrome-accent) !important; }
+    html[data-theme] #appHeader .ks-header-logo {
+      background-color: var(--ks-chrome-accent) !important;
+      color: var(--ks-chrome-accent-fg) !important;
+    }
+    html[data-theme] #appHeader #leftDrawerOpenBtn,
+    html[data-theme] #appHeader #headerMenuBtn {
+      border-color: var(--ks-chrome-btn-border) !important;
+      color: var(--ks-chrome-text) !important;
+    }
+    html[data-theme] #appHeader #leftDrawerOpenBtn:hover,
+    html[data-theme] #appHeader #headerMenuBtn:hover {
+      background-color: var(--ks-chrome-btn-hover) !important;
+    }
+    html[data-theme] #appHeader #installAppBtn {
+      background-color: var(--ks-chrome-accent) !important;
+      color: var(--ks-chrome-accent-fg) !important;
+    }
+    html[data-theme] #appHeader .ks-header-mastered { color: var(--ks-chrome-muted) !important; }
+    html[data-theme] #appHeader .ks-header-track { background-color: var(--ks-chrome-progress-track) !important; }
+    html[data-theme] #bottomNav {
+      background-color: var(--ks-chrome-bg) !important;
+      border-color: var(--ks-chrome-border) !important;
+    }
+    html[data-theme] #bottomNav .bnav-btn {
+      color: var(--ks-chrome-muted) !important;
+    }
+    html[data-theme] #bottomNav .bnav-btn:hover {
+      background-color: var(--ks-chrome-btn-hover) !important;
+    }
+    html[data-theme] #bottomNav .bnav-btn.bnav-active {
+      background-color: var(--ks-chrome-nav-active-bg) !important;
+      color: var(--ks-chrome-nav-active-text) !important;
+    }
+    html[data-theme] #appFooter {
+      background-color: var(--ks-chrome-bg) !important;
+      border-color: var(--ks-chrome-border) !important;
+      color: var(--ks-chrome-muted) !important;
+    }
+    html[data-theme] #appFooter .ks-footer-ver { color: var(--ks-chrome-accent) !important; }
+    html[data-theme] #appFooter .ks-footer-author { color: var(--ks-chrome-text) !important; }
   </style>
   <script src="strokes-data.js" defer></script>
 </head>
@@ -169,7 +231,7 @@
         <button id="leftDrawerOpenBtn" class="w-9 h-9 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 flex items-center justify-center transition font-bold text-lg shrink-0" title="Open Menu" aria-label="Open Menu">
           ☰
         </button>
-        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center kanji-font font-bold text-lg sm:text-xl shadow-sm shrink-0">
+        <div class="ks-header-logo w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center kanji-font font-bold text-lg sm:text-xl shadow-sm shrink-0">
           漢
         </div>
         <div class="min-w-0 flex-1">
@@ -181,10 +243,10 @@
       <!-- Overall Progress Pill -->
       <div class="flex items-center gap-2 sm:gap-3 shrink-0">
         <div class="hidden sm:flex flex-col items-end">
-          <div class="text-xs font-medium text-slate-600">
+          <div class="ks-header-mastered text-xs font-medium text-slate-600">
             Mastered: <span id="globalMasteredCount" class="font-bold text-emerald-600">0</span> / <span id="globalTotalCount">2137</span>
           </div>
-          <div class="w-36 h-1.5 bg-slate-200 rounded-full overflow-hidden mt-1">
+          <div class="ks-header-track w-36 h-1.5 bg-slate-200 rounded-full overflow-hidden mt-1">
             <div id="globalProgressBar" class="h-full bg-emerald-500 transition-all duration-300" style="width: 0%"></div>
           </div>
         </div>
@@ -316,10 +378,38 @@
               <span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-sm shrink-0">🔍</span>
               <span class="text-xs font-bold text-slate-700">Search Kanji &amp; Kana</span>
             </button>
+            <button data-drawer-action="settings" class="drawer-item w-full flex items-center gap-3 px-2.5 py-2 rounded-xl hover:bg-slate-50 text-left transition">
+              <span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-sm shrink-0">⚙️</span>
+              <div class="min-w-0 flex-1">
+                <div class="text-xs font-bold text-slate-700">Settings</div>
+                <div id="drawerThemeSub" class="text-[10px] text-slate-400">Theme: Indigo</div>
+              </div>
+              <span class="text-slate-400 text-xs">›</span>
+            </button>
           </div>
         </div>
       </div>
     </aside>
+  </div>
+
+  <!-- Settings & 10 Built-in Themes Modal (v4.3) -->
+  <div id="settingsModal" class="hidden fixed inset-0 z-[65] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl w-full max-w-md max-h-[86vh] flex flex-col overflow-hidden">
+      <div class="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <h3 class="text-base font-extrabold text-slate-900">⚙️ Settings</h3>
+          <p class="text-[11px] text-slate-500">10 Built-in Themes · Header, Bottom Nav &amp; Footer</p>
+        </div>
+        <button id="settingsCloseBtn" class="w-8 h-8 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 flex items-center justify-center text-sm font-bold" aria-label="Close settings">✕</button>
+      </div>
+      <div class="p-4 overflow-y-auto space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Choose App Theme</span>
+          <span id="settingsActiveThemeBadge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700">Indigo</span>
+        </div>
+        <div id="settingsThemesGrid" class="grid grid-cols-2 gap-2.5"></div>
+      </div>
+    </div>
   </div>
 
   <!-- Radical Detail Modal -->
@@ -1144,7 +1234,7 @@
   </main>
 
   <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6">
-    Kanji Studio (<span class="kanji-font">漢字学習</span>) · <span class="font-semibold text-indigo-500">v4.2</span> · Created by <span class="font-semibold text-slate-700">Zishan</span>
+    Kanji Studio (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v4.3</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan</span>
   </footer>
 
   <!-- Bottom Navigation Bar (Home | Hiragana | Katakana | Kanji) -->
@@ -3844,6 +3934,7 @@
       statusFilter: "all",
       searchQuery: "",
       darkMode: false,
+      theme: "indigo",
       soundEnabled: true,
       unlockAll: false,
       isDesigner: false,
@@ -3888,6 +3979,7 @@
         if (saved) {
           const parsed = JSON.parse(saved);
           if (typeof parsed.darkMode === "boolean") state.darkMode = parsed.darkMode;
+          if (typeof parsed.theme === "string" && parsed.theme) state.theme = parsed.theme;
           if (typeof parsed.soundEnabled === "boolean") state.soundEnabled = parsed.soundEnabled;
           if (typeof parsed.unlockAll === "boolean") state.unlockAll = parsed.unlockAll;
           if (typeof parsed.isDesigner === "boolean") state.isDesigner = parsed.isDesigner;
@@ -3926,6 +4018,7 @@
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({
           darkMode: state.darkMode,
+          theme: state.theme,
           soundEnabled: state.soundEnabled,
           unlockAll: state.unlockAll,
           isDesigner: state.isDesigner,
@@ -3949,8 +4042,50 @@
       }
     }
 
+    const APP_THEMES = [
+      { id: "indigo", name: "Indigo", jp: "藍 · Classic", isDark: false, swatch: "#4f46e5", bg: "rgba(255, 255, 255, 0.95)", solidBg: "#ffffff", border: "#e2e8f0", text: "#0f172a", muted: "#64748b", accent: "#4f46e5", accentFg: "#ffffff", navBg: "#eef2ff", navText: "#4338ca", track: "#e2e8f0" },
+      { id: "slate-dark", name: "Slate Dark", jp: "墨 · Deep Slate", isDark: true, swatch: "#334155", bg: "rgba(15, 23, 42, 0.96)", solidBg: "#0f172a", border: "#334155", text: "#f8fafc", muted: "#94a3b8", accent: "#818cf8", accentFg: "#0f172a", navBg: "rgba(129, 140, 248, 0.22)", navText: "#c7d2fe", track: "#334155" },
+      { id: "amoled", name: "AMOLED Black", jp: "漆黒 · Pure Black", isDark: true, swatch: "#000000", bg: "rgba(0, 0, 0, 0.98)", solidBg: "#000000", border: "#262626", text: "#ffffff", muted: "#a3a3a3", accent: "#2dd4bf", accentFg: "#042f2e", navBg: "rgba(45, 212, 191, 0.18)", navText: "#5eead4", track: "#262626" },
+      { id: "sakura", name: "Sakura Pink", jp: "桜 · Blossom", isDark: false, swatch: "#ec4899", bg: "rgba(255, 241, 246, 0.96)", solidBg: "#fff1f6", border: "#fbcfe8", text: "#500724", muted: "#9d4b72", accent: "#db2777", accentFg: "#ffffff", navBg: "#fce7f3", navText: "#be185d", track: "#fbcfe8" },
+      { id: "matcha", name: "Matcha Green", jp: "抹茶 · Kyoto Tea", isDark: false, swatch: "#16a34a", bg: "rgba(240, 253, 244, 0.96)", solidBg: "#f0fdf4", border: "#bbf7d0", text: "#052e16", muted: "#4d7c5f", accent: "#15803d", accentFg: "#ffffff", navBg: "#dcfce7", navText: "#166534", track: "#bbf7d0" },
+      { id: "ocean", name: "Ocean Teal", jp: "海 · Pacific", isDark: false, swatch: "#0d9488", bg: "rgba(240, 253, 250, 0.96)", solidBg: "#f0fdfa", border: "#99f6e4", text: "#042f2e", muted: "#3f7a76", accent: "#0f766e", accentFg: "#ffffff", navBg: "#ccfbf1", navText: "#115e59", track: "#99f6e4" },
+      { id: "kyoto", name: "Kyoto Red", jp: "朱 · Torii", isDark: false, swatch: "#dc2626", bg: "rgba(254, 242, 242, 0.96)", solidBg: "#fef2f2", border: "#fecaca", text: "#450a0a", muted: "#9b4a4a", accent: "#b91c1c", accentFg: "#ffffff", navBg: "#fee2e2", navText: "#991b1b", track: "#fecaca" },
+      { id: "purple", name: "Royal Purple", jp: "藤 · Wisteria", isDark: false, swatch: "#7c3aed", bg: "rgba(245, 243, 255, 0.96)", solidBg: "#f5f3ff", border: "#ddd6fe", text: "#2e1065", muted: "#6d5699", accent: "#6d28d9", accentFg: "#ffffff", navBg: "#ede9fe", navText: "#5b21b6", track: "#ddd6fe" },
+      { id: "sunset", name: "Sunset Amber", jp: "夕焼 · Gold", isDark: false, swatch: "#d97706", bg: "rgba(255, 251, 235, 0.96)", solidBg: "#fffbeb", border: "#fde68a", text: "#451a03", muted: "#8c6230", accent: "#b45309", accentFg: "#ffffff", navBg: "#fef3c7", navText: "#92400e", track: "#fde68a" },
+      { id: "sepia", name: "Paper Sepia", jp: "和紙 · Washi", isDark: false, swatch: "#92400e", bg: "rgba(248, 242, 230, 0.97)", solidBg: "#f8f2e6", border: "#e0d2b8", text: "#2c2115", muted: "#78654e", accent: "#854d0e", accentFg: "#ffffff", navBg: "#efe3cc", navText: "#713f12", track: "#e0d2b8" }
+    ];
+
+    function getThemeObj(id) {
+      return APP_THEMES.find(t => t.id === id) || APP_THEMES[0];
+    }
+
     function applyTheme() {
-      document.documentElement.classList.toggle("dark", state.darkMode);
+      const root = document.documentElement;
+      const t = getThemeObj(state.theme);
+      root.classList.toggle("dark", state.darkMode);
+      root.dataset.theme = t.id;
+
+      // If darkMode is manually toggled ON while a light theme is selected, keep dark chrome with theme accent
+      const useDarkChrome = state.darkMode && !t.isDark;
+      root.style.setProperty("--ks-chrome-bg", useDarkChrome ? "rgba(24, 24, 27, 0.96)" : t.bg);
+      root.style.setProperty("--ks-chrome-border", useDarkChrome ? "#2e2e35" : t.border);
+      root.style.setProperty("--ks-chrome-text", useDarkChrome ? "#f8fafc" : t.text);
+      root.style.setProperty("--ks-chrome-muted", useDarkChrome ? "#a1a1aa" : t.muted);
+      root.style.setProperty("--ks-chrome-accent", t.accent);
+      root.style.setProperty("--ks-chrome-accent-fg", t.accentFg);
+      root.style.setProperty("--ks-chrome-nav-active-bg", useDarkChrome ? "rgba(255,255,255,0.10)" : t.navBg);
+      root.style.setProperty("--ks-chrome-nav-active-text", useDarkChrome ? "#f8fafc" : t.navText);
+      root.style.setProperty("--ks-chrome-btn-border", useDarkChrome ? "#33333d" : t.border);
+      root.style.setProperty("--ks-chrome-progress-track", useDarkChrome ? "#35353f" : t.track);
+
+      const metaTheme = document.querySelector('meta[name="theme-color"]');
+      if (metaTheme) metaTheme.setAttribute("content", useDarkChrome ? "#18181b" : t.swatch);
+
+      const drawerSub = document.getElementById("drawerThemeSub");
+      if (drawerSub) drawerSub.textContent = `Theme: ${t.name}`;
+      const badge = document.getElementById("settingsActiveThemeBadge");
+      if (badge) badge.textContent = t.name;
+
       const lbl = document.getElementById("themeToggleLabel");
       if (lbl) lbl.textContent = state.darkMode ? "☀️ Light Mode" : "🌙 Dark Mode";
       const sLbl = document.getElementById("soundToggleLabel");
@@ -4970,7 +5105,7 @@
       document.querySelectorAll(".bnav-btn").forEach(btn => {
         const active = btn.dataset.section === state.activeTab;
         btn.className = `bnav-btn flex flex-col items-center justify-center py-1.5 rounded-xl text-xs font-bold transition ${
-          active ? "bg-indigo-50 text-indigo-700" : "text-slate-500 hover:bg-slate-50"
+          active ? "bnav-active bg-indigo-50 text-indigo-700" : "text-slate-500 hover:bg-slate-50"
         }`;
       });
     }
@@ -6780,6 +6915,7 @@
           function buildCloudPayload() {
             return {
               darkMode: state.darkMode,
+          theme: state.theme,
               soundEnabled: state.soundEnabled,
               progress: state.progress || {},
               favorites: state.favorites || {},
@@ -6904,6 +7040,10 @@
                 }
               }
             }
+            if (typeof cloud.theme === "string" && cloud.theme && cloud.theme !== state.theme && (cloud.updatedAt || 0) > (state.updatedAt || 0)) {
+              state.theme = cloud.theme;
+              changed = true;
+            }
             if (!state.lastStudiedSet && cloud.lastStudiedSet) {
               state.lastStudiedSet = cloud.lastStudiedSet;
               changed = true;
@@ -6994,6 +7134,7 @@
                 const restored = mergeCloudIntoLocal(data.cloudState);
                 if (restored) {
                   saveState(true);
+                  applyTheme();
                   renderGlobalProgress();
                   renderActiveView();
                   showToast("☁️ Progress restored from Cloud!");
@@ -7211,7 +7352,7 @@
         }
 
         // 1. Close open utility modals first
-        const modalIds = ["addToSetModal", "pickKanjiForSetModal", "radicalDetailModal", "wcPausedModal", "quizPausedModal", "unlockAllModal", "resetConfirmModal", "usersAdminModal", "searchOverlayModal", "studyPickerModal"];
+        const modalIds = ["settingsModal", "addToSetModal", "pickKanjiForSetModal", "radicalDetailModal", "wcPausedModal", "quizPausedModal", "unlockAllModal", "resetConfirmModal", "usersAdminModal", "searchOverlayModal", "studyPickerModal"];
         for (const mid of modalIds) {
           const el = document.getElementById(mid);
           if (el && !el.classList.contains("hidden")) {
@@ -7341,12 +7482,69 @@
         if (e.target.id === "leftDrawerBackdrop") closeLeftDrawer();
       });
 
+      const settingsModal = document.getElementById("settingsModal");
+      function renderSettingsThemes() {
+        const grid = document.getElementById("settingsThemesGrid");
+        if (!grid) return;
+        grid.innerHTML = "";
+        APP_THEMES.forEach(t => {
+          const active = state.theme === t.id;
+          const card = document.createElement("button");
+          card.type = "button";
+          card.className = `relative text-left p-3 rounded-2xl border-2 transition flex flex-col gap-2 ${
+            active
+              ? "border-indigo-500 bg-indigo-50/50 shadow-sm"
+              : "border-slate-200 bg-slate-50 hover:border-slate-300"
+          }`;
+          card.innerHTML = `
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5">
+                <span class="w-5 h-5 rounded-full border border-black/15 shadow-xs" style="background:${t.solidBg}"></span>
+                <span class="w-5 h-5 rounded-full border border-black/15 shadow-xs -ml-2.5" style="background:${t.swatch}"></span>
+              </div>
+              ${active ? '<span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-indigo-600 text-white">✓</span>' : ''}
+            </div>
+            <div class="min-w-0">
+              <div class="text-xs font-extrabold text-slate-900 truncate">${t.name}</div>
+              <div class="text-[10px] text-slate-500 kanji-font truncate">${t.jp}</div>
+            </div>
+          `;
+          card.addEventListener("click", () => {
+            state.theme = t.id;
+            state.darkMode = !!t.isDark;
+            saveState();
+            applyTheme();
+            renderBottomNav();
+            renderSettingsThemes();
+            if (modalPad && typeof modalPad.redraw === "function") modalPad.redraw();
+            if (wcPad && typeof wcPad.redraw === "function") wcPad.redraw();
+            showToast(`Theme: ${t.name}`);
+          });
+          grid.appendChild(card);
+        });
+      }
+
+      function openSettingsModal() {
+        renderSettingsThemes();
+        pushUserNav();
+        settingsModal.classList.remove("hidden");
+      }
+
+      document.getElementById("settingsCloseBtn").addEventListener("click", () => settingsModal.classList.add("hidden"));
+      settingsModal.addEventListener("click", (e) => {
+        if (e.target.id === "settingsModal") settingsModal.classList.add("hidden");
+      });
+
       document.querySelectorAll("[data-drawer-action]").forEach(btn => {
         btn.addEventListener("click", () => {
           const act = btn.dataset.drawerAction;
           closeLeftDrawer();
           if (act === "search") {
             openOverlaySearch();
+            return;
+          }
+          if (act === "settings") {
+            openSettingsModal();
             return;
           }
           pushUserNav();
