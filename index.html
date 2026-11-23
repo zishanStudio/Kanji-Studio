@@ -262,6 +262,74 @@
     html[data-theme] #view-home .ks-home-kanji-icon {
       color: var(--ks-home-accent) !important;
     }
+    /* Hiragana & Katakana Folders Theme System (v4.5 — strictly scoped to Kana views) */
+    html[data-theme].ks-on-kana body {
+      background-color: var(--ks-home-page-bg) !important;
+      color: var(--ks-home-text) !important;
+    }
+    html[data-theme].ks-on-kana #view-browse #levelSummaryText {
+      color: var(--ks-home-text) !important;
+    }
+    html[data-theme].ks-on-kana #view-browse #browseResultCount {
+      color: var(--ks-home-muted) !important;
+    }
+    html[data-theme].ks-on-kana #view-browse #browseSearchIconBtn,
+    html[data-theme].ks-on-kana #view-setview #svBackBtn {
+      background-color: var(--ks-home-card-bg) !important;
+      border-color: var(--ks-home-card-border) !important;
+      color: var(--ks-home-text) !important;
+    }
+    html[data-theme].ks-on-kana #view-setview #svSetBadge {
+      background-color: var(--ks-home-soft-bg) !important;
+      color: var(--ks-home-soft-text) !important;
+    }
+    html[data-theme].ks-on-kana #view-browse .ks-set-card {
+      background-color: var(--ks-home-card-bg) !important;
+      border-color: var(--ks-home-card-border) !important;
+    }
+    html[data-theme].ks-on-kana #view-browse .ks-set-card:hover {
+      border-color: var(--ks-home-soft-border) !important;
+    }
+    html[data-theme].ks-on-kana #view-browse .ks-set-card-locked {
+      background-color: var(--ks-home-sub-bg) !important;
+      border-color: var(--ks-home-card-border) !important;
+    }
+    html[data-theme].ks-on-kana #view-browse .ks-set-tile {
+      background-color: var(--ks-home-soft-bg) !important;
+      border-color: var(--ks-home-soft-border) !important;
+      color: var(--ks-home-soft-text) !important;
+    }
+    html[data-theme].ks-on-kana #view-browse .ks-set-tile-locked {
+      background-color: var(--ks-home-card-bg) !important;
+      border-color: var(--ks-home-card-border) !important;
+      color: var(--ks-home-muted) !important;
+    }
+    html[data-theme].ks-on-kana #view-browse .ks-set-title {
+      color: var(--ks-home-text) !important;
+    }
+    html[data-theme].ks-on-kana #view-browse .ks-set-meta {
+      color: var(--ks-home-muted) !important;
+    }
+    html[data-theme].ks-on-kana #view-browse .ks-set-study-btn {
+      background-color: var(--ks-home-accent) !important;
+      color: var(--ks-home-accent-fg) !important;
+    }
+    html[data-theme].ks-on-kana #view-browse .ks-set-locked-btn {
+      background-color: var(--ks-home-card-border) !important;
+      color: var(--ks-home-muted) !important;
+    }
+    html[data-theme].ks-on-kana #view-browse .ks-map-card {
+      background-image: none !important;
+      background-color: var(--ks-home-card-bg) !important;
+      border-color: var(--ks-home-soft-border) !important;
+    }
+    html[data-theme].ks-on-kana #view-browse .ks-map-card-locked {
+      background-color: var(--ks-home-sub-bg) !important;
+      border-color: var(--ks-home-card-border) !important;
+    }
+    html[data-theme].ks-on-kana #view-browse .ks-map-label {
+      color: var(--ks-home-accent) !important;
+    }
   </style>
   <script src="strokes-data.js" defer></script>
 </head>
@@ -458,7 +526,7 @@
       <div class="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between">
         <div>
           <h3 class="text-base font-extrabold text-slate-900">⚙️ Settings</h3>
-          <p class="text-[11px] text-slate-500">10 Built-in Themes · Header, Home Cards &amp; Footer</p>
+          <p class="text-[11px] text-slate-500">10 Built-in Themes · Chrome, Home &amp; Kana Folders</p>
         </div>
         <button id="settingsCloseBtn" class="w-8 h-8 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 flex items-center justify-center text-sm font-bold" aria-label="Close settings">✕</button>
       </div>
@@ -1294,7 +1362,7 @@
   </main>
 
   <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6">
-    Kanji Studio (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v4.4</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan</span>
+    Kanji Studio (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v4.5</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan</span>
   </footer>
 
   <!-- Bottom Navigation Bar (Home | Hiragana | Katakana | Kanji) -->
@@ -5205,6 +5273,8 @@
 
       const isHome = state.activeTab === "home" && state.activeMode === "browse";
       document.documentElement.classList.toggle("ks-on-home", isHome);
+      const isKanaView = (state.activeTab === "Hiragana" || state.activeTab === "Katakana") && (state.activeMode === "browse" || state.activeMode === "setview");
+      document.documentElement.classList.toggle("ks-on-kana", isKanaView);
       const headerEl = document.getElementById("appHeader");
       const footerEl = document.getElementById("appFooter");
       const mainEl = document.getElementById("mainContent");
@@ -5607,20 +5677,20 @@
           const setCard = document.createElement("div");
           setCard.className = `rounded-2xl border px-3.5 py-3 shadow-sm flex items-center justify-between gap-3 transition ${
             setUnlocked
-              ? "bg-white border-slate-200 hover:border-indigo-300"
-              : "bg-slate-50 border-slate-200 opacity-75"
+              ? "ks-set-card bg-white border-slate-200 hover:border-indigo-300"
+              : "ks-set-card-locked bg-slate-50 border-slate-200 opacity-75"
           }`;
           setCard.innerHTML = `
             <div class="flex items-center gap-3.5 min-w-0 flex-1">
-              <div class="kanji-font w-12 h-12 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-2xl font-bold text-slate-900 shrink-0">
+              <div class="${setUnlocked ? "ks-set-tile" : "ks-set-tile-locked"} kanji-font w-12 h-12 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-2xl font-bold text-slate-900 shrink-0">
                 ${setUnlocked ? sampleChar : "🔒"}
               </div>
               <div class="min-w-0 flex-1">
                 <div class="flex items-center gap-1.5 flex-wrap">
-                  <h3 class="text-sm sm:text-base font-bold text-slate-900 truncate">${sc.title}</h3>
-                  <span class="text-xs text-slate-400 font-medium">· ${chunk.length} ${isKanaLvl ? "chars" : "kanji"}</span>
+                  <h3 class="ks-set-title text-sm sm:text-base font-bold text-slate-900 truncate">${sc.title}</h3>
+                  <span class="ks-set-meta text-xs text-slate-400 font-medium">· ${chunk.length} ${isKanaLvl ? "chars" : "kanji"}</span>
                 </div>
-                <div class="text-[11px] text-slate-500 mt-0.5">${metaLine}</div>
+                <div class="ks-set-meta text-[11px] text-slate-500 mt-0.5">${metaLine}</div>
               </div>
             </div>
             <div class="flex items-center gap-3 shrink-0">
@@ -5631,8 +5701,8 @@
               </div>
               <button class="set-study-btn px-3.5 py-2 rounded-xl text-xs font-bold tracking-wide shadow-sm transition ${
                 setUnlocked
-                  ? "bg-indigo-600 hover:bg-indigo-700 text-white"
-                  : "bg-slate-200 text-slate-500"
+                  ? "ks-set-study-btn bg-indigo-600 hover:bg-indigo-700 text-white"
+                  : "ks-set-locked-btn bg-slate-200 text-slate-500"
               }">
                 ${setUnlocked ? "STUDY" : "🔒 LOCKED"}
               </button>
@@ -5655,16 +5725,16 @@
 
         const mapCard = document.createElement("div");
         mapCard.className = mapLocked
-          ? "bg-slate-50 rounded-3xl border-2 border-slate-200 p-4 sm:p-5 shadow-sm opacity-80 space-y-2"
-          : "bg-gradient-to-br from-indigo-50/70 to-white rounded-3xl border-2 border-indigo-200 p-4 sm:p-5 shadow-sm space-y-3";
+          ? "ks-map-card-locked bg-slate-50 rounded-3xl border-2 border-slate-200 p-4 sm:p-5 shadow-sm opacity-80 space-y-2"
+          : "ks-map-card bg-gradient-to-br from-indigo-50/70 to-white rounded-3xl border-2 border-indigo-200 p-4 sm:p-5 shadow-sm space-y-3";
         mapCard.innerHTML = `
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <span class="text-[11px] font-bold uppercase tracking-wider ${mapLocked ? "text-slate-500" : "text-indigo-600"}">Master Review</span>
-              <h3 class="text-base font-bold text-slate-900">${mapLocked ? "🔒 " : ""}Full ${state.activeLevel} Map — All ${levelItems.length} ${isKanaLvl ? "Characters" : "Kanji"}</h3>
-              <p class="text-xs text-slate-500">${mapLocked ? `Complete all ${setChunks.length} sets to unlock the Full ${state.activeLevel} Map` : `${totalMastered} / ${levelItems.length} known across all sets`}</p>
+              <span class="text-[11px] font-bold uppercase tracking-wider ${mapLocked ? "ks-set-meta text-slate-500" : "ks-map-label text-indigo-600"}">Master Review</span>
+              <h3 class="ks-set-title text-base font-bold text-slate-900">${mapLocked ? "🔒 " : ""}Full ${state.activeLevel} Map — All ${levelItems.length} ${isKanaLvl ? "Characters" : "Kanji"}</h3>
+              <p class="ks-set-meta text-xs text-slate-500">${mapLocked ? `Complete all ${setChunks.length} sets to unlock the Full ${state.activeLevel} Map` : `${totalMastered} / ${levelItems.length} known across all sets`}</p>
             </div>
-            <button class="full-study-btn px-4 py-2.5 rounded-xl text-xs font-bold shadow-sm transition ${mapLocked ? "bg-slate-200 text-slate-500" : "bg-indigo-600 hover:bg-indigo-700 text-white"}">
+            <button class="full-study-btn px-4 py-2.5 rounded-xl text-xs font-bold shadow-sm transition ${mapLocked ? "ks-set-locked-btn bg-slate-200 text-slate-500" : "ks-set-study-btn bg-indigo-600 hover:bg-indigo-700 text-white"}">
               ${mapLocked ? "🔒 LOCKED" : `Study All ${levelItems.length}`}
             </button>
           </div>
