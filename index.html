@@ -330,6 +330,94 @@
     html[data-theme].ks-on-kana #view-browse .ks-map-label {
       color: var(--ks-home-accent) !important;
     }
+    /* Kanji N5-N1 Folders & Sets Theme System (v4.6 — strictly scoped to Kanji views) */
+    html[data-theme].ks-on-kanji body {
+      background-color: var(--ks-home-page-bg) !important;
+      color: var(--ks-home-text) !important;
+    }
+    html[data-theme].ks-on-kanji #view-kanji-folders h2,
+    html[data-theme].ks-on-kanji #view-browse #levelSummaryText {
+      color: var(--ks-home-text) !important;
+    }
+    html[data-theme].ks-on-kanji #view-kanji-folders > div:first-child p,
+    html[data-theme].ks-on-kanji #view-browse #browseResultCount {
+      color: var(--ks-home-muted) !important;
+    }
+    html[data-theme].ks-on-kanji #kanjiFolderSearchBtn,
+    html[data-theme].ks-on-kanji #browseBackFolderBtn,
+    html[data-theme].ks-on-kanji #browseSearchIconBtn,
+    html[data-theme].ks-on-kanji #view-setview #svBackBtn {
+      background-color: var(--ks-home-card-bg) !important;
+      border-color: var(--ks-home-card-border) !important;
+      color: var(--ks-home-text) !important;
+    }
+    html[data-theme].ks-on-kanji #view-setview #svSetBadge {
+      background-color: var(--ks-home-soft-bg) !important;
+      color: var(--ks-home-soft-text) !important;
+    }
+    html[data-theme].ks-on-kanji #view-kanji-folders .ks-kanji-folder,
+    html[data-theme].ks-on-kanji #view-browse .ks-set-card {
+      background-color: var(--ks-home-card-bg) !important;
+      border-color: var(--ks-home-card-border) !important;
+    }
+    html[data-theme].ks-on-kanji #view-kanji-folders .ks-kanji-folder:hover,
+    html[data-theme].ks-on-kanji #view-browse .ks-set-card:hover {
+      border-color: var(--ks-home-soft-border) !important;
+    }
+    html[data-theme].ks-on-kanji #view-kanji-folders .ks-kanji-folder-locked,
+    html[data-theme].ks-on-kanji #view-browse .ks-set-card-locked {
+      background-color: var(--ks-home-sub-bg) !important;
+      border-color: var(--ks-home-card-border) !important;
+    }
+    html[data-theme].ks-on-kanji #view-kanji-folders .ks-kanji-badge,
+    html[data-theme].ks-on-kanji #view-browse .ks-set-tile {
+      background-color: var(--ks-home-soft-bg) !important;
+      border-color: var(--ks-home-soft-border) !important;
+      color: var(--ks-home-soft-text) !important;
+    }
+    html[data-theme].ks-on-kanji #view-kanji-folders .ks-kanji-badge span {
+      color: var(--ks-home-soft-text) !important;
+    }
+    html[data-theme].ks-on-kanji #view-kanji-folders .ks-kanji-badge-locked,
+    html[data-theme].ks-on-kanji #view-browse .ks-set-tile-locked {
+      background-color: var(--ks-home-card-bg) !important;
+      border-color: var(--ks-home-card-border) !important;
+      color: var(--ks-home-muted) !important;
+    }
+    html[data-theme].ks-on-kanji #view-kanji-folders .ks-kanji-title,
+    html[data-theme].ks-on-kanji #view-browse .ks-set-title {
+      color: var(--ks-home-text) !important;
+    }
+    html[data-theme].ks-on-kanji #view-kanji-folders .ks-kanji-meta,
+    html[data-theme].ks-on-kanji #view-browse .ks-set-meta {
+      color: var(--ks-home-muted) !important;
+    }
+    html[data-theme].ks-on-kanji #view-kanji-folders .ks-kanji-track {
+      background-color: var(--ks-home-sub-bg) !important;
+    }
+    html[data-theme].ks-on-kanji #view-kanji-folders .ks-kanji-bar {
+      background-color: var(--ks-home-accent) !important;
+    }
+    html[data-theme].ks-on-kanji #view-browse .ks-set-study-btn {
+      background-color: var(--ks-home-accent) !important;
+      color: var(--ks-home-accent-fg) !important;
+    }
+    html[data-theme].ks-on-kanji #view-browse .ks-set-locked-btn {
+      background-color: var(--ks-home-card-border) !important;
+      color: var(--ks-home-muted) !important;
+    }
+    html[data-theme].ks-on-kanji #view-browse .ks-map-card {
+      background-image: none !important;
+      background-color: var(--ks-home-card-bg) !important;
+      border-color: var(--ks-home-soft-border) !important;
+    }
+    html[data-theme].ks-on-kanji #view-browse .ks-map-card-locked {
+      background-color: var(--ks-home-sub-bg) !important;
+      border-color: var(--ks-home-card-border) !important;
+    }
+    html[data-theme].ks-on-kanji #view-browse .ks-map-label {
+      color: var(--ks-home-accent) !important;
+    }
   </style>
   <script src="strokes-data.js" defer></script>
 </head>
@@ -526,7 +614,7 @@
       <div class="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between">
         <div>
           <h3 class="text-base font-extrabold text-slate-900">⚙️ Settings</h3>
-          <p class="text-[11px] text-slate-500">10 Built-in Themes · Chrome, Home &amp; Kana Folders</p>
+          <p class="text-[11px] text-slate-500">10 Built-in Themes · Chrome, Home, Kana &amp; Kanji N5–N1</p>
         </div>
         <button id="settingsCloseBtn" class="w-8 h-8 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 flex items-center justify-center text-sm font-bold" aria-label="Close settings">✕</button>
       </div>
@@ -1362,7 +1450,7 @@
   </main>
 
   <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6">
-    Kanji Studio (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v4.5</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan</span>
+    Kanji Studio (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v4.6</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan</span>
   </footer>
 
   <!-- Bottom Navigation Bar (Home | Hiragana | Katakana | Kanji) -->
@@ -5275,6 +5363,8 @@
       document.documentElement.classList.toggle("ks-on-home", isHome);
       const isKanaView = (state.activeTab === "Hiragana" || state.activeTab === "Katakana") && (state.activeMode === "browse" || state.activeMode === "setview");
       document.documentElement.classList.toggle("ks-on-kana", isKanaView);
+      const isKanjiView = state.activeTab === "kanji" && (state.activeMode === "browse" || state.activeMode === "setview");
+      document.documentElement.classList.toggle("ks-on-kanji", isKanjiView);
       const headerEl = document.getElementById("appHeader");
       const footerEl = document.getElementById("appFooter");
       const mainEl = document.getElementById("mainContent");
@@ -5403,22 +5493,22 @@
         const folder = document.createElement("button");
         folder.className = `w-full text-left rounded-3xl border p-4 shadow-sm transition flex items-center justify-between gap-3 ${
           unlocked
-            ? "bg-white border-slate-200 hover:border-indigo-300"
-            : "bg-slate-50 border-slate-200 opacity-80 hover:border-pink-300"
+            ? "ks-kanji-folder bg-white border-slate-200 hover:border-indigo-300"
+            : "ks-kanji-folder-locked bg-slate-50 border-slate-200 opacity-80 hover:border-pink-300"
         }`;
         folder.innerHTML = `
           <div class="flex items-center gap-3.5 min-w-0 flex-1">
-            <div class="w-14 h-14 rounded-2xl ${unlocked ? "bg-indigo-50 border-indigo-200" : "bg-slate-200/70 border-slate-300"} border flex flex-col items-center justify-center shrink-0">
+            <div class="${unlocked ? "ks-kanji-badge bg-indigo-50 border-indigo-200" : "ks-kanji-badge-locked bg-slate-200/70 border-slate-300"} w-14 h-14 rounded-2xl border flex flex-col items-center justify-center shrink-0">
               <span class="text-base font-extrabold ${unlocked ? "text-indigo-700" : "text-slate-500"}">${unlocked ? lvl : "🔒"}</span>
               <span class="text-[10px] font-semibold ${unlocked ? "text-indigo-500" : "text-slate-500"}">${unlocked ? pct + "%" : lvl}</span>
             </div>
             <div class="min-w-0 flex-1">
               <div class="flex items-center gap-2 flex-wrap">
-                <h3 class="text-base font-bold text-slate-900">${LEVEL_META[lvl].sub}</h3>
-                <span class="text-xs text-slate-400 font-medium">· ${list.length} Kanji · ${totalSets} Sets</span>
+                <h3 class="ks-kanji-title text-base font-bold text-slate-900">${LEVEL_META[lvl].sub}</h3>
+                <span class="ks-kanji-meta text-xs text-slate-400 font-medium">· ${list.length} Kanji · ${totalSets} Sets</span>
               </div>
               ${unlocked
-                ? `<div class="w-full max-w-xs h-1.5 bg-slate-100 rounded-full overflow-hidden mt-2"><div class="h-full bg-pink-500 transition-all duration-300" style="width: ${pct}%"></div></div>`
+                ? `<div class="ks-kanji-track w-full max-w-xs h-1.5 bg-slate-100 rounded-full overflow-hidden mt-2"><div class="ks-kanji-bar h-full bg-pink-500 transition-all duration-300" style="width: ${pct}%"></div></div>`
                 : `<div class="text-[11px] font-semibold text-pink-600 mt-1">Reach Pink ★ (Seen) on all ${prevLvl} Kanji to unlock</div>`
               }
             </div>
@@ -5429,7 +5519,7 @@
               ${seenCount ? `<span class="text-pink-500">${seenCount} ★</span>` : ""}
               ${knownCount ? `<span class="text-red-500">${knownCount} ★</span>` : ""}
             </div>
-            <span class="text-slate-400 text-lg font-bold">${unlocked ? "›" : "🔒"}</span>
+            <span class="ks-kanji-meta text-slate-400 text-lg font-bold">${unlocked ? "›" : "🔒"}</span>
           </div>
         `;
         folder.addEventListener("click", () => {
