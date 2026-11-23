@@ -202,6 +202,66 @@
     }
     html[data-theme] #appFooter .ks-footer-ver { color: var(--ks-chrome-accent) !important; }
     html[data-theme] #appFooter .ks-footer-author { color: var(--ks-chrome-text) !important; }
+    /* Home Middle Cards Theme System (v4.4 — strictly scoped to Home page) */
+    html[data-theme].ks-on-home body {
+      background-color: var(--ks-home-page-bg) !important;
+      color: var(--ks-home-text) !important;
+    }
+    html[data-theme] #view-home .ks-home-card {
+      background-color: var(--ks-home-card-bg) !important;
+      border-color: var(--ks-home-card-border) !important;
+      color: var(--ks-home-text) !important;
+    }
+    html[data-theme] #view-home .ks-home-card:hover {
+      border-color: var(--ks-home-soft-border) !important;
+    }
+    html[data-theme] #view-home .ks-home-title {
+      color: var(--ks-home-text) !important;
+    }
+    html[data-theme] #view-home .ks-home-muted {
+      color: var(--ks-home-muted) !important;
+    }
+    html[data-theme] #view-home .ks-home-label {
+      color: var(--ks-home-accent) !important;
+    }
+    html[data-theme] #view-home #homeSearchInput {
+      background-color: var(--ks-home-sub-bg) !important;
+      border-color: var(--ks-home-card-border) !important;
+      color: var(--ks-home-text) !important;
+    }
+    html[data-theme] #view-home #homeSearchInput::placeholder {
+      color: var(--ks-home-muted) !important;
+    }
+    html[data-theme] #view-home #wotdChar,
+    html[data-theme] #view-home #wotdOpenBtn,
+    html[data-theme] #view-home .ks-home-soft-btn {
+      background-color: var(--ks-home-soft-bg) !important;
+      border-color: var(--ks-home-soft-border) !important;
+      color: var(--ks-home-soft-text) !important;
+    }
+    html[data-theme] #view-home #resumeStudyBtn {
+      background-color: var(--ks-home-accent) !important;
+      color: var(--ks-home-accent-fg) !important;
+    }
+    html[data-theme] #view-home #exportBackupBtn {
+      background-color: var(--ks-home-sub-bg) !important;
+      border-color: var(--ks-home-card-border) !important;
+      color: var(--ks-home-text) !important;
+    }
+    html[data-theme] #view-home #weeklyDaysGrid > div {
+      background-color: var(--ks-home-sub-bg) !important;
+      border-color: var(--ks-home-card-border) !important;
+    }
+    html[data-theme] #view-home #weeklyDaysGrid > div.ks-today-box {
+      background-color: var(--ks-home-soft-bg) !important;
+      border-color: var(--ks-home-soft-border) !important;
+    }
+    html[data-theme] #view-home #weeklyDaysGrid > div.ks-today-box .ks-today-lbl {
+      color: var(--ks-home-soft-text) !important;
+    }
+    html[data-theme] #view-home .ks-home-kanji-icon {
+      color: var(--ks-home-accent) !important;
+    }
   </style>
   <script src="strokes-data.js" defer></script>
 </head>
@@ -398,7 +458,7 @@
       <div class="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between">
         <div>
           <h3 class="text-base font-extrabold text-slate-900">⚙️ Settings</h3>
-          <p class="text-[11px] text-slate-500">10 Built-in Themes · Header, Bottom Nav &amp; Footer</p>
+          <p class="text-[11px] text-slate-500">10 Built-in Themes · Header, Home Cards &amp; Footer</p>
         </div>
         <button id="settingsCloseBtn" class="w-8 h-8 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 flex items-center justify-center text-sm font-bold" aria-label="Close settings">✕</button>
       </div>
@@ -499,7 +559,7 @@
     <!-- TAB 1: HOME PAGE -->
     <section id="view-home" class="space-y-4">
       <!-- Home Search Bar -->
-      <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+      <div class="ks-home-card bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
         <div class="relative">
           <input id="homeSearchInput" type="text" placeholder="Search any Kanji, Hiragana, Katakana, meaning, or reading..." class="w-full pl-9 pr-8 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
           <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
@@ -510,34 +570,34 @@
 
       <!-- Today's Kanji & Continue Studying -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-        <div class="bg-white rounded-3xl border border-slate-200 p-4 shadow-sm flex items-center justify-between gap-3">
+        <div class="ks-home-card bg-white rounded-3xl border border-slate-200 p-4 shadow-sm flex items-center justify-between gap-3">
           <div class="flex items-center gap-3.5 min-w-0">
             <div id="wotdChar" class="kanji-font w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-3xl font-bold text-indigo-700 shrink-0">日</div>
             <div class="min-w-0">
-              <div class="text-[11px] font-bold uppercase tracking-wider text-indigo-600">Today's Kanji</div>
-              <div id="wotdMeaning" class="text-sm font-bold text-slate-900 truncate mt-0.5">day, sun, Japan</div>
-              <div id="wotdReading" class="text-xs text-slate-500 truncate">nichi, hi</div>
+              <div class="ks-home-label text-[11px] font-bold uppercase tracking-wider text-indigo-600">Today's Kanji</div>
+              <div id="wotdMeaning" class="ks-home-title text-sm font-bold text-slate-900 truncate mt-0.5">day, sun, Japan</div>
+              <div id="wotdReading" class="ks-home-muted text-xs text-slate-500 truncate">nichi, hi</div>
             </div>
           </div>
           <button id="wotdOpenBtn" class="px-3.5 py-2 rounded-xl bg-indigo-50 border border-indigo-200 text-xs font-bold text-indigo-700 hover:bg-indigo-100 transition shrink-0">Practice</button>
         </div>
 
-        <div class="bg-white rounded-3xl border border-slate-200 p-4 shadow-sm flex items-center justify-between gap-3">
+        <div class="ks-home-card bg-white rounded-3xl border border-slate-200 p-4 shadow-sm flex items-center justify-between gap-3">
           <div class="min-w-0">
-            <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-600">Continue Studying</div>
-            <div id="resumeLabel" class="text-sm font-bold text-slate-900 truncate mt-0.5">N5 · Set 1 (1–10)</div>
-            <div class="text-xs text-slate-500 mt-0.5">Pick up right where you left off</div>
+            <div class="ks-home-label text-[11px] font-bold uppercase tracking-wider text-emerald-600">Continue Studying</div>
+            <div id="resumeLabel" class="ks-home-title text-sm font-bold text-slate-900 truncate mt-0.5">N5 · Set 1 (1–10)</div>
+            <div class="ks-home-muted text-xs text-slate-500 mt-0.5">Pick up right where you left off</div>
           </div>
           <button id="resumeStudyBtn" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm transition shrink-0">Resume</button>
         </div>
       </div>
 
       <!-- Weekly Study Activity & 1-Tap Review -->
-      <div class="bg-white rounded-3xl border border-slate-200 p-4 shadow-sm space-y-3">
+      <div class="ks-home-card bg-white rounded-3xl border border-slate-200 p-4 shadow-sm space-y-3">
         <div class="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <div class="text-xs font-bold uppercase tracking-wider text-indigo-600">Weekly Study Activity</div>
-            <div class="text-xs text-slate-500 mt-0.5" id="reviewSubText">Characters marked Learning appear here for quick review</div>
+            <div class="ks-home-label text-xs font-bold uppercase tracking-wider text-indigo-600">Weekly Study Activity</div>
+            <div class="ks-home-muted text-xs text-slate-500 mt-0.5" id="reviewSubText">Characters marked Learning appear here for quick review</div>
           </div>
           <div class="flex items-center gap-2">
             <button id="reviewHardBtn" class="hidden px-3 py-2 rounded-xl bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold shadow-sm transition">
@@ -553,30 +613,30 @@
 
       <!-- Quick Section Shortcuts -->
       <div class="grid grid-cols-3 gap-2.5" id="homeQuickCards">
-        <button data-jump="Hiragana" class="home-jump-btn bg-white rounded-2xl border border-slate-200 p-3.5 text-left hover:border-rose-300 shadow-sm transition">
+        <button data-jump="Hiragana" class="ks-home-card home-jump-btn bg-white rounded-2xl border border-slate-200 p-3.5 text-left hover:border-rose-300 shadow-sm transition">
           <div class="kanji-font text-2xl font-bold text-rose-600">あ</div>
-          <div class="text-xs font-bold text-slate-900 mt-1">Hiragana</div>
-          <div id="homeHiraCount" class="text-[11px] text-slate-500">0 / 71</div>
+          <div class="ks-home-title text-xs font-bold text-slate-900 mt-1">Hiragana</div>
+          <div id="homeHiraCount" class="ks-home-muted text-[11px] text-slate-500">0 / 71</div>
         </button>
-        <button data-jump="Katakana" class="home-jump-btn bg-white rounded-2xl border border-slate-200 p-3.5 text-left hover:border-teal-300 shadow-sm transition">
+        <button data-jump="Katakana" class="ks-home-card home-jump-btn bg-white rounded-2xl border border-slate-200 p-3.5 text-left hover:border-teal-300 shadow-sm transition">
           <div class="kanji-font text-2xl font-bold text-teal-600">ア</div>
-          <div class="text-xs font-bold text-slate-900 mt-1">Katakana</div>
-          <div id="homeKataCount" class="text-[11px] text-slate-500">0 / 71</div>
+          <div class="ks-home-title text-xs font-bold text-slate-900 mt-1">Katakana</div>
+          <div id="homeKataCount" class="ks-home-muted text-[11px] text-slate-500">0 / 71</div>
         </button>
-        <button data-jump="kanji" class="home-jump-btn bg-white rounded-2xl border border-slate-200 p-3.5 text-left hover:border-indigo-300 shadow-sm transition">
-          <div class="kanji-font text-2xl font-bold text-indigo-600">漢</div>
-          <div class="text-xs font-bold text-slate-900 mt-1">Kanji N5–N1</div>
-          <div id="homeKanjiCount" class="text-[11px] text-slate-500">0 / 2137</div>
+        <button data-jump="kanji" class="ks-home-card home-jump-btn bg-white rounded-2xl border border-slate-200 p-3.5 text-left hover:border-indigo-300 shadow-sm transition">
+          <div class="ks-home-kanji-icon kanji-font text-2xl font-bold text-indigo-600">漢</div>
+          <div class="ks-home-title text-xs font-bold text-slate-900 mt-1">Kanji N5–N1</div>
+          <div id="homeKanjiCount" class="ks-home-muted text-[11px] text-slate-500">0 / 2137</div>
         </button>
       </div>
 
       <!-- Backup Info Card -->
-      <div class="bg-white rounded-3xl border border-slate-200 p-4 shadow-sm flex flex-wrap items-center justify-between gap-3">
+      <div class="ks-home-card bg-white rounded-3xl border border-slate-200 p-4 shadow-sm flex flex-wrap items-center justify-between gap-3">
         <div>
-          <div class="flex items-center gap-2 flex-wrap"><h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">Backup &amp; Cloud Sync</h4><span id="cloudSyncBadge" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">☁️ Connecting…</span></div>
-          <p class="text-xs text-slate-600 mt-0.5">
-            Total Study Time: <span id="totalStudyTimeText" class="font-bold text-slate-900">0s</span>
-            &nbsp;·&nbsp; Last Backup: <span id="lastBackupText" class="font-semibold text-slate-700">Never</span>
+          <div class="flex items-center gap-2 flex-wrap"><h4 class="ks-home-label text-xs font-bold uppercase tracking-wider text-slate-500">Backup &amp; Cloud Sync</h4><span id="cloudSyncBadge" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">☁️ Connecting…</span></div>
+          <p class="ks-home-muted text-xs text-slate-600 mt-0.5">
+            Total Study Time: <span id="totalStudyTimeText" class="ks-home-title font-bold text-slate-900">0s</span>
+            &nbsp;·&nbsp; Last Backup: <span id="lastBackupText" class="ks-home-title font-semibold text-slate-700">Never</span>
           </p>
         </div>
         <div class="flex items-center flex-wrap gap-2">
@@ -584,7 +644,7 @@
           <button id="exportBackupBtn" class="px-3.5 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 transition">
             Export Backup
           </button>
-          <label class="px-3.5 py-2 rounded-xl bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 text-xs font-semibold text-indigo-700 cursor-pointer transition">
+          <label class="ks-home-soft-btn px-3.5 py-2 rounded-xl bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 text-xs font-semibold text-indigo-700 cursor-pointer transition">
             Import Backup
             <input type="file" id="importBackupInput" accept="application/json,.json" class="hidden" />
           </label>
@@ -1234,7 +1294,7 @@
   </main>
 
   <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6">
-    Kanji Studio (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v4.3</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan</span>
+    Kanji Studio (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v4.4</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan</span>
   </footer>
 
   <!-- Bottom Navigation Bar (Home | Hiragana | Katakana | Kanji) -->
@@ -4043,16 +4103,16 @@
     }
 
     const APP_THEMES = [
-      { id: "indigo", name: "Indigo", jp: "藍 · Classic", isDark: false, swatch: "#4f46e5", bg: "rgba(255, 255, 255, 0.95)", solidBg: "#ffffff", border: "#e2e8f0", text: "#0f172a", muted: "#64748b", accent: "#4f46e5", accentFg: "#ffffff", navBg: "#eef2ff", navText: "#4338ca", track: "#e2e8f0" },
-      { id: "slate-dark", name: "Slate Dark", jp: "墨 · Deep Slate", isDark: true, swatch: "#334155", bg: "rgba(15, 23, 42, 0.96)", solidBg: "#0f172a", border: "#334155", text: "#f8fafc", muted: "#94a3b8", accent: "#818cf8", accentFg: "#0f172a", navBg: "rgba(129, 140, 248, 0.22)", navText: "#c7d2fe", track: "#334155" },
-      { id: "amoled", name: "AMOLED Black", jp: "漆黒 · Pure Black", isDark: true, swatch: "#000000", bg: "rgba(0, 0, 0, 0.98)", solidBg: "#000000", border: "#262626", text: "#ffffff", muted: "#a3a3a3", accent: "#2dd4bf", accentFg: "#042f2e", navBg: "rgba(45, 212, 191, 0.18)", navText: "#5eead4", track: "#262626" },
-      { id: "sakura", name: "Sakura Pink", jp: "桜 · Blossom", isDark: false, swatch: "#ec4899", bg: "rgba(255, 241, 246, 0.96)", solidBg: "#fff1f6", border: "#fbcfe8", text: "#500724", muted: "#9d4b72", accent: "#db2777", accentFg: "#ffffff", navBg: "#fce7f3", navText: "#be185d", track: "#fbcfe8" },
-      { id: "matcha", name: "Matcha Green", jp: "抹茶 · Kyoto Tea", isDark: false, swatch: "#16a34a", bg: "rgba(240, 253, 244, 0.96)", solidBg: "#f0fdf4", border: "#bbf7d0", text: "#052e16", muted: "#4d7c5f", accent: "#15803d", accentFg: "#ffffff", navBg: "#dcfce7", navText: "#166534", track: "#bbf7d0" },
-      { id: "ocean", name: "Ocean Teal", jp: "海 · Pacific", isDark: false, swatch: "#0d9488", bg: "rgba(240, 253, 250, 0.96)", solidBg: "#f0fdfa", border: "#99f6e4", text: "#042f2e", muted: "#3f7a76", accent: "#0f766e", accentFg: "#ffffff", navBg: "#ccfbf1", navText: "#115e59", track: "#99f6e4" },
-      { id: "kyoto", name: "Kyoto Red", jp: "朱 · Torii", isDark: false, swatch: "#dc2626", bg: "rgba(254, 242, 242, 0.96)", solidBg: "#fef2f2", border: "#fecaca", text: "#450a0a", muted: "#9b4a4a", accent: "#b91c1c", accentFg: "#ffffff", navBg: "#fee2e2", navText: "#991b1b", track: "#fecaca" },
-      { id: "purple", name: "Royal Purple", jp: "藤 · Wisteria", isDark: false, swatch: "#7c3aed", bg: "rgba(245, 243, 255, 0.96)", solidBg: "#f5f3ff", border: "#ddd6fe", text: "#2e1065", muted: "#6d5699", accent: "#6d28d9", accentFg: "#ffffff", navBg: "#ede9fe", navText: "#5b21b6", track: "#ddd6fe" },
-      { id: "sunset", name: "Sunset Amber", jp: "夕焼 · Gold", isDark: false, swatch: "#d97706", bg: "rgba(255, 251, 235, 0.96)", solidBg: "#fffbeb", border: "#fde68a", text: "#451a03", muted: "#8c6230", accent: "#b45309", accentFg: "#ffffff", navBg: "#fef3c7", navText: "#92400e", track: "#fde68a" },
-      { id: "sepia", name: "Paper Sepia", jp: "和紙 · Washi", isDark: false, swatch: "#92400e", bg: "rgba(248, 242, 230, 0.97)", solidBg: "#f8f2e6", border: "#e0d2b8", text: "#2c2115", muted: "#78654e", accent: "#854d0e", accentFg: "#ffffff", navBg: "#efe3cc", navText: "#713f12", track: "#e0d2b8" }
+      { id: "indigo", name: "Indigo", jp: "藍 · Classic", isDark: false, swatch: "#4f46e5", bg: "rgba(255, 255, 255, 0.95)", solidBg: "#ffffff", border: "#e2e8f0", text: "#0f172a", muted: "#64748b", accent: "#4f46e5", accentFg: "#ffffff", navBg: "#eef2ff", navText: "#4338ca", track: "#e2e8f0", pageBg: "#f8fafc", cardBg: "#ffffff", subBg: "#f8fafc", softBorder: "#c7d2fe" },
+      { id: "slate-dark", name: "Slate Dark", jp: "墨 · Deep Slate", isDark: true, swatch: "#334155", bg: "rgba(15, 23, 42, 0.96)", solidBg: "#0f172a", border: "#334155", text: "#f8fafc", muted: "#94a3b8", accent: "#818cf8", accentFg: "#0f172a", navBg: "rgba(129, 140, 248, 0.22)", navText: "#c7d2fe", track: "#334155", pageBg: "#0b1120", cardBg: "#1e293b", subBg: "#0f172a", softBorder: "rgba(129, 140, 248, 0.42)" },
+      { id: "amoled", name: "AMOLED Black", jp: "漆黒 · Pure Black", isDark: true, swatch: "#000000", bg: "rgba(0, 0, 0, 0.98)", solidBg: "#000000", border: "#262626", text: "#ffffff", muted: "#a3a3a3", accent: "#2dd4bf", accentFg: "#042f2e", navBg: "rgba(45, 212, 191, 0.18)", navText: "#5eead4", track: "#262626", pageBg: "#000000", cardBg: "#0d0d10", subBg: "#17171c", softBorder: "rgba(45, 212, 191, 0.40)" },
+      { id: "sakura", name: "Sakura Pink", jp: "桜 · Blossom", isDark: false, swatch: "#ec4899", bg: "rgba(255, 241, 246, 0.96)", solidBg: "#fff1f6", border: "#fbcfe8", text: "#500724", muted: "#9d4b72", accent: "#db2777", accentFg: "#ffffff", navBg: "#fce7f3", navText: "#be185d", track: "#fbcfe8", pageBg: "#fdf2f8", cardBg: "#ffffff", subBg: "#fff5f9", softBorder: "#f9a8d4" },
+      { id: "matcha", name: "Matcha Green", jp: "抹茶 · Kyoto Tea", isDark: false, swatch: "#16a34a", bg: "rgba(240, 253, 244, 0.96)", solidBg: "#f0fdf4", border: "#bbf7d0", text: "#052e16", muted: "#4d7c5f", accent: "#15803d", accentFg: "#ffffff", navBg: "#dcfce7", navText: "#166534", track: "#bbf7d0", pageBg: "#f2fbf5", cardBg: "#ffffff", subBg: "#f0fdf4", softBorder: "#86efac" },
+      { id: "ocean", name: "Ocean Teal", jp: "海 · Pacific", isDark: false, swatch: "#0d9488", bg: "rgba(240, 253, 250, 0.96)", solidBg: "#f0fdfa", border: "#99f6e4", text: "#042f2e", muted: "#3f7a76", accent: "#0f766e", accentFg: "#ffffff", navBg: "#ccfbf1", navText: "#115e59", track: "#99f6e4", pageBg: "#f0fdfa", cardBg: "#ffffff", subBg: "#ecfeff", softBorder: "#5eead4" },
+      { id: "kyoto", name: "Kyoto Red", jp: "朱 · Torii", isDark: false, swatch: "#dc2626", bg: "rgba(254, 242, 242, 0.96)", solidBg: "#fef2f2", border: "#fecaca", text: "#450a0a", muted: "#9b4a4a", accent: "#b91c1c", accentFg: "#ffffff", navBg: "#fee2e2", navText: "#991b1b", track: "#fecaca", pageBg: "#fef2f2", cardBg: "#ffffff", subBg: "#fff5f5", softBorder: "#fca5a5" },
+      { id: "purple", name: "Royal Purple", jp: "藤 · Wisteria", isDark: false, swatch: "#7c3aed", bg: "rgba(245, 243, 255, 0.96)", solidBg: "#f5f3ff", border: "#ddd6fe", text: "#2e1065", muted: "#6d5699", accent: "#6d28d9", accentFg: "#ffffff", navBg: "#ede9fe", navText: "#5b21b6", track: "#ddd6fe", pageBg: "#f5f3ff", cardBg: "#ffffff", subBg: "#faf5ff", softBorder: "#c4b5fd" },
+      { id: "sunset", name: "Sunset Amber", jp: "夕焼 · Gold", isDark: false, swatch: "#d97706", bg: "rgba(255, 251, 235, 0.96)", solidBg: "#fffbeb", border: "#fde68a", text: "#451a03", muted: "#8c6230", accent: "#b45309", accentFg: "#ffffff", navBg: "#fef3c7", navText: "#92400e", track: "#fde68a", pageBg: "#fffbeb", cardBg: "#ffffff", subBg: "#fef9e7", softBorder: "#fcd34d" },
+      { id: "sepia", name: "Paper Sepia", jp: "和紙 · Washi", isDark: false, swatch: "#92400e", bg: "rgba(248, 242, 230, 0.97)", solidBg: "#f8f2e6", border: "#e0d2b8", text: "#2c2115", muted: "#78654e", accent: "#854d0e", accentFg: "#ffffff", navBg: "#efe3cc", navText: "#713f12", track: "#e0d2b8", pageBg: "#f4ecdc", cardBg: "#fbf7ee", subBg: "#f3ead8", softBorder: "#d6c3a1" }
     ];
 
     function getThemeObj(id) {
@@ -4077,6 +4137,19 @@
       root.style.setProperty("--ks-chrome-nav-active-text", useDarkChrome ? "#f8fafc" : t.navText);
       root.style.setProperty("--ks-chrome-btn-border", useDarkChrome ? "#33333d" : t.border);
       root.style.setProperty("--ks-chrome-progress-track", useDarkChrome ? "#35353f" : t.track);
+
+      // v4.4: Home Page Middle Cards Theme Variables
+      root.style.setProperty("--ks-home-page-bg", useDarkChrome ? "#121214" : t.pageBg);
+      root.style.setProperty("--ks-home-card-bg", useDarkChrome ? "#1c1c20" : t.cardBg);
+      root.style.setProperty("--ks-home-sub-bg", useDarkChrome ? "#242429" : t.subBg);
+      root.style.setProperty("--ks-home-card-border", useDarkChrome ? "#2e2e35" : t.border);
+      root.style.setProperty("--ks-home-text", useDarkChrome ? "#f8fafc" : t.text);
+      root.style.setProperty("--ks-home-muted", useDarkChrome ? "#a1a1aa" : t.muted);
+      root.style.setProperty("--ks-home-accent", t.accent);
+      root.style.setProperty("--ks-home-accent-fg", t.accentFg);
+      root.style.setProperty("--ks-home-soft-bg", useDarkChrome ? "rgba(255,255,255,0.08)" : t.navBg);
+      root.style.setProperty("--ks-home-soft-border", useDarkChrome ? "#3f3f46" : t.softBorder);
+      root.style.setProperty("--ks-home-soft-text", useDarkChrome ? "#f8fafc" : t.navText);
 
       const metaTheme = document.querySelector('meta[name="theme-color"]');
       if (metaTheme) metaTheme.setAttribute("content", useDarkChrome ? "#18181b" : t.swatch);
@@ -5131,6 +5204,7 @@
       });
 
       const isHome = state.activeTab === "home" && state.activeMode === "browse";
+      document.documentElement.classList.toggle("ks-on-home", isHome);
       const headerEl = document.getElementById("appHeader");
       const footerEl = document.getElementById("appFooter");
       const mainEl = document.getElementById("mainContent");
@@ -5422,9 +5496,9 @@
           const cnt = state.dailyActivity[key] || 0;
           const isToday = i === 0;
           const box = document.createElement("div");
-          box.className = `rounded-xl py-1.5 px-1 border ${isToday ? "border-indigo-300 bg-indigo-50" : "border-slate-200 bg-slate-50"}`;
+          box.className = `rounded-xl py-1.5 px-1 border ${isToday ? "ks-today-box border-indigo-300 bg-indigo-50" : "border-slate-200 bg-slate-50"}`;
           box.innerHTML = `
-            <div class="text-[10px] font-semibold ${isToday ? "text-indigo-600" : "text-slate-500"}">${dayNames[d.getDay()]}</div>
+            <div class="text-[10px] font-semibold ${isToday ? "ks-today-lbl text-indigo-600" : "ks-home-muted text-slate-500"}">${dayNames[d.getDay()]}</div>
             <div class="text-xs font-bold mt-0.5 ${cnt > 0 ? "text-emerald-600" : "text-slate-400"}">${cnt > 0 ? cnt : "–"}</div>
           `;
           grid.appendChild(box);
