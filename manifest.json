@@ -1,36 +1,24 @@
 {
-  "id": "/",
-  "name": "Kanji Studio — 漢字学習",
-  "short_name": "Kanji Studio",
-  "description": "Learn Japanese Kanji (JLPT N5–N1), Hiragana, Katakana, and 214 Kangxi Radicals with flashcards, quizzes, and stroke-order writing practice.",
-  "start_url": "./",
-  "scope": "./",
+  "name": "Nihonify — 漢字学習 (JLPT N5–N1)",
+  "short_name": "Nihonify",
+  "description": "Learn Japanese Hiragana, Katakana, 214 Radicals, and 2,137 JLPT N5–N1 Kanji with offline stroke writing, flashcards, quizzes, and reading practice.",
+  "start_url": "./index.html",
   "display": "standalone",
-  "orientation": "portrait-primary",
-  "background_color": "#f8fafc",
-  "theme_color": "#4f46e5",
-  "lang": "en",
-  "categories": [
-    "education"
-  ],
+  "background_color": "#3730a3",
+  "theme_color": "#4338ca",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "icon.svg",

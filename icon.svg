@@ -1,4 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#4f46e5"/>
-  <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="#ffffff" font-size="280" font-family="sans-serif" font-weight="bold">漢</text>
+  <defs>
+    <linearGradient id="ng" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4347a8"/>
+      <stop offset="55%" stop-color="#3730a3"/>
+      <stop offset="100%" stop-color="#2e1065"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#ng)"/>
+  <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="#ffffff" font-size="270" font-family="'Noto Serif JP','Hiragino Mincho ProN','Yu Mincho',serif" font-weight="400">漢</text>
+  <circle cx="418" cy="418" r="18" fill="#f9a8d4"/>
 </svg>
