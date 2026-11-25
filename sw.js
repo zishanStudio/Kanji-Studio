@@ -1,5 +1,5 @@
-const CACHE_NAME = 'kanji-studio-v4.9';
-const RUNTIME_CACHE = 'kanji-studio-runtime-v4.9';
+const CACHE_NAME = 'nihonify-v4.9.2';
+const RUNTIME_CACHE = 'nihonify-runtime-v4.9.2';
 const CORE_ASSETS = [
   './',
   './index.html',
