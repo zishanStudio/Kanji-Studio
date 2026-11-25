@@ -648,6 +648,18 @@
       </div>
 
       <div class="flex-1 overflow-y-auto p-3 space-y-4">
+        <div class="space-y-1.5 pb-3 border-b border-slate-100">
+          <div class="px-2 mb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Beginner Guide</div>
+          <button data-drawer-action="aboutjp" class="drawer-item w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl bg-rose-50/70 hover:bg-rose-50 border border-rose-200/70 text-left transition">
+            <span class="w-9 h-9 rounded-xl bg-rose-500 text-white flex items-center justify-center text-base shrink-0 shadow-xs">🇯🇵</span>
+            <div class="min-w-0 flex-1">
+              <div class="text-sm font-bold text-slate-900">About Japanese</div>
+              <div class="text-[11px] text-slate-500">Kana, Kanji, Radicals &amp; Study Path</div>
+            </div>
+            <span class="text-rose-400 text-sm font-bold">›</span>
+          </button>
+        </div>
+
         <div>
           <div class="px-2 mb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">Study Sections</div>
           <div class="space-y-1">
@@ -726,14 +738,6 @@
               <span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-sm shrink-0">🔍</span>
               <span class="text-xs font-bold text-slate-700">Search Kanji &amp; Kana</span>
             </button>
-            <button data-drawer-action="aboutjp" class="drawer-item w-full flex items-center gap-3 px-2.5 py-2 rounded-xl hover:bg-slate-50 text-left transition">
-              <span class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-sm shrink-0">🇯🇵</span>
-              <div class="min-w-0 flex-1">
-                <div class="text-xs font-bold text-slate-700">About Japanese</div>
-                <div class="text-[10px] text-slate-400">Beginner Guide · Kana, Kanji &amp; Radicals</div>
-              </div>
-              <span class="text-slate-400 text-xs">›</span>
-            </button>
             <button data-drawer-action="settings" class="drawer-item w-full flex items-center gap-3 px-2.5 py-2 rounded-xl hover:bg-slate-50 text-left transition">
               <span class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-sm shrink-0">⚙️</span>
               <div class="min-w-0 flex-1">
@@ -748,48 +752,7 @@
     </aside>
   </div>
 
-  <!-- Settings & Per-Section 10 Built-in Themes Modal (v4.8) -->
-  <div id="settingsModal" class="hidden fixed inset-0 z-[65] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl border border-slate-200 shadow-2xl w-full max-w-md max-h-[88vh] flex flex-col overflow-hidden">
-      <div class="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between">
-        <div>
-          <h3 class="text-base font-extrabold text-slate-900">⚙️ Settings</h3>
-          <p class="text-[11px] text-slate-500">Customize each section with 10 Built-in Themes</p>
-        </div>
-        <button id="settingsCloseBtn" class="w-8 h-8 rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-100 flex items-center justify-center text-sm font-bold" aria-label="Close settings">✕</button>
-      </div>
-      <div class="p-4 overflow-y-auto space-y-3.5">
-        <!-- Section Target Picker (v4.8) -->
-        <div class="space-y-1.5">
-          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Apply Theme To</div>
-          <div id="settingsTargetTabs" class="flex flex-wrap gap-1.5">
-            <button type="button" data-theme-target="all" class="st-target-btn px-2.5 py-1.5 rounded-xl text-xs font-bold border transition">✨ All</button>
-            <button type="button" data-theme-target="chrome" class="st-target-btn px-2.5 py-1.5 rounded-xl text-xs font-bold border transition">🧭 Top &amp; Bottom</button>
-            <button type="button" data-theme-target="home" class="st-target-btn px-2.5 py-1.5 rounded-xl text-xs font-bold border transition">🏠 Home</button>
-            <button type="button" data-theme-target="kana" class="st-target-btn px-2.5 py-1.5 rounded-xl text-xs font-bold border transition">あ Hira / Kata</button>
-            <button type="button" data-theme-target="kanji" class="st-target-btn px-2.5 py-1.5 rounded-xl text-xs font-bold border transition">漢 Kanji</button>
-            <button type="button" data-theme-target="study" class="st-target-btn px-2.5 py-1.5 rounded-xl text-xs font-bold border transition">📖 Study &amp; Drawer</button>
-          </div>
-        </div>
 
-        <div class="flex items-center justify-between gap-2 pt-1 border-t border-slate-100">
-          <span id="settingsTargetLabel" class="text-xs font-bold uppercase tracking-wider text-slate-500">All Sections</span>
-          <span id="settingsActiveThemeBadge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700">Indigo</span>
-        </div>
-
-        <div id="settingsThemesGrid" class="grid grid-cols-2 gap-2.5"></div>
-
-        <!-- Writing Challenge Mascot Toggle (v4.9.1) -->
-        <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-          <div class="min-w-0">
-            <div class="text-xs font-extrabold text-slate-900">Writing Challenge Mascot</div>
-            <div class="text-[11px] text-slate-500">Show Anime Chibi Girl or Classic Emoji</div>
-          </div>
-          <button id="settingsMascotToggleBtn" type="button" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-pink-500 text-white shadow-xs shrink-0 transition">🌸 Anime Girl</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Radical Detail Modal -->
   <div id="radicalDetailModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
@@ -997,6 +960,102 @@
       <div id="kanjiFoldersList" class="space-y-3"></div>
     </section>
 
+
+    <!-- SETTINGS MAIN FOLDER VIEW (v4.9.3) -->
+    <section id="view-settings" class="hidden max-w-2xl mx-auto space-y-4 pb-6">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <button id="settingsDrawerBtn" class="w-9 h-9 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 shadow-sm flex items-center justify-center font-bold text-base shrink-0" title="Menu">☰</button>
+          <div class="min-w-0">
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 truncate">Settings <span class="kanji-font text-indigo-600">設定</span></h2>
+            <p class="text-xs text-slate-500">Customize appearance &amp; study companions</p>
+          </div>
+        </div>
+        <button id="settingsBackHomeBtn" class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition shrink-0">← Home</button>
+      </div>
+
+      <div class="space-y-3">
+        <!-- Folder 1: Themes -->
+        <button id="settingsOpenThemesBtn" type="button" class="w-full text-left bg-white hover:border-indigo-300 rounded-3xl border border-slate-200 p-4 shadow-sm flex items-center justify-between gap-3.5 transition">
+          <div class="flex items-center gap-3.5 min-w-0 flex-1">
+            <div id="settingsThemesFolderIcon" class="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-2xl shrink-0">🎨</div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h3 class="text-sm sm:text-base font-extrabold text-slate-900">Themes</h3>
+                <span id="settingsFolderThemeBadge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700">Indigo</span>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">10 Built-in Color Styles · Apply to All or Any Section</p>
+            </div>
+          </div>
+          <span class="text-slate-400 text-xl font-bold shrink-0">›</span>
+        </button>
+
+        <!-- Folder 2: Anime Mascot -->
+        <button id="settingsOpenMascotBtn" type="button" class="w-full text-left bg-white hover:border-pink-300 rounded-3xl border border-slate-200 p-4 shadow-sm flex items-center justify-between gap-3.5 transition">
+          <div class="flex items-center gap-3.5 min-w-0 flex-1">
+            <div class="w-14 h-14 rounded-2xl bg-pink-50 border border-pink-200 flex items-center justify-center text-2xl shrink-0 overflow-hidden">
+              <img id="settingsMascotFolderThumb" src="" alt="Mascot" class="w-12 h-12 object-contain" />
+            </div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h3 class="text-sm sm:text-base font-extrabold text-slate-900">Anime Mascot</h3>
+                <span id="settingsFolderMascotBadge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-pink-50 text-pink-700">🌸 Anime Girl</span>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">Choose your Writing Challenge reaction companion</p>
+            </div>
+          </div>
+          <span class="text-slate-400 text-xl font-bold shrink-0">›</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- SETTINGS SUB-FOLDER 1: THEMES (Line-by-Line Rich Color Preview) -->
+    <section id="view-settings-themes" class="hidden max-w-2xl mx-auto space-y-4 pb-6">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <button id="settingsThemesBackBtn" class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition shrink-0">← Settings</button>
+          <div class="min-w-0">
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 truncate">🎨 Themes</h2>
+            <p class="text-xs text-slate-500">Pick a section and tap any color style</p>
+          </div>
+        </div>
+        <span id="settingsActiveThemeBadge" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 shrink-0">Indigo</span>
+      </div>
+
+      <!-- Section Target Picker -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-3.5 shadow-sm space-y-2">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Apply Theme To</span>
+          <span id="settingsTargetLabel" class="text-[11px] font-bold text-indigo-600">All Sections</span>
+        </div>
+        <div id="settingsTargetTabs" class="flex flex-wrap gap-1.5">
+          <button type="button" data-theme-target="all" class="st-target-btn px-2.5 py-1.5 rounded-xl text-xs font-bold border transition">✨ All</button>
+          <button type="button" data-theme-target="chrome" class="st-target-btn px-2.5 py-1.5 rounded-xl text-xs font-bold border transition">🧭 Top &amp; Bottom</button>
+          <button type="button" data-theme-target="home" class="st-target-btn px-2.5 py-1.5 rounded-xl text-xs font-bold border transition">🏠 Home</button>
+          <button type="button" data-theme-target="kana" class="st-target-btn px-2.5 py-1.5 rounded-xl text-xs font-bold border transition">あ Hira / Kata</button>
+          <button type="button" data-theme-target="kanji" class="st-target-btn px-2.5 py-1.5 rounded-xl text-xs font-bold border transition">漢 Kanji</button>
+          <button type="button" data-theme-target="study" class="st-target-btn px-2.5 py-1.5 rounded-xl text-xs font-bold border transition">📖 Study &amp; Drawer</button>
+        </div>
+      </div>
+
+      <!-- Line-by-Line Rich Color Preview List -->
+      <div id="settingsThemesGrid" class="flex flex-col gap-2.5"></div>
+    </section>
+
+    <!-- SETTINGS SUB-FOLDER 2: ANIME MASCOT -->
+    <section id="view-settings-mascot" class="hidden max-w-2xl mx-auto space-y-4 pb-6">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <button id="settingsMascotBackBtn" class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 shadow-sm transition shrink-0">← Settings</button>
+          <div class="min-w-0">
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 truncate">🌸 Anime Mascot</h2>
+            <p class="text-xs text-slate-500">Writing Challenge feedback style</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="settingsMascotOptions" class="space-y-3"></div>
+    </section>
 
     <!-- ABOUT JAPANESE LANGUAGE BEGINNER GUIDE (v4.9.2) -->
     <section id="view-aboutjp" class="hidden max-w-2xl mx-auto space-y-4 pb-6">
@@ -1497,6 +1556,50 @@
         <button id="wcNextArrowBtn" type="button" class="absolute bottom-3 right-3 z-20 w-8 h-8 rounded-full bg-white/85 border border-slate-200 shadow-sm text-xs font-bold text-slate-700 hover:text-indigo-600 flex items-center justify-center transition" title="Skip / Next">⏭</button>
       </div>
       </div>
+
+      <!-- Writing Session Complete Score Summary Screen (v4.9.4) -->
+      <div id="wcSummaryScreen" class="hidden py-4 space-y-4">
+        <div class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-md text-center space-y-4">
+          <div id="wcSumVisual" class="flex flex-col items-center justify-center">
+            <img id="wcSumMascotImg" src="" alt="Mascot" class="hidden w-24 h-24 object-contain drop-shadow-md" />
+            <div id="wcSumEmojiIcon" class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-3xl font-bold">🏆</div>
+          </div>
+          <div>
+            <span id="wcSumSetBadge" class="inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-700 mb-1.5">N5 · Set 1</span>
+            <h3 class="text-xl font-extrabold text-slate-900">Writing Complete!</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Session Score Summary</p>
+          </div>
+
+          <div class="py-2">
+            <div id="wcSumAccuracyBig" class="text-4xl font-black text-indigo-600">100%</div>
+            <div class="text-xs font-semibold text-slate-500 mt-0.5">Overall Accuracy</div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+            <div class="bg-slate-50 rounded-2xl p-3 border border-slate-100">
+              <div id="wcSumWritings" class="text-lg font-black text-slate-900">10 / 10</div>
+              <div class="text-[10px] font-bold uppercase text-slate-400 mt-0.5">Writings</div>
+            </div>
+            <div class="bg-emerald-50/70 rounded-2xl p-3 border border-emerald-100">
+              <div id="wcSumCorrect" class="text-lg font-black text-emerald-600">0</div>
+              <div class="text-[10px] font-bold uppercase text-emerald-600/80 mt-0.5">Correct</div>
+            </div>
+            <div class="bg-rose-50/70 rounded-2xl p-3 border border-rose-100">
+              <div id="wcSumMistakes" class="text-lg font-black text-rose-600">0</div>
+              <div class="text-[10px] font-bold uppercase text-rose-600/80 mt-0.5">Mistakes</div>
+            </div>
+            <div class="bg-amber-50/70 rounded-2xl p-3 border border-amber-100">
+              <div id="wcSumHints" class="text-lg font-black text-amber-600">0</div>
+              <div class="text-[10px] font-bold uppercase text-amber-600/80 mt-0.5">Hints</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5 pt-2">
+            <button id="wcSumDoneBtn" type="button" class="py-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 transition">← Back to Sets</button>
+            <button id="wcSumRetryBtn" type="button" class="py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-bold text-white shadow-sm transition">↻ Practice Again</button>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- MODE 5: LEARN BY READING (v4.7) -->
@@ -1726,7 +1829,7 @@
   </main>
 
   <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6">
-    Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v4.9.2</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan</span>
+    Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v4.9.4</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan</span>
   </footer>
 
   <!-- Bottom Navigation Bar (Home | Hiragana | Katakana | Kanji) -->
@@ -5683,7 +5786,7 @@
     }
 
     function renderModeTabs() {
-      ["home", "kanji-folders", "aboutjp", "radicals", "customsets", "lookalikes", "speedwrite", "browse", "setview", "detail", "flashcards", "quiz", "writing", "reading"].forEach(m => {
+      ["home", "kanji-folders", "settings", "settings-themes", "settings-mascot", "aboutjp", "radicals", "customsets", "lookalikes", "speedwrite", "browse", "setview", "detail", "flashcards", "quiz", "writing", "reading"].forEach(m => {
         const sec = document.getElementById(`view-${m}`);
         if (sec) sec.classList.add("hidden");
       });
@@ -5717,6 +5820,12 @@
 
       if (state.activeTab === "home") {
         document.getElementById("view-home").classList.remove("hidden");
+      } else if (state.activeTab === "settings") {
+        document.getElementById("view-settings").classList.remove("hidden");
+      } else if (state.activeTab === "settings-themes") {
+        document.getElementById("view-settings-themes").classList.remove("hidden");
+      } else if (state.activeTab === "settings-mascot") {
+        document.getElementById("view-settings-mascot").classList.remove("hidden");
       } else if (state.activeTab === "aboutjp") {
         document.getElementById("view-aboutjp").classList.remove("hidden");
       } else if (state.activeTab === "radicals") {
@@ -5907,6 +6016,9 @@
       renderModeTabs();
       if (state.activeMode === "browse") {
         if (state.activeTab === "home") renderHomePage();
+        else if (state.activeTab === "settings" && typeof window.renderSettingsHome === "function") window.renderSettingsHome();
+        else if (state.activeTab === "settings-themes" && typeof window.renderSettingsThemes === "function") window.renderSettingsThemes();
+        else if (state.activeTab === "settings-mascot" && typeof window.renderSettingsMascot === "function") window.renderSettingsMascot();
         else if (state.activeTab === "aboutjp" && typeof window.renderAboutJpView === "function") window.renderAboutJpView();
         else if (state.activeTab === "radicals" && typeof window.renderRadicalsView === "function") window.renderRadicalsView();
         else if (state.activeTab === "customsets" && typeof window.renderCustomSetsView === "function") window.renderCustomSetsView();
@@ -6827,8 +6939,11 @@
     let wcSessionWritings = 0;
 
     function openWritingPreStart() {
+      clearTimeout(window._wcAutoTimer);
       document.getElementById("wcPreStartScreen").classList.remove("hidden");
       document.getElementById("wcActiveSession").classList.add("hidden");
+      const sumEl = document.getElementById("wcSummaryScreen");
+      if (sumEl) sumEl.classList.add("hidden");
       const pool = getActiveStudyPool();
       const isKana = pool.length > 0 && pool[0].isKana;
       document.getElementById("wcPreSetTitle").textContent = state.activeSetLabel;
@@ -6889,7 +7004,11 @@
       clearTimeout(window._wcAutoTimer);
       window._wcAutoTimer = setTimeout(() => {
         if (state.activeMode === "writing") {
-          moveWritingIndex(1);
+          if (state.wcIndex + 1 >= list.length) {
+            if (typeof window.showWritingSummary === "function") window.showWritingSummary();
+          } else {
+            moveWritingIndex(1);
+          }
         }
       }, state.writingMascot === "emoji" ? 720 : 1080);
     }
@@ -7267,16 +7386,60 @@
         renderActiveView();
       });
 
-      document.getElementById("wcStartSessionBtn").addEventListener("click", () => {
+      function showWritingSummary() {
+        clearTimeout(window._wcAutoTimer);
+        hideWritingMascot();
+        sfx.complete();
+        const pool = getActiveStudyPool();
+        const tot = wcCorrect + wcWrong;
+        const acc = tot > 0 ? Math.round((wcCorrect / tot) * 100) : 0;
+
+        document.getElementById("wcSumSetBadge").textContent = state.activeSetLabel;
+        document.getElementById("wcSumAccuracyBig").textContent = `${acc}%`;
+        document.getElementById("wcSumWritings").textContent = `${wcSessionWritings} / ${pool.length}`;
+        document.getElementById("wcSumCorrect").textContent = wcCorrect;
+        document.getElementById("wcSumMistakes").textContent = wcWrong;
+        document.getElementById("wcSumHints").textContent = wcHints;
+
+        const mImg = document.getElementById("wcSumMascotImg");
+        const eIcon = document.getElementById("wcSumEmojiIcon");
+        if (state.writingMascot !== "emoji" && CHIBI_MASCOT) {
+          const tier = acc >= 85 ? "best" : (acc >= 60 ? "good" : "bad");
+          mImg.src = CHIBI_MASCOT[tier][0];
+          mImg.classList.remove("hidden");
+          eIcon.classList.add("hidden");
+        } else {
+          mImg.classList.add("hidden");
+          eIcon.textContent = acc >= 85 ? "🏆" : (acc >= 60 ? "👍" : "💪");
+          eIcon.classList.remove("hidden");
+        }
+
+        document.getElementById("wcPreStartScreen").classList.add("hidden");
+        document.getElementById("wcActiveSession").classList.add("hidden");
+        document.getElementById("wcSummaryScreen").classList.remove("hidden");
+      }
+      window.showWritingSummary = showWritingSummary;
+
+      function startWritingSessionFresh() {
         pushUserNav();
+        clearTimeout(window._wcAutoTimer);
         wcCorrect = 0; wcWrong = 0; wcHints = 0; wcSessionWritings = 0;
+        window._wcCharWrong = 0;
+        window._wcCharHint = false;
         document.getElementById("wcCorrectCount").textContent = "0";
         document.getElementById("wcWrongCount").textContent = "0";
         document.getElementById("wcHintCount").textContent = "0";
         state.wcIndex = 0;
         document.getElementById("wcPreStartScreen").classList.add("hidden");
+        document.getElementById("wcSummaryScreen").classList.add("hidden");
         document.getElementById("wcActiveSession").classList.remove("hidden");
         renderWritingChallenge();
+      }
+
+      document.getElementById("wcStartSessionBtn").addEventListener("click", startWritingSessionFresh);
+      document.getElementById("wcSumRetryBtn").addEventListener("click", startWritingSessionFresh);
+      document.getElementById("wcSumDoneBtn").addEventListener("click", () => {
+        openWritingPreStart();
       });
 
       document.getElementById("wcPauseResumeBtn").addEventListener("click", () => {
@@ -7626,7 +7789,16 @@
         const k = list[state.wcIndex];
         if (k) speakJapanese(k.isKana ? k.char : (k.kun !== "—" ? k.kun : k.on));
       });
-      document.getElementById("wcNextArrowBtn").addEventListener("click", () => moveWritingIndex(1));
+      document.getElementById("wcNextArrowBtn").addEventListener("click", () => {
+        clearTimeout(window._wcAutoTimer);
+        const list = getActiveStudyPool();
+        if (!list.length) return;
+        if (state.wcIndex + 1 >= list.length) {
+          showWritingSummary();
+        } else {
+          moveWritingIndex(1);
+        }
+      });
 
       // Three-Dot Header Menu (Theme, Sound, Reset Confirmation Modal)
       const menuBtn = document.getElementById("headerMenuBtn");
@@ -8361,7 +8533,7 @@
         }
 
         // 1. Close open utility modals first
-        const modalIds = ["settingsModal", "addToSetModal", "pickKanjiForSetModal", "radicalDetailModal", "wcPausedModal", "quizPausedModal", "unlockAllModal", "resetConfirmModal", "usersAdminModal", "searchOverlayModal", "studyPickerModal"];
+        const modalIds = ["addToSetModal", "pickKanjiForSetModal", "radicalDetailModal", "wcPausedModal", "quizPausedModal", "unlockAllModal", "resetConfirmModal", "usersAdminModal", "searchOverlayModal", "studyPickerModal"];
         for (const mid of modalIds) {
           const el = document.getElementById(mid);
           if (el && !el.classList.contains("hidden")) {
@@ -8398,6 +8570,11 @@
         }
         if (state.activeMode !== "browse") {
           state.activeMode = "browse";
+          renderActiveView();
+          return;
+        }
+        if (state.activeTab === "settings-themes" || state.activeTab === "settings-mascot") {
+          state.activeTab = "settings";
           renderActiveView();
           return;
         }
@@ -8491,8 +8668,7 @@
         if (e.target.id === "leftDrawerBackdrop") closeLeftDrawer();
       });
 
-      const settingsModal = document.getElementById("settingsModal");
-      let settingsThemeTarget = "all"; // 'all' | 'chrome' | 'home' | 'kana' | 'kanji'
+      let settingsThemeTarget = "all"; // 'all' | 'chrome' | 'home' | 'kana' | 'kanji' | 'study'
       const TARGET_LABELS = {
         all: "All Sections",
         chrome: "Top Header, Bottom Nav & Footer",
@@ -8510,6 +8686,24 @@
         }
         return st[target] || "indigo";
       }
+
+      function renderSettingsHome() {
+        const st = ensureSectionThemes();
+        const allSame = st.chrome === st.home && st.home === st.kana && st.kana === st.kanji && st.kanji === st.study;
+        const tObj = getThemeObj(st.chrome);
+        const tBadge = document.getElementById("settingsFolderThemeBadge");
+        if (tBadge) tBadge.textContent = allSame ? tObj.name : "Custom (Mixed)";
+
+        const mBadge = document.getElementById("settingsFolderMascotBadge");
+        const isAnime = state.writingMascot !== "emoji";
+        if (mBadge) mBadge.textContent = isAnime ? "🌸 Anime Girl" : "😀 Classic Emoji";
+
+        const thumb = document.getElementById("settingsMascotFolderThumb");
+        if (thumb && CHIBI_MASCOT && CHIBI_MASCOT.best && CHIBI_MASCOT.best[0]) {
+          thumb.src = CHIBI_MASCOT.best[0];
+        }
+      }
+      window.renderSettingsHome = renderSettingsHome;
 
       function renderSettingsThemes() {
         const st = ensureSectionThemes();
@@ -8536,27 +8730,48 @@
         grid.innerHTML = "";
         APP_THEMES.forEach(t => {
           const active = activeId === t.id;
-          const card = document.createElement("button");
-          card.type = "button";
-          card.className = `relative text-left p-3 rounded-2xl border-2 transition flex flex-col gap-2 ${
+          const row = document.createElement("button");
+          row.type = "button";
+          row.className = `w-full text-left p-3 rounded-2xl border-2 transition flex items-center justify-between gap-3.5 shadow-xs ${
             active
               ? "border-indigo-500 bg-indigo-50/50 shadow-sm"
-              : "border-slate-200 bg-slate-50 hover:border-slate-300"
+              : "border-slate-200 bg-white hover:border-indigo-300"
           }`;
-          card.innerHTML = `
-            <div class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-1.5">
-                <span class="w-5 h-5 rounded-full border border-black/15 shadow-xs" style="background:${t.solidBg}"></span>
-                <span class="w-5 h-5 rounded-full border border-black/15 shadow-xs -ml-2.5" style="background:${t.swatch}"></span>
+          row.innerHTML = `
+            <div class="flex items-center gap-3.5 min-w-0 flex-1">
+              <!-- Live Mini UI Color Preview Card (not tiny circles!) -->
+              <div class="w-24 h-14 rounded-xl overflow-hidden border shrink-0 flex flex-col justify-between p-1.5 shadow-2xs" style="background:${t.pageBg}; border-color:${t.border}">
+                <div class="flex items-center justify-between gap-1">
+                  <span class="kanji-font text-[11px] font-black px-1.5 py-0.5 rounded-md leading-none" style="background:${t.accent}; color:${t.accentFg}">漢</span>
+                  <span class="h-1.5 flex-1 rounded-full opacity-75" style="background:${t.softBorder}"></span>
+                </div>
+                <div class="rounded-md px-1.5 py-1 flex items-center justify-between border" style="background:${t.cardBg}; border-color:${t.border}">
+                  <span class="h-1.5 w-8 rounded-full" style="background:${t.text}; opacity:0.8"></span>
+                  <span class="h-2.5 w-6 rounded-sm" style="background:${t.swatch}"></span>
+                </div>
               </div>
-              ${active ? '<span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-indigo-600 text-white">✓</span>' : ''}
+              <!-- Theme Name, Japanese Subtitle & Color Strip -->
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-extrabold text-slate-900 truncate">${t.name}</span>
+                  ${t.isDark ? '<span class="text-[9px] font-bold px-1.5 py-0.5 rounded-md bg-slate-800 text-slate-100">DARK</span>' : ''}
+                </div>
+                <div class="text-[11px] text-slate-500 kanji-font truncate mt-0.5">${t.jp}</div>
+                <div class="flex items-center gap-1 mt-1.5">
+                  <span class="h-2 w-8 rounded-full border border-black/10" style="background:${t.swatch}" title="Accent"></span>
+                  <span class="h-2 w-6 rounded-full border border-black/10" style="background:${t.navBg}" title="Highlight"></span>
+                  <span class="h-2 w-6 rounded-full border border-black/10" style="background:${t.pageBg}" title="Background"></span>
+                  <span class="h-2 w-5 rounded-full border border-black/10" style="background:${t.cardBg}" title="Card"></span>
+                </div>
+              </div>
             </div>
-            <div class="min-w-0">
-              <div class="text-xs font-extrabold text-slate-900 truncate">${t.name}</div>
-              <div class="text-[10px] text-slate-500 kanji-font truncate">${t.jp}</div>
+            <div class="shrink-0">
+              ${active
+                ? '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-indigo-600 text-white text-[11px] font-extrabold shadow-xs">✓ Active</span>'
+                : '<span class="text-xs font-bold text-slate-400 px-2">Apply</span>'}
             </div>
           `;
-          card.addEventListener("click", () => {
+          row.addEventListener("click", () => {
             if (settingsThemeTarget === "all") {
               st.chrome = t.id;
               st.home = t.id;
@@ -8568,7 +8783,6 @@
             } else {
               st[settingsThemeTarget] = t.id;
               if (settingsThemeTarget === "chrome") state.theme = t.id;
-              // If user picks a light theme for a section while global darkMode was ON, turn off global dark override so the chosen light theme shows accurately
               if (!t.isDark && state.darkMode) state.darkMode = false;
             }
             saveState();
@@ -8579,9 +8793,75 @@
             if (wcPad && typeof wcPad.redraw === "function") wcPad.redraw();
             showToast(`${TARGET_LABELS[settingsThemeTarget]} → ${t.name}`);
           });
-          grid.appendChild(card);
+          grid.appendChild(row);
         });
       }
+      window.renderSettingsThemes = renderSettingsThemes;
+
+      function renderSettingsMascot() {
+        const container = document.getElementById("settingsMascotOptions");
+        if (!container) return;
+        const isAnime = state.writingMascot !== "emoji";
+        const bestImg = (CHIBI_MASCOT && CHIBI_MASCOT.best && CHIBI_MASCOT.best[0]) || "";
+        const goodImg = (CHIBI_MASCOT && CHIBI_MASCOT.good && CHIBI_MASCOT.good[0]) || "";
+        const badImg  = (CHIBI_MASCOT && CHIBI_MASCOT.bad  && CHIBI_MASCOT.bad[0])  || "";
+
+        container.innerHTML = `
+          <button type="button" data-mascot-pick="mascot" class="w-full text-left p-4 rounded-3xl border-2 transition shadow-xs space-y-3 ${
+            isAnime ? "border-pink-500 bg-pink-50/50 shadow-sm" : "border-slate-200 bg-white hover:border-pink-300"
+          }">
+            <div class="flex items-center justify-between gap-2">
+              <div>
+                <div class="text-sm sm:text-base font-extrabold text-slate-900">🌸 Anime Chibi Girl</div>
+                <div class="text-xs text-slate-500 mt-0.5">6-pose animated reactions for Perfect, Good &amp; Try Again</div>
+              </div>
+              ${isAnime
+                ? '<span class="px-2.5 py-1 rounded-xl bg-pink-500 text-white text-[11px] font-extrabold shrink-0">✓ Active</span>'
+                : '<span class="text-xs font-bold text-slate-400 shrink-0">Select</span>'}
+            </div>
+            <div class="grid grid-cols-3 gap-2 pt-1">
+              <div class="rounded-2xl bg-white border border-slate-200 p-2 flex flex-col items-center">
+                <img src="${bestImg}" alt="Perfect" class="w-16 h-16 object-contain" />
+                <span class="text-[10px] font-bold text-teal-600 mt-1">すごい! Perfect</span>
+              </div>
+              <div class="rounded-2xl bg-white border border-slate-200 p-2 flex flex-col items-center">
+                <img src="${goodImg}" alt="Good" class="w-16 h-16 object-contain" />
+                <span class="text-[10px] font-bold text-indigo-600 mt-1">いいね! Good</span>
+              </div>
+              <div class="rounded-2xl bg-white border border-slate-200 p-2 flex flex-col items-center">
+                <img src="${badImg}" alt="Try Again" class="w-16 h-16 object-contain" />
+                <span class="text-[10px] font-bold text-rose-600 mt-1">もう一回! Oops</span>
+              </div>
+            </div>
+          </button>
+
+          <button type="button" data-mascot-pick="emoji" class="w-full text-left p-4 rounded-3xl border-2 transition shadow-xs flex items-center justify-between gap-3 ${
+            !isAnime ? "border-indigo-500 bg-indigo-50/50 shadow-sm" : "border-slate-200 bg-white hover:border-indigo-300"
+          }">
+            <div class="flex items-center gap-3.5 min-w-0">
+              <div class="w-14 h-14 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-2xl shrink-0">👌</div>
+              <div class="min-w-0">
+                <div class="text-sm sm:text-base font-extrabold text-slate-900">😀 Classic Emoji</div>
+                <div class="text-xs text-slate-500 mt-0.5">Clean, minimal emoji reactions (👌 👍 👎)</div>
+              </div>
+            </div>
+            ${!isAnime
+              ? '<span class="px-2.5 py-1 rounded-xl bg-indigo-600 text-white text-[11px] font-extrabold shrink-0">✓ Active</span>'
+              : '<span class="text-xs font-bold text-slate-400 shrink-0">Select</span>'}
+          </button>
+        `;
+
+        container.querySelectorAll("[data-mascot-pick]").forEach(btn => {
+          btn.addEventListener("click", () => {
+            state.writingMascot = btn.dataset.mascotPick;
+            saveState();
+            renderSettingsMascot();
+            renderSettingsHome();
+            showToast(state.writingMascot === "emoji" ? "Writing Mascot: 😀 Classic Emoji" : "Writing Mascot: 🌸 Anime Chibi Girl!");
+          });
+        });
+      }
+      window.renderSettingsMascot = renderSettingsMascot;
 
       document.querySelectorAll(".st-target-btn").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -8590,35 +8870,35 @@
         });
       });
 
-      function updateSettingsMascotBtn() {
-        const b = document.getElementById("settingsMascotToggleBtn");
-        if (!b) return;
-        const isAnime = state.writingMascot !== "emoji";
-        b.textContent = isAnime ? "🌸 Anime Girl" : "😀 Classic Emoji";
-        b.className = isAnime
-          ? "px-3 py-1.5 rounded-xl text-xs font-bold bg-pink-500 hover:bg-pink-600 text-white shadow-xs shrink-0 transition"
-          : "px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-200 hover:bg-slate-300 text-slate-800 shrink-0 transition";
-      }
-      const smBtn = document.getElementById("settingsMascotToggleBtn");
-      if (smBtn) {
-        smBtn.addEventListener("click", () => {
-          state.writingMascot = state.writingMascot === "emoji" ? "mascot" : "emoji";
-          saveState();
-          updateSettingsMascotBtn();
-          showToast(state.writingMascot === "emoji" ? "Writing Feedback: Classic Emoji" : "Writing Feedback: 🌸 Anime Mascot!");
-        });
-      }
-
-      function openSettingsModal() {
-        renderSettingsThemes();
-        updateSettingsMascotBtn();
+      document.getElementById("settingsDrawerBtn").addEventListener("click", openLeftDrawer);
+      document.getElementById("settingsBackHomeBtn").addEventListener("click", () => {
         pushUserNav();
-        settingsModal.classList.remove("hidden");
-      }
-
-      document.getElementById("settingsCloseBtn").addEventListener("click", () => settingsModal.classList.add("hidden"));
-      settingsModal.addEventListener("click", (e) => {
-        if (e.target.id === "settingsModal") settingsModal.classList.add("hidden");
+        state.activeTab = "home";
+        state.activeMode = "browse";
+        saveState();
+        renderActiveView();
+      });
+      document.getElementById("settingsOpenThemesBtn").addEventListener("click", () => {
+        pushUserNav();
+        state.activeTab = "settings-themes";
+        state.activeMode = "browse";
+        renderActiveView();
+      });
+      document.getElementById("settingsOpenMascotBtn").addEventListener("click", () => {
+        pushUserNav();
+        state.activeTab = "settings-mascot";
+        state.activeMode = "browse";
+        renderActiveView();
+      });
+      document.getElementById("settingsThemesBackBtn").addEventListener("click", () => {
+        state.activeTab = "settings";
+        state.activeMode = "browse";
+        renderActiveView();
+      });
+      document.getElementById("settingsMascotBackBtn").addEventListener("click", () => {
+        state.activeTab = "settings";
+        state.activeMode = "browse";
+        renderActiveView();
       });
 
       document.querySelectorAll("[data-drawer-action]").forEach(btn => {
@@ -8630,7 +8910,10 @@
             return;
           }
           if (act === "settings") {
-            openSettingsModal();
+            pushUserNav();
+            state.activeTab = "settings";
+            state.activeMode = "browse";
+            renderActiveView();
             return;
           }
           pushUserNav();
