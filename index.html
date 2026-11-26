@@ -20,6 +20,28 @@
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%234347a8'/%3E%3Cstop offset='100%25' stop-color='%232e1065'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='112' fill='url(%23g)'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-size='270' font-family='serif'%3E%E6%BC%A2%3C/text%3E%3Ccircle cx='418' cy='418' r='18' fill='%23f9a8d4'/%3E%3C/svg%3E" />
   <link rel="manifest" id="pwaManifest" href="manifest.json" />
   <title>Nihonify — 漢字学習 (JLPT N5–N1)</title>
+  <script>
+    (function () {
+      try {
+        var html = document.documentElement;
+        html.classList.add("ks-booting");
+        var raw = localStorage.getItem("kanji_studio_state_v1");
+        if (raw) {
+          var st = JSON.parse(raw);
+          if (st && st.darkMode) {
+            html.classList.add("ks-pre-dark");
+            html.style.backgroundColor = "#09090b";
+            var mt = document.querySelector('meta[name="theme-color"]');
+            if (mt) mt.setAttribute("content", "#18181b");
+          }
+        }
+        if (localStorage.getItem("nihonify_auth_ok") !== "1") {
+          html.classList.add("ks-auth-locked");
+        }
+        setTimeout(function () { html.classList.remove("ks-booting"); }, 1500);
+      } catch (e) {}
+    })();
+  </script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
@@ -29,10 +51,28 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
   <script>tailwind.config = { darkMode: 'class' };</script>
   <style>
+    html.ks-pre-dark, html.ks-pre-dark body {
+      background-color: #09090b !important;
+      color: #f8fafc !important;
+    }
+    html.ks-booting body {
+      opacity: 0 !important;
+    }
+    html.ks-auth-locked #appHeader,
+    html.ks-auth-locked main,
+    html.ks-auth-locked #appFooter,
+    html.ks-auth-locked #bottomNav {
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+    html.ks-auth-locked #authGateModal {
+      display: flex !important;
+    }
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: #f8fafc;
       color: #0f172a;
+      transition: opacity 0.12s ease;
     }
     .kanji-font {
       font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
@@ -2134,7 +2174,7 @@
   </main>
 
   <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6">
-    Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v5.4</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan &amp; Its Team</span>
+    Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v5.5</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan &amp; Its Team</span>
   </footer>
 
   <!-- Bottom Navigation Bar (Home | Hiragana | Katakana | Kanji) -->
@@ -2256,27 +2296,25 @@
     </div>
   </div>
 
-  <!-- Unlock All (Creator / VIP Access) Modal -->
+  <!-- VIP Access Modal (v5.5 Zero Plaintext Passwords) -->
   <div id="unlockAllModal" class="hidden fixed inset-0 z-[60] bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 p-5 space-y-4">
       <div class="flex items-center justify-between">
-        <h3 class="text-base font-bold text-slate-900">🔓 Unlock All Levels &amp; Sets</h3>
+        <h3 class="text-base font-bold text-slate-900">🔓 Unlock VIP Access</h3>
         <button id="unlockCloseBtn" class="p-1 rounded-lg hover:bg-slate-100 text-slate-500 font-bold text-lg leading-none">&times;</button>
       </div>
-      <div class="space-y-2.5">
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Username</label>
-          <input id="unlockUserInput" type="text" placeholder="Enter username" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+      <div class="space-y-3 text-xs text-slate-600">
+        <div class="p-3 rounded-2xl bg-indigo-50 border border-indigo-100 space-y-1">
+          <div class="font-bold text-indigo-800">All JLPT N5–N1 Levels &amp; Mock Tests</div>
+          <p class="text-indigo-700/90 leading-relaxed">VIP access is verified directly from Firebase for your account:</p>
+          <div id="vipModalAccountEmail" class="font-bold text-slate-900 break-all pt-0.5">—</div>
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Password</label>
-          <input id="unlockPassInput" type="password" placeholder="Enter password" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-        </div>
-        <div id="unlockErrorMsg" class="hidden text-xs font-semibold text-rose-600">Incorrect username or password.</div>
+        <p class="text-[11px] text-slate-500 leading-relaxed">Ask the Nihonify team to enable VIP for your verified email, then tap <strong>Refresh VIP Status</strong> below. Your access unlocks automatically in real time.</p>
+        <div id="unlockErrorMsg" class="hidden text-xs font-semibold text-rose-600 bg-rose-50 border border-rose-200 rounded-xl p-2"></div>
       </div>
       <div class="flex gap-2">
-        <button id="unlockCancelBtn" class="flex-1 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 transition">Cancel</button>
-        <button id="unlockSubmitBtn" class="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-bold text-white shadow-sm transition">Unlock</button>
+        <button id="unlockCancelBtn" class="flex-1 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 transition">Close</button>
+        <button id="unlockRefreshVipBtn" class="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-bold text-white shadow-sm transition">🔄 Refresh VIP</button>
       </div>
     </div>
   </div>
@@ -2392,11 +2430,27 @@
         </div>
       </div>
 
+      <!-- COMPULSORY EMAIL VERIFICATION GATE (v5.5) -->
+      <div id="authVerifyWrap" class="hidden space-y-3 text-center">
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center text-2xl">✉️</div>
+        <div class="space-y-1">
+          <h3 class="text-base font-extrabold text-slate-900">Verify Your Email</h3>
+          <p class="text-xs text-slate-500 leading-relaxed">We sent a verification link to:</p>
+          <div id="authVerifyEmailText" class="text-xs font-bold text-indigo-600 break-all">—</div>
+          <p class="text-[11px] text-slate-500 leading-relaxed pt-1">Open your inbox (or Spam folder), tap the Firebase verification link, then tap below to enter Nihonify.</p>
+        </div>
+        <div class="space-y-2 pt-1">
+          <button id="authCheckVerifiedBtn" type="button" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition">✓ I've Verified — Continue</button>
+          <button id="authResendVerifyBtn" type="button" class="w-full py-2 rounded-xl border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition">📨 Resend Verification Email</button>
+          <button id="authVerifySignOutBtn" type="button" class="w-full py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 text-xs font-semibold transition">← Use a Different Email</button>
+        </div>
+      </div>
+
       <div id="authErrorMsg" class="hidden text-xs font-semibold text-rose-600 bg-rose-50 border border-rose-200 rounded-xl p-2.5"></div>
       <div id="authSuccessMsg" class="hidden text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl p-2.5"></div>
 
       <button id="authSubmitBtn" class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-sm transition">Sign In</button>
-      <div class="text-center text-xs text-slate-500">
+      <div id="authSwitchRow" class="text-center text-xs text-slate-500">
         <span id="authSwitchPrompt">Don't have an account?</span>
         <button id="authSwitchModeBtn" type="button" class="text-indigo-600 font-bold hover:underline ml-1">Create Account</button>
       </div>
@@ -4954,6 +5008,7 @@
       unlockAll: false,
       isDesigner: false,
       currentUserEmail: "",
+      currentUserVerified: false,
       progress: {},   // { [char]: 'unseen' | 'learning' | 'mastered' }
       favorites: {},  // { [char]: true }
       setStats: {},   // { [setKey]: { seconds: number, lastStudied: number } }
@@ -5183,14 +5238,14 @@
       const sLbl = document.getElementById("soundToggleLabel");
       if (sLbl) sLbl.textContent = state.soundEnabled ? "🔊 Sound: ON" : "🔇 Sound: OFF";
       const DESIGNER_ACCOUNT_EMAIL = "zishan41965@gmail.com";
-      const isDesignerEmail = String(state.currentUserEmail || "").trim().toLowerCase() === DESIGNER_ACCOUNT_EMAIL;
+      const isVerifiedDesigner = (String(state.currentUserEmail || "").trim().toLowerCase() === DESIGNER_ACCOUNT_EMAIL) && !!state.currentUserVerified;
       const uBtn = document.getElementById("unlockAllMenuBtn");
       const uLbl = document.getElementById("unlockAllMenuLabel");
-      // v5.4 Role-Based Menu: Only zishan41965@gmail.com sees Designer / Unlock in top ⋮ menu
-      if (uBtn) uBtn.classList.toggle("hidden", !isDesignerEmail);
+      // v5.5 Zero Plaintext Passwords: Designer access locked strictly to Firebase-verified zishan41965@gmail.com
+      if (uBtn) uBtn.classList.toggle("hidden", !isVerifiedDesigner);
       if (uLbl) uLbl.textContent = (state.isDesigner && state.unlockAll) ? "🔒 Lock Back (Normal)" : "🔓 Designer / Unlock";
       const dBtn = document.getElementById("designerUsersMenuBtn");
-      if (dBtn) dBtn.classList.toggle("hidden", !(isDesignerEmail && state.isDesigner));
+      if (dBtn) dBtn.classList.toggle("hidden", !(isVerifiedDesigner && state.isDesigner));
     }
 
     // =========================================================================
@@ -8431,26 +8486,33 @@
       });
 
       const unlockModal = document.getElementById("unlockAllModal");
-      const unlockUser = document.getElementById("unlockUserInput");
-      const unlockPass = document.getElementById("unlockPassInput");
       const unlockErr = document.getElementById("unlockErrorMsg");
 
+      // v5.5: Designer access locked strictly to Firebase-verified zishan41965@gmail.com (zero plaintext passwords)
       document.getElementById("unlockAllMenuBtn").addEventListener("click", () => {
         menuDrop.classList.add("hidden");
+        const isVerifiedDesigner = (String(state.currentUserEmail || "").trim().toLowerCase() === "zishan41965@gmail.com") && !!state.currentUserVerified;
+        if (!isVerifiedDesigner) {
+          showToast("Designer access is restricted to the verified Designer account.");
+          return;
+        }
         if (state.isDesigner && state.unlockAll) {
           state.unlockAll = false;
           saveState();
           applyTheme();
           renderActiveView();
-          showToast("Normal lock mode restored.");
-          return;
+          if (typeof window.renderSettingsHome === "function") window.renderSettingsHome();
+          showToast("Normal lock preview restored.");
+        } else {
+          state.isDesigner = true;
+          state.unlockAll = true;
+          saveState();
+          applyTheme();
+          sfx.complete();
+          renderActiveView();
+          if (typeof window.renderSettingsHome === "function") window.renderSettingsHome();
+          showToast("Designer mode enabled! Check ⋮ → Who's Using.");
         }
-        unlockUser.value = "";
-        unlockPass.value = "";
-        unlockErr.classList.add("hidden");
-        pushUserNav();
-        unlockModal.classList.remove("hidden");
-        setTimeout(() => unlockUser.focus(), 50);
       });
 
       ["unlockCloseBtn", "unlockCancelBtn"].forEach(id => {
@@ -8460,31 +8522,12 @@
         if (e.target.id === "unlockAllModal") unlockModal.classList.add("hidden");
       });
 
-      document.getElementById("unlockSubmitBtn").addEventListener("click", () => {
-        const u = unlockUser.value.trim().toLowerCase();
-        const p = unlockPass.value.trim();
-        if (u === "designer_zishan" && p === "zishan#786") {
-          state.isDesigner = true;
-          state.unlockAll = true;
-          saveState();
-          applyTheme();
-          unlockModal.classList.add("hidden");
-          sfx.complete();
-          renderActiveView();
-          showToast("Designer access enabled! Check ⋮ → Who's Using.");
-        } else if (u === "vip_zishan" && p === "jp#9026") {
-          state.isDesigner = false;
-          state.unlockAll = true;
-          saveState();
-          applyTheme();
-          unlockModal.classList.add("hidden");
-          sfx.complete();
-          renderActiveView();
-          if (typeof window.renderSettingsHome === "function") window.renderSettingsHome();
-          showToast("✓ VIP Active! All JLPT N5–N1 levels unlocked.");
+      document.getElementById("unlockRefreshVipBtn").addEventListener("click", async () => {
+        if (unlockErr) unlockErr.classList.add("hidden");
+        if (typeof window.refreshVipFromFirestore === "function") {
+          await window.refreshVipFromFirestore(true);
         } else {
-          sfx.wrong();
-          unlockErr.classList.remove("hidden");
+          showToast("Please sign in first to check VIP status.");
         }
       });
 
@@ -9007,20 +9050,52 @@
             if (userDocUnsub) { userDocUnsub(); userDocUnsub = null; }
             if (!user) {
               activeCloudUid = null;
+              try { localStorage.removeItem("nihonify_auth_ok"); } catch (e) {}
+              document.documentElement.classList.add("ks-auth-locked");
               state.currentUserEmail = "";
+              state.currentUserVerified = false;
               state.isDesigner = false;
               applyTheme();
               if (typeof window.renderSettingsHome === "function") window.renderSettingsHome();
               setCloudSyncBadge("offline", "☁️ Sign in to sync");
               if (signOutBtn) signOutBtn.classList.add("hidden");
+              showAuthVerifyScreen(false);
               authModal.classList.remove("hidden");
               return;
             }
+
+            // v5.5 Compulsory Email Verification Gate: block app entry until Gmail/email is verified
+            if (!user.emailVerified) {
+              activeCloudUid = null;
+              try { localStorage.removeItem("nihonify_auth_ok"); } catch (e) {}
+              document.documentElement.classList.add("ks-auth-locked");
+              state.currentUserEmail = String(user.email || "").trim().toLowerCase();
+              state.currentUserVerified = false;
+              state.isDesigner = false;
+              applyTheme();
+              setCloudSyncBadge("offline", "✉️ Verify email to sync");
+              if (signOutBtn) signOutBtn.classList.add("hidden");
+              showAuthVerifyScreen(true, user.email || "");
+              authModal.classList.remove("hidden");
+              return;
+            }
+
+            showAuthVerifyScreen(false);
             activeCloudUid = user.uid;
             state.currentUserEmail = String(user.email || "").trim().toLowerCase();
-            if (state.currentUserEmail !== "zishan41965@gmail.com" && state.isDesigner) {
+            state.currentUserVerified = true;
+            if (state.currentUserEmail === "zishan41965@gmail.com") {
+              state.isDesigner = true;
+            } else if (state.isDesigner) {
               state.isDesigner = false;
               saveState(true);
+            }
+            // Recover any pending profile saved before email verification
+            if (!pendingSignupProfile) {
+              try {
+                const rawProf = localStorage.getItem("nihonify_pending_profile_" + user.uid);
+                if (rawProf) pendingSignupProfile = JSON.parse(rawProf);
+              } catch (e) {}
             }
             applyTheme();
             if (typeof window.renderSettingsHome === "function") window.renderSettingsHome();
@@ -9030,6 +9105,8 @@
               const data = snap.exists ? snap.data() : {};
               if (data.blocked) {
                 activeCloudUid = null;
+                try { localStorage.removeItem("nihonify_auth_ok"); } catch (e) {}
+                document.documentElement.classList.add("ks-auth-locked");
                 await fbAuth.signOut();
                 showAuthError("Your access has been removed by the Designer.");
                 authModal.classList.remove("hidden");
@@ -9051,6 +9128,7 @@
               if (pendingSignupProfile) {
                 const prof = pendingSignupProfile;
                 pendingSignupProfile = null;
+                try { localStorage.removeItem("nihonify_pending_profile_" + user.uid); } catch (e) {}
                 if (typeof window.setDailyGoalFromMinutes === "function") {
                   window.setDailyGoalFromMinutes(prof.studyMinutes || 20);
                 }
@@ -9078,6 +9156,8 @@
                 const live = liveSnap.data() || {};
                 if (live.blocked) {
                   if (userDocUnsub) { userDocUnsub(); userDocUnsub = null; }
+                  try { localStorage.removeItem("nihonify_auth_ok"); } catch (e) {}
+                  document.documentElement.classList.add("ks-auth-locked");
                   await fbAuth.signOut();
                   showAuthError("Your access has been removed by the Designer.");
                   authModal.classList.remove("hidden");
@@ -9096,13 +9176,174 @@
                 }
               });
             } catch (err) {}
+            try { localStorage.setItem("nihonify_auth_ok", "1"); } catch (e) {}
+            document.documentElement.classList.remove("ks-auth-locked");
             if (signOutBtn) signOutBtn.classList.remove("hidden");
             authModal.classList.add("hidden");
           });
+
+          window.refreshVipFromFirestore = async function(showFeedback) {
+            const u = fbAuth && fbAuth.currentUser;
+            if (!u || !u.emailVerified || !fbDb) {
+              if (showFeedback) showToast("Please sign in with a verified email first.");
+              return;
+            }
+            try {
+              const snap = await fbDb.collection("users").doc(u.uid).get();
+              const d = snap.exists ? (snap.data() || {}) : {};
+              const isVip = !!d.vipUnlocked || (String(u.email || "").trim().toLowerCase() === "zishan41965@gmail.com" && state.isDesigner);
+              state.unlockAll = isVip;
+              saveState(true);
+              applyTheme();
+              renderActiveView();
+              if (typeof window.renderSettingsHome === "function") window.renderSettingsHome();
+              if (isVip) {
+                const m = document.getElementById("unlockAllModal");
+                if (m) m.classList.add("hidden");
+                sfx.complete();
+                if (showFeedback) showToast("✓ VIP Active! All JLPT N5–N1 levels unlocked.");
+              } else if (showFeedback) {
+                const err = document.getElementById("unlockErrorMsg");
+                if (err) {
+                  err.textContent = "VIP is not active yet for this email. Ask the Nihonify team to activate it.";
+                  err.classList.remove("hidden");
+                }
+              }
+            } catch (err) {
+              if (showFeedback) showToast("Could not check VIP status right now.");
+            }
+          };
         }
       } catch (e) {}
 
+      let verifyResendCooldownUntil = 0;
+
+      function showAuthVerifyScreen(show, email) {
+        const vWrap = document.getElementById("authVerifyWrap");
+        const s1 = document.getElementById("authStep1Wrap");
+        const s2 = document.getElementById("authStep2Wrap");
+        const ind = document.getElementById("authStepIndicator");
+        const subBtn = document.getElementById("authSubmitBtn");
+        const swRow = document.getElementById("authSwitchRow");
+        const titleEl = document.getElementById("authTitle");
+        const subEl = document.getElementById("authSubtitle");
+        const emailText = document.getElementById("authVerifyEmailText");
+        if (!vWrap) return;
+        if (show) {
+          vWrap.classList.remove("hidden");
+          if (s1) s1.classList.add("hidden");
+          if (s2) s2.classList.add("hidden");
+          if (ind) ind.classList.add("hidden");
+          if (subBtn) subBtn.classList.add("hidden");
+          if (swRow) swRow.classList.add("hidden");
+          if (titleEl) titleEl.textContent = "Email Verification Required";
+          if (subEl) subEl.textContent = "One quick step to protect your account";
+          if (emailText) emailText.textContent = email || "";
+        } else {
+          vWrap.classList.add("hidden");
+          if (subBtn) subBtn.classList.remove("hidden");
+          if (swRow) swRow.classList.remove("hidden");
+        }
+      }
+
+      document.getElementById("authCheckVerifiedBtn").addEventListener("click", async () => {
+        clearAuthMessages();
+        if (!fbAuth || !fbAuth.currentUser) {
+          showAuthError("Please sign in again.");
+          return;
+        }
+        const btn = document.getElementById("authCheckVerifiedBtn");
+        btn.disabled = true;
+        btn.textContent = "Checking verification...";
+        try {
+          await fbAuth.currentUser.reload();
+          if (fbAuth.currentUser.emailVerified) {
+            showAuthSuccess("Email verified! Entering Nihonify...");
+            // Force refresh auth state cleanly
+            const u = fbAuth.currentUser;
+            state.currentUserVerified = true;
+            state.currentUserEmail = String(u.email || "").trim().toLowerCase();
+            if (state.currentUserEmail === "zishan41965@gmail.com") state.isDesigner = true;
+            try { localStorage.setItem("nihonify_auth_ok", "1"); } catch (e) {}
+            document.documentElement.classList.remove("ks-auth-locked");
+            showAuthVerifyScreen(false);
+            authModal.classList.add("hidden");
+            const signOutBtn = document.getElementById("signOutMenuBtn");
+            if (signOutBtn) signOutBtn.classList.remove("hidden");
+            // Trigger profile + cloud sync via reload or direct save
+            if (fbDb) {
+              const docRef = fbDb.collection("users").doc(u.uid);
+              let prof = pendingSignupProfile;
+              if (!prof) {
+                try {
+                  const raw = localStorage.getItem("nihonify_pending_profile_" + u.uid);
+                  if (raw) prof = JSON.parse(raw);
+                } catch (e) {}
+              }
+              const payload = {
+                uid: u.uid,
+                name: (prof && prof.fullName) || u.displayName || u.email.split("@")[0],
+                email: u.email,
+                emailVerified: true,
+                blocked: false,
+                lastActive: firebase.firestore.FieldValue.serverTimestamp(),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+              };
+              if (prof) payload.profile = prof;
+              await docRef.set(payload, { merge: true });
+              if (prof) {
+                pendingSignupProfile = null;
+                try { localStorage.removeItem("nihonify_pending_profile_" + u.uid); } catch (e) {}
+                if (typeof window.setDailyGoalFromMinutes === "function") {
+                  window.setDailyGoalFromMinutes(prof.studyMinutes || 20);
+                }
+                applyUserLevelFocus(prof.level);
+              }
+            }
+            applyTheme();
+            renderActiveView();
+            if (typeof window.renderSettingsHome === "function") window.renderSettingsHome();
+            showToast("✓ Email verified! Welcome to Nihonify.");
+          } else {
+            showAuthError("Email not verified yet. Please tap the link in your inbox (or Spam folder), then try again.");
+          }
+        } catch (err) {
+          showAuthError(err.message || "Could not check verification status.");
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "✓ I've Verified — Continue";
+        }
+      });
+
+      document.getElementById("authResendVerifyBtn").addEventListener("click", async () => {
+        clearAuthMessages();
+        if (!fbAuth || !fbAuth.currentUser) return;
+        const now = Date.now();
+        if (now < verifyResendCooldownUntil) {
+          const secs = Math.ceil((verifyResendCooldownUntil - now) / 1000);
+          showAuthError(`Please wait ${secs}s before requesting another link.`);
+          return;
+        }
+        try {
+          await fbAuth.currentUser.sendEmailVerification();
+          verifyResendCooldownUntil = Date.now() + 30000;
+          showAuthSuccess("Verification link resent! Check your Gmail inbox or Spam folder.");
+        } catch (err) {
+          showAuthError(err.message || "Could not resend verification email.");
+        }
+      });
+
+      document.getElementById("authVerifySignOutBtn").addEventListener("click", async () => {
+        clearAuthMessages();
+        showAuthVerifyScreen(false);
+        if (fbAuth) await fbAuth.signOut();
+        authIsSignUp = false;
+        authSignUpStep = 1;
+        renderAuthModalUI();
+      });
+
       function renderAuthModalUI() {
+        showAuthVerifyScreen(false);
         clearAuthMessages();
         const stepInd = document.getElementById("authStepIndicator");
         const step1Wrap = document.getElementById("authStep1Wrap");
@@ -9258,15 +9499,38 @@
           submitBtn.textContent = "Creating account...";
           try {
             const cred = await fbAuth.createUserWithEmailAndPassword(email, pass);
-            if (fullName && cred.user) {
-              await cred.user.updateProfile({ displayName: fullName });
+            if (cred.user) {
+              if (fullName) await cred.user.updateProfile({ displayName: fullName });
+              try {
+                localStorage.setItem("nihonify_pending_profile_" + cred.user.uid, JSON.stringify(pendingSignupProfile));
+              } catch (e) {}
+              if (fbDb) {
+                try {
+                  await fbDb.collection("users").doc(cred.user.uid).set({
+                    uid: cred.user.uid,
+                    name: fullName,
+                    email: cred.user.email,
+                    blocked: false,
+                    vipUnlocked: false,
+                    profile: pendingSignupProfile,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastActive: firebase.firestore.FieldValue.serverTimestamp()
+                  }, { merge: true });
+                } catch (e) {}
+              }
+              await cred.user.sendEmailVerification();
+              verifyResendCooldownUntil = Date.now() + 30000;
+              showAuthVerifyScreen(true, cred.user.email || email);
+              showAuthSuccess("Account created! Verification link sent to your email.");
             }
           } catch (err) {
             pendingSignupProfile = null;
             showAuthError(err.message || "Could not create account.");
           } finally {
             submitBtn.disabled = false;
-            renderAuthModalUI();
+            if (!fbAuth || !fbAuth.currentUser || fbAuth.currentUser.emailVerified) {
+              renderAuthModalUI();
+            }
           }
           return;
         }
@@ -9676,15 +9940,12 @@
             return;
           }
           const uModal = document.getElementById("unlockAllModal");
-          const uUser = document.getElementById("unlockUserInput");
-          const uPass = document.getElementById("unlockPassInput");
           const uErr = document.getElementById("unlockErrorMsg");
-          if (uUser) uUser.value = "";
-          if (uPass) uPass.value = "";
+          const emailEl = document.getElementById("vipModalAccountEmail");
+          if (emailEl) emailEl.textContent = state.currentUserEmail || "Not signed in";
           if (uErr) uErr.classList.add("hidden");
           pushUserNav();
           if (uModal) uModal.classList.remove("hidden");
-          setTimeout(() => { if (uUser) uUser.focus(); }, 50);
         });
       }
 
@@ -11553,6 +11814,8 @@
       renderGlobalProgress();
       renderLevelTabs();
       renderActiveView();
+      document.documentElement.classList.remove("ks-booting", "ks-pre-dark");
+      document.documentElement.style.backgroundColor = "";
     });
   </script>
 </body>
