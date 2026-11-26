@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "short_name": "Kanji Studio",
-  "name": "漢字学習 · Created by Zishan & Its Team",
+  "short_name": "Nihonify",
+  "name": "Nihonify · 漢字学習",
   "description": "Learn Japanese Hiragana, Katakana & JLPT N5–N1 Kanji with flashcards, quizzes, timed mock tests, and writing practice.",
   "start_url": "./index.html",
   "scope": "./",
