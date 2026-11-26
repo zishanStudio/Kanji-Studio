@@ -551,6 +551,25 @@
     .ks-mascot-good { animation: ksMascotNod 0.40s cubic-bezier(0.22, 1, 0.36, 1) forwards, ksMascotHop 0.8s ease-in-out 0.42s infinite; }
     .ks-mascot-bad  { animation: ksMascotShake 0.46s ease-out forwards; }
     /* Interactive Full-Body Home & Peek Mascot (v4.9.5) */
+
+    /* Daily Goal & Streak Tracker (v5.1) */
+    .dg-ring-bg { stroke: rgba(148, 163, 184, 0.25); }
+    .dg-ring-fill { transition: stroke-dashoffset 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+    .dg-preset-btn.active { background: #4f46e5; color: #ffffff; border-color: #4f46e5; }
+    body.dark .dg-preset-btn { background: rgba(30,41,59,0.7); color: #cbd5e1; border-color: #334155; }
+    body.dark .dg-preset-btn.active { background: #6366f1; color: #ffffff; border-color: #6366f1; }
+    body.dark #dgTargetEditor { background: rgba(15,23,42,0.55); border-color: #334155; }
+    body.dark #dgCustomInput { background: #0f172a; color: #f8fafc; border-color: #334155; }
+    @keyframes dgFlamePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+    .dg-flame-active { display: inline-block; animation: dgFlamePulse 1.8s ease-in-out infinite; }
+
+    /* v5.2 Smart 2-Step Onboarding & Designer Details */
+    .ob-pill { transition: all 0.15s ease; }
+    .ob-pill.active { background: #4f46e5 !important; color: #ffffff !important; border-color: #4f46e5 !important; box-shadow: 0 2px 6px rgba(79,70,229,0.28); }
+    body.dark #authGateModal > div { background: #0f172a; border-color: #334155; color: #f8fafc; }
+    body.dark #authGateModal input { background: #1e293b; color: #f8fafc; border-color: #334155; }
+    body.dark .ob-pill { background: #1e293b; color: #cbd5e1; border-color: #334155; }
+    body.dark .user-detail-box { background: #0f172a; border-color: #334155; color: #e2e8f0; }
   </style>
   <script src="strokes-data.js" defer></script>
 </head>
@@ -693,6 +712,14 @@
               <div class="min-w-0 flex-1">
                 <div class="text-sm font-bold text-slate-900">Speed Writing</div>
                 <div id="drawerSpeedBestSub" class="text-[11px] text-slate-500">60s Stroke Challenge</div>
+              </div>
+              <span class="text-slate-400 text-sm">›</span>
+            </button>
+            <button data-drawer-action="mocktest" class="drawer-item w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl hover:bg-slate-50 text-left transition">
+              <span class="w-9 h-9 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-sm shrink-0">🎯</span>
+              <div class="min-w-0 flex-1">
+                <div class="text-sm font-bold text-slate-900">JLPT Mock Test</div>
+                <div id="drawerMockBestSub" class="text-[11px] text-slate-500">N5–N1 Timed Exam &amp; Scorecard</div>
               </div>
               <span class="text-slate-400 text-sm">›</span>
             </button>
@@ -851,6 +878,73 @@
         <div id="homeSearchResults" class="hidden mt-3 pt-3 border-t border-slate-200 grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2"></div>
       </div>
 
+      <!-- Daily Goal & Streak Tracker (v5.1) -->
+      <div id="dailyGoalCard" class="ks-home-card bg-white rounded-3xl border border-slate-200 p-4 shadow-sm space-y-3">
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="relative w-14 h-14 shrink-0 flex items-center justify-center">
+              <svg class="w-14 h-14 -rotate-90" viewBox="0 0 56 56">
+                <circle class="dg-ring-bg" cx="28" cy="28" r="23" fill="none" stroke-width="5"></circle>
+                <circle id="dgRingCircle" class="dg-ring-fill" cx="28" cy="28" r="23" fill="none" stroke="#4f46e5" stroke-width="5" stroke-linecap="round" stroke-dasharray="144.51" stroke-dashoffset="144.51"></circle>
+              </svg>
+              <div id="dgRingText" class="absolute inset-0 flex items-center justify-center text-xs font-extrabold text-indigo-700 ks-home-title">0%</div>
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="ks-home-label text-[11px] font-bold uppercase tracking-wider text-indigo-600">Daily Study Goal</span>
+                <span id="dgDoneBadge" class="hidden text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">✓ DONE</span>
+              </div>
+              <div id="dgCountHeadline" class="ks-home-title text-base font-extrabold text-slate-900 leading-tight mt-0.5">0 / 10 Kanji today</div>
+              <div id="dgSubStatus" class="ks-home-muted text-[11px] text-slate-500 truncate mt-0.5">10 more to reach today's target</div>
+            </div>
+          </div>
+          <div class="flex flex-col items-end gap-1.5 shrink-0">
+            <div id="dgStreakBadge" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-extrabold">
+              <span id="dgFlameIcon">🔥</span>
+              <span id="dgStreakCount">0d</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="dgBestStreakText" class="ks-home-muted text-[10px] font-semibold text-slate-400">Best: 0d</span>
+              <button id="dgEditBtn" type="button" class="ks-home-soft-btn px-2 py-0.5 rounded-lg bg-slate-100 border border-slate-200 text-[10px] font-bold text-slate-600 hover:bg-slate-200 transition">Edit</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+          <div id="dgProgressBar" class="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <!-- Collapsible Target Picker -->
+        <div id="dgTargetEditor" class="hidden rounded-2xl bg-slate-50 border border-slate-200 p-3 space-y-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <span class="ks-home-label text-[11px] font-bold uppercase tracking-wider text-slate-500">Choose Daily Target</span>
+            <span class="ks-home-muted text-[10px] text-slate-400">Cloud synced</span>
+          </div>
+          <div class="grid grid-cols-4 gap-1.5">
+            <button type="button" data-dg-target="5" class="dg-preset-btn py-1.5 px-1 rounded-xl border border-slate-200 bg-white text-center transition">
+              <div class="text-xs font-extrabold">5</div>
+              <div class="text-[9px] opacity-75">~10 min</div>
+            </button>
+            <button type="button" data-dg-target="10" class="dg-preset-btn py-1.5 px-1 rounded-xl border border-slate-200 bg-white text-center transition">
+              <div class="text-xs font-extrabold">10</div>
+              <div class="text-[9px] opacity-75">~20 min</div>
+            </button>
+            <button type="button" data-dg-target="20" class="dg-preset-btn py-1.5 px-1 rounded-xl border border-slate-200 bg-white text-center transition">
+              <div class="text-xs font-extrabold">20</div>
+              <div class="text-[9px] opacity-75">~30 min</div>
+            </button>
+            <button type="button" data-dg-target="30" class="dg-preset-btn py-1.5 px-1 rounded-xl border border-slate-200 bg-white text-center transition">
+              <div class="text-xs font-extrabold">30</div>
+              <div class="text-[9px] opacity-75">~1 hr</div>
+            </button>
+          </div>
+          <div class="flex items-center gap-2 pt-0.5">
+            <input id="dgCustomInput" type="number" min="1" max="200" placeholder="Custom (1–200)" class="flex-1 px-3 py-1.5 text-xs rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            <button id="dgCustomSaveBtn" type="button" class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold transition">Save</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Today's Kanji & Continue Studying -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
         <div class="ks-home-card bg-white rounded-3xl border border-slate-200 p-4 shadow-sm flex items-center justify-between gap-3">
@@ -923,6 +1017,21 @@
           </div>
         </div>
         <span class="ks-home-soft-btn px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200 text-[11px] font-bold text-indigo-700 shrink-0">Guide ›</span>
+      </button>
+
+      <!-- JLPT Timed Mock Test Shortcut (v5.0) -->
+      <button id="homeMockTestBtn" type="button" class="ks-home-card w-full bg-white rounded-2xl border border-slate-200 px-4 py-3 shadow-sm flex items-center justify-between gap-3 text-left transition">
+        <div class="flex items-center gap-3 min-w-0">
+          <span class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-lg shrink-0">🎯</span>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="ks-home-title text-xs sm:text-sm font-bold text-slate-900 truncate">JLPT Timed Mock Test</span>
+              <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700 shrink-0">N5–N1</span>
+            </div>
+            <div id="homeMockSubText" class="ks-home-muted text-[11px] text-slate-500 truncate">N5–N1 real timed exam · Scorecard · Mistake review</div>
+          </div>
+        </div>
+        <span class="ks-home-soft-btn px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200 text-[11px] font-bold text-indigo-700 shrink-0">Exam ›</span>
       </button>
 
       <!-- Backup Info Card -->
@@ -1272,6 +1381,213 @@
         <div class="grid grid-cols-2 gap-2.5 pt-1">
           <button id="swChangeBtn" class="py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 hover:bg-slate-50 transition">Change Pool</button>
           <button id="swPlayAgainBtn" class="py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-xs font-bold text-white shadow-sm transition">⚡ Play Again</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- JLPT TIMED MOCK TEST VIEW (v5.0) -->
+    <section id="view-mocktest" class="hidden max-w-2xl mx-auto space-y-4 pb-6">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <button id="mtDrawerBtn" type="button" class="w-9 h-9 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 shadow-sm flex items-center justify-center font-bold text-base shrink-0" title="Menu">☰</button>
+          <div class="min-w-0">
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 truncate">JLPT Timed Mock Test <span class="kanji-font text-indigo-600">模擬試験</span></h2>
+            <p class="text-xs text-slate-500">Real JLPT-style N5–N1 timed exam · Scorecard · Mistake review</p>
+          </div>
+        </div>
+        <button id="mtBackHomeBtn" type="button" class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition shrink-0">← Home</button>
+      </div>
+
+      <!-- 1. MOCK EXAM SETUP PANEL -->
+      <div id="mtSetupPanel" class="space-y-4">
+        <div class="bg-white rounded-3xl border border-slate-200 p-5 shadow-sm space-y-4">
+          <!-- Best Score Banner -->
+          <div class="flex items-center justify-between gap-3 bg-indigo-50/70 border border-indigo-200 rounded-2xl px-4 py-3">
+            <div class="min-w-0">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-indigo-600">Selected Level Best</div>
+              <div id="mtBestLabel" class="text-xs font-semibold text-slate-600 truncate mt-0.5">JLPT N5 · Pass mark: 60%</div>
+            </div>
+            <div class="text-right shrink-0">
+              <div id="mtBestScore" class="text-xl font-black text-indigo-600">--</div>
+              <div id="mtBestStatus" class="text-[10px] font-bold text-slate-400 uppercase">Not taken</div>
+            </div>
+          </div>
+
+          <!-- Level Selector -->
+          <div class="space-y-2">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Select JLPT Level</label>
+            <div class="grid grid-cols-5 gap-2" id="mtLevelBtns">
+              <button type="button" data-mt-level="N5" class="mt-lvl-btn py-2.5 rounded-xl text-xs font-extrabold border transition bg-indigo-600 text-white border-indigo-600 shadow-xs">N5</button>
+              <button type="button" data-mt-level="N4" class="mt-lvl-btn py-2.5 rounded-xl text-xs font-extrabold border transition bg-slate-50 text-slate-700 border-slate-200">N4</button>
+              <button type="button" data-mt-level="N3" class="mt-lvl-btn py-2.5 rounded-xl text-xs font-extrabold border transition bg-slate-50 text-slate-700 border-slate-200">N3</button>
+              <button type="button" data-mt-level="N2" class="mt-lvl-btn py-2.5 rounded-xl text-xs font-extrabold border transition bg-slate-50 text-slate-700 border-slate-200">N2</button>
+              <button type="button" data-mt-level="N1" class="mt-lvl-btn py-2.5 rounded-xl text-xs font-extrabold border transition bg-slate-50 text-slate-700 border-slate-200">N1</button>
+            </div>
+          </div>
+
+          <!-- Exam Preset Selector -->
+          <div class="space-y-2">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-500">Exam Format &amp; Timer</label>
+            <div class="grid grid-cols-3 gap-2" id="mtPresetBtns">
+              <button type="button" data-mt-preset="mini" class="mt-preset-btn py-2.5 px-2 rounded-xl border text-center transition bg-slate-50 text-slate-700 border-slate-200">
+                <div class="text-xs font-extrabold">Mini</div>
+                <div class="text-[10px] opacity-80 mt-0.5">20 Qs · 10m</div>
+              </button>
+              <button type="button" data-mt-preset="standard" class="mt-preset-btn py-2.5 px-2 rounded-xl border text-center transition bg-indigo-600 text-white border-indigo-600 shadow-xs">
+                <div class="text-xs font-extrabold">Standard</div>
+                <div class="text-[10px] opacity-90 mt-0.5">35 Qs · 20m</div>
+              </button>
+              <button type="button" data-mt-preset="full" class="mt-preset-btn py-2.5 px-2 rounded-xl border text-center transition bg-slate-50 text-slate-700 border-slate-200">
+                <div class="text-xs font-extrabold">Full</div>
+                <div class="text-[10px] opacity-80 mt-0.5">50 Qs · 30m</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Exam Sections Preview -->
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="rounded-2xl bg-slate-50 border border-slate-200 p-2.5">
+              <div class="kanji-font text-sm font-black text-rose-600">漢字読み</div>
+              <div class="text-[10px] font-semibold text-slate-500 mt-0.5">Kanji Reading</div>
+            </div>
+            <div class="rounded-2xl bg-slate-50 border border-slate-200 p-2.5">
+              <div class="kanji-font text-sm font-black text-sky-600">意味</div>
+              <div class="text-[10px] font-semibold text-slate-500 mt-0.5">Meaning</div>
+            </div>
+            <div class="rounded-2xl bg-slate-50 border border-slate-200 p-2.5">
+              <div class="kanji-font text-sm font-black text-emerald-600">表記</div>
+              <div class="text-[10px] font-semibold text-slate-500 mt-0.5">Recognition</div>
+            </div>
+          </div>
+
+          <button id="mtStartBtn" type="button" class="w-full py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-sm shadow-md transition">
+            🎯 Start Timed Mock Test
+          </button>
+        </div>
+
+        <!-- Recent Mock Test History -->
+        <div id="mtHistoryCard" class="hidden bg-white rounded-3xl border border-slate-200 p-4 shadow-sm space-y-2.5">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Recent Mock Attempts</h3>
+            <span id="mtTotalAttempts" class="text-[11px] font-bold text-indigo-600">0 tests</span>
+          </div>
+          <div id="mtHistoryList" class="space-y-2"></div>
+        </div>
+      </div>
+
+      <!-- 2. ACTIVE TIMED EXAM PANEL -->
+      <div id="mtActivePanel" class="hidden space-y-3">
+        <!-- Exam Top HUD -->
+        <div class="bg-white rounded-2xl border border-slate-200 px-3.5 py-2.5 shadow-sm flex items-center justify-between gap-2 flex-wrap">
+          <div class="flex items-center gap-2">
+            <span id="mtExamLevelBadge" class="px-2.5 py-1 rounded-xl bg-indigo-600 text-white font-extrabold text-xs">JLPT N5</span>
+            <span id="mtTimerBadge" class="px-3 py-1 rounded-xl bg-indigo-50 text-indigo-700 font-black text-sm">⏱ 20:00</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button id="mtPaletteToggleBtn" type="button" class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700 transition">
+              📋 <span id="mtAnsweredCount">0</span>/<span id="mtTotalQCount">35</span>
+            </button>
+            <button id="mtSubmitOpenBtn" type="button" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition">
+              Submit
+            </button>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+          <div id="mtProgressBar" class="h-full bg-indigo-600 transition-all duration-300" style="width: 3%"></div>
+        </div>
+
+        <!-- Collapsible Question Navigator Palette -->
+        <div id="mtPaletteBox" class="hidden bg-white rounded-2xl border border-slate-200 p-3 shadow-sm space-y-2">
+          <div class="flex items-center justify-between text-[11px] text-slate-500 font-semibold">
+            <span>Jump to Question</span>
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>Done</span>
+              <span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>Flag</span>
+              <span class="inline-flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-200"></span>Left</span>
+            </div>
+          </div>
+          <div id="mtPaletteGrid" class="grid grid-cols-7 sm:grid-cols-10 gap-1.5"></div>
+        </div>
+
+        <!-- Question Card -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-5 shadow-sm space-y-4">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span id="mtQNumLabel" class="text-xs font-extrabold text-slate-500">Q 1 / 35</span>
+              <span id="mtSectionBadge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700">Section 1 · Reading</span>
+            </div>
+            <button id="mtFlagBtn" type="button" class="px-2.5 py-1 rounded-xl border border-slate-200 bg-slate-50 hover:bg-amber-50 text-xs font-bold text-slate-600 transition">
+              🚩 Flag
+            </button>
+          </div>
+
+          <div class="py-3 text-center space-y-2">
+            <div id="mtPromptSubtitle" class="text-xs font-semibold uppercase tracking-wider text-slate-400">Choose the correct reading for this Kanji</div>
+            <div id="mtPromptMain" class="kanji-font text-6xl sm:text-7xl font-black text-slate-900">日</div>
+            <div id="mtPromptHint" class="hidden text-xs font-semibold text-indigo-600 kanji-font"></div>
+          </div>
+
+          <div id="mtOptionsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+
+          <div class="grid grid-cols-2 gap-2.5 pt-2 border-t border-slate-100">
+            <button id="mtPrevQBtn" type="button" class="py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 transition">← Previous</button>
+            <button id="mtNextQBtn" type="button" class="py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-bold text-white shadow-sm transition">Next →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. OFFICIAL JLPT SCORECARD & MISTAKE REVIEW PANEL -->
+      <div id="mtResultPanel" class="hidden space-y-4">
+        <div class="bg-white rounded-3xl border border-slate-200 p-5 shadow-md space-y-4">
+          <div class="text-center space-y-2">
+            <div id="mtPassBadge" class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-extrabold">
+              🏆 PASSED (合格)
+            </div>
+            <h3 id="mtResTitle" class="text-xl font-black text-slate-900">JLPT N5 Mock Scorecard</h3>
+            <div class="flex items-baseline justify-center gap-2">
+              <span id="mtResPct" class="text-4xl font-black text-indigo-600">86%</span>
+              <span id="mtResRaw" class="text-sm font-bold text-slate-500">(30 / 35)</span>
+            </div>
+            <div class="flex items-center justify-center flex-wrap gap-3 text-xs font-semibold text-slate-500">
+              <span>Scaled: <strong id="mtResScaled" class="text-slate-900">154 / 180</strong></span>
+              <span>·</span>
+              <span>Time: <strong id="mtResTime" class="text-slate-900">12m 10s</strong></span>
+            </div>
+          </div>
+
+          <!-- Section-Wise Score Breakdown -->
+          <div class="bg-slate-50 rounded-2xl border border-slate-200 p-3.5 space-y-2.5">
+            <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500">Section Breakdown</div>
+            <div id="mtSectionBreakdown" class="space-y-2"></div>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <button id="mtAddDoubtBtn" type="button" class="hidden py-2.5 px-3 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-xs font-bold text-amber-800 transition">
+              📌 Add Mistakes to Doubt List
+            </button>
+            <button id="mtPracticeMistakesBtn" type="button" class="hidden py-2.5 px-3 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-xs font-bold text-rose-700 transition">
+              ✍️ Practice Missed Kanji →
+            </button>
+          </div>
+          <div class="grid grid-cols-2 gap-2.5">
+            <button id="mtChangeLevelBtn" type="button" class="py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-bold text-slate-700 transition">← Change Level</button>
+            <button id="mtRetakeBtn" type="button" class="py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-bold text-white shadow-sm transition">↻ Retake Mock</button>
+          </div>
+        </div>
+
+        <!-- Mistake Review & Answer Key -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-4 shadow-sm space-y-3">
+          <div class="flex items-center justify-between gap-2 flex-wrap">
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-500">Answer Sheet &amp; Mistake Review</h4>
+            <div class="flex items-center gap-1.5">
+              <button id="mtRevMistakesTab" type="button" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-rose-600 text-white transition">❌ Mistakes</button>
+              <button id="mtRevAllTab" type="button" class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-slate-100 text-slate-600 transition">📋 All</button>
+            </div>
+          </div>
+          <div id="mtReviewList" class="space-y-2.5"></div>
         </div>
       </div>
     </section>
@@ -1830,7 +2146,7 @@
   </main>
 
   <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6">
-    Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v4.9.9</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan</span>
+    Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v5.2</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan</span>
   </footer>
 
   <!-- Bottom Navigation Bar (Home | Hiragana | Katakana | Kanji) -->
@@ -1977,30 +2293,119 @@
     </div>
   </div>
 
-  <!-- Mandatory Login / Sign Up Gate -->
-  <div id="authGateModal" class="hidden fixed inset-0 z-[90] bg-slate-900/75 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 p-6 space-y-4">
+  <!-- Mandatory Login / 2-Step Sign Up Gate (v5.2) -->
+  <div id="authGateModal" class="hidden fixed inset-0 z-[90] bg-slate-900/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white w-full max-w-md max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl border border-slate-200 p-5 sm:p-6 space-y-4">
       <div class="text-center space-y-1">
-        <div class="w-14 h-14 mx-auto rounded-2xl bg-indigo-600 text-white flex items-center justify-center kanji-font font-bold text-3xl shadow-md">漢</div>
+        <div class="w-12 h-12 mx-auto rounded-2xl bg-indigo-600 text-white flex items-center justify-center kanji-font font-bold text-2xl shadow-md">漢</div>
         <h2 id="authTitle" class="text-lg font-extrabold text-slate-900 pt-1">Sign In to Nihonify</h2>
-        <p class="text-xs text-slate-500">Created by Zishan · Free JLPT N5–N1 Learning</p>
+        <p id="authSubtitle" class="text-xs text-slate-500">Free JLPT N5–N1 Japanese Learning</p>
       </div>
 
-      <div class="space-y-2.5">
-        <div id="authNameWrap" class="hidden">
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Your Name</label>
-          <input id="authNameInput" type="text" placeholder="e.g. Rahul Sharma" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Email</label>
-          <input id="authEmailInput" type="email" placeholder="you@example.com" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Password</label>
-          <input id="authPassInput" type="password" placeholder="Min 6 characters" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-        </div>
-        <div id="authErrorMsg" class="hidden text-xs font-semibold text-rose-600 bg-rose-50 border border-rose-200 rounded-xl p-2.5"></div>
+      <!-- 2-Step Progress Indicator (Create Account only) -->
+      <div id="authStepIndicator" class="hidden flex items-center justify-center gap-2 text-[11px] font-bold">
+        <span id="authStepBadge1" class="px-2.5 py-1 rounded-full bg-indigo-600 text-white">1. Account</span>
+        <span class="text-slate-300">→</span>
+        <span id="authStepBadge2" class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-500">2. Quick Profile</span>
       </div>
+
+      <!-- STEP 1: Email + Password (Sign In & Create Account Step 1) -->
+      <div id="authStep1Wrap" class="space-y-2.5">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Email <span class="text-rose-500">*</span></label>
+          <input id="authEmailInput" type="email" autocomplete="email" placeholder="you@example.com" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+        </div>
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-xs font-semibold text-slate-600">Password <span class="text-rose-500">*</span></label>
+            <button id="authForgotPassBtn" type="button" class="text-[11px] font-bold text-indigo-600 hover:underline">Forgot Password?</button>
+          </div>
+          <input id="authPassInput" type="password" autocomplete="current-password" placeholder="Min 6 characters" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+        </div>
+      </div>
+
+      <!-- STEP 2: Quick Profile (Create Account Step 2 only) -->
+      <div id="authStep2Wrap" class="hidden space-y-3">
+        <button id="authBackToStep1Btn" type="button" class="text-xs font-bold text-indigo-600 hover:underline">← Back to Email &amp; Password</button>
+
+        <div class="grid grid-cols-3 gap-2">
+          <div class="col-span-2">
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Full Name <span class="text-rose-500">*</span></label>
+            <input id="obFullName" type="text" placeholder="e.g. Rahul Sharma" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Age <span class="text-rose-500">*</span></label>
+            <input id="obAge" type="number" min="5" max="110" placeholder="18" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">City &amp; State / Country <span class="text-rose-500">*</span></label>
+          <input id="obLocation" type="text" placeholder="e.g. Patna, Bihar / India" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Student / Profession <span class="text-rose-500">*</span></label>
+          <div id="obProfessionGroup" class="grid grid-cols-2 gap-1.5">
+            <button type="button" data-val="School Student" class="ob-pill px-2.5 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">School Student</button>
+            <button type="button" data-val="College Student" class="ob-pill px-2.5 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">College Student</button>
+            <button type="button" data-val="Working" class="ob-pill px-2.5 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">Working</button>
+            <button type="button" data-val="Other" class="ob-pill px-2.5 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">Other</button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Current Japanese Level <span class="text-rose-500">*</span></label>
+          <div id="obLevelGroup" class="flex flex-wrap gap-1.5">
+            <button type="button" data-val="Complete Beginner" class="ob-pill px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">Complete Beginner</button>
+            <button type="button" data-val="Kana Only" class="ob-pill px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">Kana Only</button>
+            <button type="button" data-val="JLPT N5" class="ob-pill px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">JLPT N5</button>
+            <button type="button" data-val="JLPT N4" class="ob-pill px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">JLPT N4</button>
+            <button type="button" data-val="JLPT N3" class="ob-pill px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">JLPT N3</button>
+            <button type="button" data-val="JLPT N2" class="ob-pill px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">JLPT N2</button>
+            <button type="button" data-val="JLPT N1" class="ob-pill px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">JLPT N1</button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Main Goal <span class="text-rose-500">*</span></label>
+          <div id="obGoalGroup" class="grid grid-cols-2 gap-1.5">
+            <button type="button" data-val="JLPT Exam" class="ob-pill px-2.5 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">JLPT Exam</button>
+            <button type="button" data-val="Job or Study in Japan" class="ob-pill px-2.5 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">Job or Study in Japan</button>
+            <button type="button" data-val="Anime & Culture" class="ob-pill px-2.5 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">Anime &amp; Culture</button>
+            <button type="button" data-val="Hobby" class="ob-pill px-2.5 py-2 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">Hobby</button>
+          </div>
+        </div>
+
+        <div id="obAnimeWrap" class="hidden">
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Which are your favorite anime? <span class="text-slate-400 font-normal">(Min 2 — Optional)</span></label>
+          <input id="obFavoriteAnime" type="text" placeholder="e.g. Naruto, Attack on Titan, Demon Slayer" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Daily Study Time <span class="text-rose-500">*</span></label>
+          <div id="obStudyTimeGroup" class="grid grid-cols-4 gap-1.5">
+            <button type="button" data-val="10 min" data-mins="10" class="ob-pill py-2 px-1 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold text-slate-700">10 min</button>
+            <button type="button" data-val="20 min" data-mins="20" class="ob-pill py-2 px-1 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold text-slate-700">20 min</button>
+            <button type="button" data-val="30 min" data-mins="30" class="ob-pill py-2 px-1 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold text-slate-700">30 min</button>
+            <button type="button" data-val="1 hr" data-mins="60" class="ob-pill py-2 px-1 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold text-slate-700">1 hr</button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1.5">How did you hear about Kanji Studio? <span class="text-rose-500">*</span></label>
+          <div id="obReferralGroup" class="flex flex-wrap gap-1.5">
+            <button type="button" data-val="Friend" class="ob-pill px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">Friend</button>
+            <button type="button" data-val="WhatsApp" class="ob-pill px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">WhatsApp</button>
+            <button type="button" data-val="YouTube" class="ob-pill px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">YouTube</button>
+            <button type="button" data-val="Instagram" class="ob-pill px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">Instagram</button>
+            <button type="button" data-val="Other" class="ob-pill px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">Other</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="authErrorMsg" class="hidden text-xs font-semibold text-rose-600 bg-rose-50 border border-rose-200 rounded-xl p-2.5"></div>
+      <div id="authSuccessMsg" class="hidden text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-xl p-2.5"></div>
 
       <button id="authSubmitBtn" class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-sm transition">Sign In</button>
       <div class="text-center text-xs text-slate-500">
@@ -2047,6 +2452,21 @@
       <div class="grid grid-cols-2 gap-2.5 pt-1">
         <button id="exitNoBtn" class="py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 transition">No</button>
         <button id="exitYesBtn" class="py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-xs font-bold text-white shadow-sm transition">Yes, Exit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mock Test Submit / Exit Confirmation Modal (v5.0) -->
+  <div id="mtConfirmModal" class="hidden fixed inset-0 z-[70] bg-slate-900/55 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl border border-slate-200 p-5 text-center space-y-4">
+      <div id="mtConfirmIcon" class="w-12 h-12 mx-auto rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl font-bold">🎯</div>
+      <div>
+        <h3 id="mtConfirmTitle" class="text-base font-bold text-slate-900">Submit Mock Exam?</h3>
+        <p id="mtConfirmDesc" class="text-xs text-slate-500 mt-1">You have answered 35 of 35 questions.</p>
+      </div>
+      <div class="grid grid-cols-2 gap-2.5 pt-1">
+        <button id="mtConfirmCancelBtn" type="button" class="py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 transition">Continue Exam</button>
+        <button id="mtConfirmOkBtn" type="button" class="py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-xs font-bold text-white shadow-sm transition">Submit Now</button>
       </div>
     </div>
   </div>
@@ -4551,9 +4971,12 @@
       writingStats: {}, // { [setKey]: { lastStudied, writings, correctStrokes, wrongStrokes } }
       practiceCounts: {}, // { [char]: { write: number, quiz: number } }
       dailyActivity: {}, // { 'YYYY-MM-DD': count }
+      dailyGoal: { target: 10, bestStreak: 0, goalCompletedDates: {} }, // v5.1 Daily Goal & Streak
       srs: {}, // { [char]: { box, nextReview, wrongCount, hard, lastResult } }
       customSets: [{ id: "doubt", name: "Doubt List", chars: [], createdAt: 0 }],
       speedBest: {}, // { [poolKey]: bestScore }
+      mockBest: {},  // { [level]: { pct, score, total, passed, date } }
+      mockHistory: [], // last 20 attempts
       lastBackup: null,
       updatedAt: 0,
       selectedKanji: null,
@@ -4623,8 +5046,17 @@
           if (parsed.writingStats) state.writingStats = parsed.writingStats;
           if (parsed.practiceCounts) state.practiceCounts = parsed.practiceCounts;
           if (parsed.dailyActivity) state.dailyActivity = parsed.dailyActivity;
+          if (parsed.dailyGoal && typeof parsed.dailyGoal === "object") {
+            state.dailyGoal = {
+              target: Math.max(1, Math.min(200, Number(parsed.dailyGoal.target) || 10)),
+              bestStreak: Math.max(0, Number(parsed.dailyGoal.bestStreak) || 0),
+              goalCompletedDates: (parsed.dailyGoal.goalCompletedDates && typeof parsed.dailyGoal.goalCompletedDates === "object") ? parsed.dailyGoal.goalCompletedDates : {}
+            };
+          }
           if (parsed.srs && typeof parsed.srs === "object") state.srs = parsed.srs;
           if (parsed.speedBest && typeof parsed.speedBest === "object") state.speedBest = parsed.speedBest;
+          if (parsed.mockBest && typeof parsed.mockBest === "object") state.mockBest = parsed.mockBest;
+          if (Array.isArray(parsed.mockHistory)) state.mockHistory = parsed.mockHistory.slice(0, 20);
           if (Array.isArray(parsed.customSets) && parsed.customSets.length) {
             state.customSets = parsed.customSets;
             if (!state.customSets.some(s => s.id === "doubt")) {
@@ -4658,9 +5090,12 @@
           writingStats: state.writingStats,
           practiceCounts: state.practiceCounts,
           dailyActivity: state.dailyActivity,
+          dailyGoal: state.dailyGoal,
           srs: state.srs,
           customSets: state.customSets,
           speedBest: state.speedBest,
+          mockBest: state.mockBest,
+          mockHistory: state.mockHistory,
           lastBackup: state.lastBackup,
           updatedAt: state.updatedAt,
           lastStudiedSet: state.lastStudiedSet,
@@ -4834,9 +5269,170 @@
       return `${y}-${m}-${day}`;
     }
 
-    function bumpTodayActivity() {
+    function ensureDailyGoalState() {
+      if (!state.dailyGoal || typeof state.dailyGoal !== "object") {
+        state.dailyGoal = { target: 10, bestStreak: 0, goalCompletedDates: {} };
+      }
+      if (!state.dailyGoal.goalCompletedDates || typeof state.dailyGoal.goalCompletedDates !== "object") {
+        state.dailyGoal.goalCompletedDates = {};
+      }
+      state.dailyGoal.target = Math.max(1, Math.min(200, Number(state.dailyGoal.target) || 10));
+      state.dailyGoal.bestStreak = Math.max(0, Number(state.dailyGoal.bestStreak) || 0);
+      return state.dailyGoal;
+    }
+
+    function isDayGoalCompleted(dateKey, targetOverride) {
+      const dg = ensureDailyGoalState();
+      const tgt = targetOverride || dg.target;
+      if (dg.goalCompletedDates && dg.goalCompletedDates[dateKey]) return true;
+      return (state.dailyActivity[dateKey] || 0) >= tgt;
+    }
+
+    function computeDailyGoalStats() {
+      const dg = ensureDailyGoalState();
+      const target = dg.target;
+      const now = new Date();
+      const todayKey = getDateKey(now);
+      const todayCount = state.dailyActivity[todayKey] || 0;
+      const goalMetToday = todayCount >= target || Boolean(dg.goalCompletedDates[todayKey]);
+      if (todayCount >= target && !dg.goalCompletedDates[todayKey]) {
+        dg.goalCompletedDates[todayKey] = true;
+      }
+
+      // Compute active streak (if today isn't done yet, check starting from yesterday so streak stays alive during the day)
+      let currentStreak = 0;
+      const cursor = new Date(now);
+      if (!goalMetToday) cursor.setDate(cursor.getDate() - 1);
+      for (let i = 0; i < 3650; i++) {
+        const k = getDateKey(cursor);
+        if (isDayGoalCompleted(k, target)) {
+          currentStreak++;
+          cursor.setDate(cursor.getDate() - 1);
+        } else {
+          break;
+        }
+      }
+      if (currentStreak > dg.bestStreak) dg.bestStreak = currentStreak;
+
+      const pct = Math.min(100, Math.round((todayCount / target) * 100));
+      const remaining = Math.max(0, target - todayCount);
+      return {
+        todayKey,
+        todayCount,
+        target,
+        pct,
+        remaining,
+        goalMetToday,
+        currentStreak,
+        bestStreak: dg.bestStreak,
+        atRisk: currentStreak > 0 && !goalMetToday
+      };
+    }
+
+    function renderDailyGoalCard() {
+      const card = document.getElementById("dailyGoalCard");
+      if (!card) return;
+      const stats = computeDailyGoalStats();
+
+      // Ring
+      const circle = document.getElementById("dgRingCircle");
+      const ringText = document.getElementById("dgRingText");
+      const circ = 2 * Math.PI * 23;
+      if (circle) {
+        circle.setAttribute("stroke-dasharray", circ.toFixed(2));
+        circle.setAttribute("stroke-dashoffset", (circ * (1 - stats.pct / 100)).toFixed(2));
+        circle.setAttribute("stroke", stats.goalMetToday ? "#10b981" : "#4f46e5");
+      }
+      if (ringText) {
+        ringText.textContent = stats.goalMetToday ? "✓" : `${stats.pct}%`;
+        ringText.className = `absolute inset-0 flex items-center justify-center ${stats.goalMetToday ? "text-base text-emerald-600" : "text-xs text-indigo-700 ks-home-title"} font-extrabold`;
+      }
+
+      const doneBadge = document.getElementById("dgDoneBadge");
+      if (doneBadge) doneBadge.classList.toggle("hidden", !stats.goalMetToday);
+
+      const headline = document.getElementById("dgCountHeadline");
+      if (headline) headline.textContent = `${stats.todayCount} / ${stats.target} Kanji today`;
+
+      const sub = document.getElementById("dgSubStatus");
+      if (sub) {
+        if (stats.goalMetToday) {
+          const extra = stats.todayCount - stats.target;
+          sub.textContent = extra > 0
+            ? `Goal complete! +${extra} bonus Kanji studied today`
+            : `Awesome! You hit today's study target`;
+        } else if (stats.atRisk) {
+          sub.textContent = `${stats.remaining} more to keep your ${stats.currentStreak}-day streak alive`;
+        } else {
+          sub.textContent = `${stats.remaining} more to reach today's target`;
+        }
+      }
+
+      const bar = document.getElementById("dgProgressBar");
+      if (bar) {
+        bar.style.width = `${stats.pct}%`;
+        bar.className = stats.goalMetToday
+          ? "h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500"
+          : "h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 transition-all duration-500";
+      }
+
+      const streakBadge = document.getElementById("dgStreakBadge");
+      const streakCount = document.getElementById("dgStreakCount");
+      const flameIcon = document.getElementById("dgFlameIcon");
+      const bestEl = document.getElementById("dgBestStreakText");
+      if (streakCount) streakCount.textContent = `${stats.currentStreak}d`;
+      if (bestEl) bestEl.textContent = `Best: ${stats.bestStreak}d`;
+      if (streakBadge) {
+        if (stats.currentStreak > 0) {
+          streakBadge.className = "inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-300 text-amber-700 text-xs font-extrabold";
+        } else {
+          streakBadge.className = "inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-500 text-xs font-extrabold";
+        }
+      }
+      if (flameIcon) {
+        flameIcon.className = stats.currentStreak > 0 ? "dg-flame-active" : "opacity-50";
+      }
+
+      // Sync preset highlight
+      card.querySelectorAll(".dg-preset-btn").forEach(btn => {
+        const val = Number(btn.getAttribute("data-dg-target"));
+        btn.classList.toggle("active", val === stats.target);
+      });
+    }
+
+    function setDailyGoalTarget(newTarget, silent) {
+      const dg = ensureDailyGoalState();
+      const clamped = Math.max(1, Math.min(200, Math.round(Number(newTarget) || 10)));
+      dg.target = clamped;
+      computeDailyGoalStats();
+      saveState();
+      renderDailyGoalCard();
+      renderDashboardCards();
+      if (!silent) showToast(`Daily goal set to ${clamped} Kanji/day`);
+    }
+
+    // Forward-compatible helper for v5.2 Onboarding Daily Study Time pills (10/20/30/60 min)
+    window.setDailyGoalFromMinutes = function(minutes) {
+      const map = { 10: 5, 20: 10, 30: 20, 60: 30 };
+      setDailyGoalTarget(map[minutes] || 10, true);
+    };
+
+    function bumpTodayActivity(amount) {
+      const inc = Math.max(1, Number(amount) || 1);
+      const dg = ensureDailyGoalState();
       const key = getDateKey(new Date());
-      state.dailyActivity[key] = (state.dailyActivity[key] || 0) + 1;
+      const wasDone = Boolean(dg.goalCompletedDates[key]) || (state.dailyActivity[key] || 0) >= dg.target;
+      state.dailyActivity[key] = (state.dailyActivity[key] || 0) + inc;
+      const nowDone = state.dailyActivity[key] >= dg.target;
+      if (nowDone && !wasDone) {
+        dg.goalCompletedDates[key] = true;
+        const stats = computeDailyGoalStats();
+        try { if (typeof sfx !== "undefined" && sfx.complete) sfx.complete(); } catch (e) {}
+        showToast(`🔥 Daily Goal Complete! ${stats.currentStreak}-day streak!`);
+      }
+      if (state.activeTab === "home" && state.activeMode === "browse") {
+        renderDailyGoalCard();
+      }
     }
 
     // =========================================================================
@@ -5793,7 +6389,7 @@
     }
 
     function renderModeTabs() {
-      ["home", "kanji-folders", "settings", "settings-themes", "settings-mascot", "aboutjp", "radicals", "customsets", "lookalikes", "speedwrite", "browse", "setview", "detail", "flashcards", "quiz", "writing", "reading"].forEach(m => {
+      ["home", "kanji-folders", "settings", "settings-themes", "settings-mascot", "aboutjp", "radicals", "customsets", "lookalikes", "speedwrite", "mocktest", "browse", "setview", "detail", "flashcards", "quiz", "writing", "reading"].forEach(m => {
         const sec = document.getElementById(`view-${m}`);
         if (sec) sec.classList.add("hidden");
       });
@@ -5843,6 +6439,8 @@
         document.getElementById("view-lookalikes").classList.remove("hidden");
       } else if (state.activeTab === "speedwrite") {
         document.getElementById("view-speedwrite").classList.remove("hidden");
+      } else if (state.activeTab === "mocktest") {
+        document.getElementById("view-mocktest").classList.remove("hidden");
       } else if (state.activeTab === "kanji" && !state.activeKanjiLevel) {
         document.getElementById("view-kanji-folders").classList.remove("hidden");
       } else {
@@ -6031,6 +6629,7 @@
         else if (state.activeTab === "customsets" && typeof window.renderCustomSetsView === "function") window.renderCustomSetsView();
         else if (state.activeTab === "lookalikes" && typeof window.renderLookalikesView === "function") window.renderLookalikesView();
         else if (state.activeTab === "speedwrite" && typeof window.renderSpeedWriteSetup === "function") window.renderSpeedWriteSetup();
+        else if (state.activeTab === "mocktest" && typeof window.renderMockTestSetup === "function") window.renderMockTestSetup();
         else if (state.activeTab === "kanji" && !state.activeKanjiLevel) renderKanjiFolders();
         else renderBrowse();
       } else if (state.activeMode === "setview") {
@@ -6099,6 +6698,7 @@
     }
 
     function renderDashboardCards() {
+      renderDailyGoalCard();
       // Weekly Sun-Sat / last 7 days tracker
       const grid = document.getElementById("weeklyDaysGrid");
       if (grid) {
@@ -6111,11 +6711,12 @@
           const key = getDateKey(d);
           const cnt = state.dailyActivity[key] || 0;
           const isToday = i === 0;
+          const metGoal = isDayGoalCompleted(key);
           const box = document.createElement("div");
-          box.className = `rounded-xl py-1.5 px-1 border ${isToday ? "ks-today-box border-indigo-300 bg-indigo-50" : "border-slate-200 bg-slate-50"}`;
+          box.className = `rounded-xl py-1.5 px-1 border ${isToday ? "ks-today-box border-indigo-300 bg-indigo-50" : (metGoal ? "border-emerald-200 bg-emerald-50/70" : "border-slate-200 bg-slate-50")}`;
           box.innerHTML = `
             <div class="text-[10px] font-semibold ${isToday ? "ks-today-lbl text-indigo-600" : "ks-home-muted text-slate-500"}">${dayNames[d.getDay()]}</div>
-            <div class="text-xs font-bold mt-0.5 ${cnt > 0 ? "text-emerald-600" : "text-slate-400"}">${cnt > 0 ? cnt : "–"}</div>
+            <div class="text-xs font-bold mt-0.5 ${metGoal ? "text-emerald-600" : (cnt > 0 ? "text-indigo-600" : "text-slate-400")}">${cnt > 0 ? cnt : "–"}${metGoal ? '<span class="text-[9px] ml-0.5">✓</span>' : ""}</div>
           `;
           grid.appendChild(box);
         }
@@ -7920,9 +8521,12 @@
         state.favorites = {};
         state.setStats = {};
         state.dailyActivity = {};
+        state.dailyGoal = { target: (state.dailyGoal && state.dailyGoal.target) || 10, bestStreak: 0, goalCompletedDates: {} };
         state.lastStudiedSet = null;
         state.writingStats = {};
         state.practiceCounts = {};
+        state.mockBest = {};
+        state.mockHistory = [];
         saveState();
         renderGlobalProgress();
         renderLevelTabs();
@@ -7992,7 +8596,8 @@
           progress: state.progress,
           favorites: state.favorites,
           setStats: state.setStats,
-          dailyActivity: state.dailyActivity
+          dailyActivity: state.dailyActivity,
+          dailyGoal: state.dailyGoal
         }, null, 2);
         const blob = new Blob([payload], { type: "application/json" });
         const url = URL.createObjectURL(blob);
@@ -8021,6 +8626,13 @@
             state.favorites = data.favorites || {};
             state.setStats = data.setStats || {};
             state.dailyActivity = data.dailyActivity || {};
+            if (data.dailyGoal && typeof data.dailyGoal === "object") {
+              state.dailyGoal = {
+                target: Math.max(1, Math.min(200, Number(data.dailyGoal.target) || 10)),
+                bestStreak: Math.max(0, Number(data.dailyGoal.bestStreak) || 0),
+                goalCompletedDates: (data.dailyGoal.goalCompletedDates && typeof data.dailyGoal.goalCompletedDates === "object") ? data.dailyGoal.goalCompletedDates : {}
+              };
+            }
             state.lastBackup = Date.now();
             saveState();
             renderGlobalProgress();
@@ -8063,12 +8675,72 @@
       let fbAuth = null;
       let fbDb = null;
       let authIsSignUp = false;
+      let authSignUpStep = 1;
+      let pendingSignupProfile = null;
       const authModal = document.getElementById("authGateModal");
       const authErrEl = document.getElementById("authErrorMsg");
+      const authOkEl = document.getElementById("authSuccessMsg");
+
+      const obSelections = {
+        profession: "",
+        level: "",
+        goal: "",
+        studyTime: "",
+        studyMinutes: 20,
+        referral: ""
+      };
 
       function showAuthError(msg) {
+        if (authOkEl) authOkEl.classList.add("hidden");
         authErrEl.textContent = msg;
         authErrEl.classList.remove("hidden");
+      }
+
+      function showAuthSuccess(msg) {
+        authErrEl.classList.add("hidden");
+        if (authOkEl) {
+          authOkEl.textContent = msg;
+          authOkEl.classList.remove("hidden");
+        }
+      }
+
+      function clearAuthMessages() {
+        authErrEl.classList.add("hidden");
+        if (authOkEl) authOkEl.classList.add("hidden");
+      }
+
+      function escHtmlStr(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function applyUserLevelFocus(levelStr) {
+        if (!levelStr) return;
+        state.activeMode = "browse";
+        state.activeSetChars = null;
+        if (levelStr === "Complete Beginner") {
+          state.activeTab = "Hiragana";
+          state.activeLevel = "Hiragana";
+        } else if (levelStr === "Kana Only" || levelStr === "JLPT N5") {
+          state.activeTab = "kanji";
+          state.activeKanjiLevel = "N5";
+          state.activeLevel = "N5";
+        } else if (levelStr.startsWith("JLPT N")) {
+          const lvl = levelStr.replace("JLPT ", "").trim();
+          if (LEVELS.includes(lvl)) {
+            state.activeTab = "kanji";
+            state.activeKanjiLevel = lvl;
+            state.activeLevel = lvl;
+          }
+        }
+        saveState();
+        renderGlobalProgress();
+        renderLevelTabs();
+        renderActiveView();
       }
 
       try {
@@ -8118,9 +8790,12 @@
               writingStats: state.writingStats || {},
               practiceCounts: state.practiceCounts || {},
               dailyActivity: state.dailyActivity || {},
+              dailyGoal: state.dailyGoal || { target: 10, bestStreak: 0, goalCompletedDates: {} },
               srs: state.srs || {},
               customSets: state.customSets || [],
               speedBest: state.speedBest || {},
+              mockBest: state.mockBest || {},
+              mockHistory: state.mockHistory || [],
               lastStudiedSet: state.lastStudiedSet || null,
               activeLevel: state.activeLevel || "N5",
               updatedAt: state.updatedAt || Date.now()
@@ -8154,6 +8829,28 @@
               for (const [day, cnt] of Object.entries(cloud.dailyActivity)) {
                 if ((cnt || 0) > (state.dailyActivity[day] || 0)) {
                   state.dailyActivity[day] = cnt;
+                  changed = true;
+                }
+              }
+            }
+            if (cloud.dailyGoal && typeof cloud.dailyGoal === "object") {
+              const dg = ensureDailyGoalState();
+              if (cloud.dailyGoal.goalCompletedDates && typeof cloud.dailyGoal.goalCompletedDates === "object") {
+                for (const [dKey, done] of Object.entries(cloud.dailyGoal.goalCompletedDates)) {
+                  if (done && !dg.goalCompletedDates[dKey]) {
+                    dg.goalCompletedDates[dKey] = true;
+                    changed = true;
+                  }
+                }
+              }
+              if ((Number(cloud.dailyGoal.bestStreak) || 0) > (dg.bestStreak || 0)) {
+                dg.bestStreak = Number(cloud.dailyGoal.bestStreak) || 0;
+                changed = true;
+              }
+              if ((cloud.updatedAt || 0) > (state.updatedAt || 0) && Number(cloud.dailyGoal.target) >= 1) {
+                const cTgt = Math.max(1, Math.min(200, Math.round(Number(cloud.dailyGoal.target))));
+                if (cTgt !== dg.target) {
+                  dg.target = cTgt;
                   changed = true;
                 }
               }
@@ -8234,6 +8931,28 @@
                   changed = true;
                 }
               }
+            }
+            if (cloud.mockBest && typeof cloud.mockBest === "object") {
+              if (!state.mockBest) state.mockBest = {};
+              for (const [lvl, obj] of Object.entries(cloud.mockBest)) {
+                if (obj && (!state.mockBest[lvl] || (obj.pct || 0) > (state.mockBest[lvl].pct || 0))) {
+                  state.mockBest[lvl] = obj;
+                  changed = true;
+                }
+              }
+            }
+            if (Array.isArray(cloud.mockHistory) && cloud.mockHistory.length) {
+              if (!Array.isArray(state.mockHistory)) state.mockHistory = [];
+              const seenTs = new Set(state.mockHistory.map(h => h.ts));
+              cloud.mockHistory.forEach(h => {
+                if (h && h.ts && !seenTs.has(h.ts)) {
+                  state.mockHistory.push(h);
+                  seenTs.add(h.ts);
+                  changed = true;
+                }
+              });
+              state.mockHistory.sort((a, b) => (b.ts || 0) - (a.ts || 0));
+              state.mockHistory = state.mockHistory.slice(0, 20);
             }
             if ((cloud.updatedAt || 0) > (state.updatedAt || 0)) {
               if (typeof cloud.theme === "string" && cloud.theme && cloud.theme !== state.theme) {
@@ -8326,15 +9045,28 @@
                 authModal.classList.remove("hidden");
                 return;
               }
-              await docRef.set({
+              const userPayload = {
                 uid: user.uid,
-                name: data.name || user.displayName || user.email.split("@")[0],
+                name: (pendingSignupProfile && pendingSignupProfile.fullName) || data.name || user.displayName || user.email.split("@")[0],
                 email: user.email,
                 blocked: false,
                 vipUnlocked: !!data.vipUnlocked,
                 lastActive: firebase.firestore.FieldValue.serverTimestamp(),
                 createdAt: data.createdAt || firebase.firestore.FieldValue.serverTimestamp()
-              }, { merge: true });
+              };
+              if (pendingSignupProfile) {
+                userPayload.profile = pendingSignupProfile;
+              }
+              await docRef.set(userPayload, { merge: true });
+              if (pendingSignupProfile) {
+                const prof = pendingSignupProfile;
+                pendingSignupProfile = null;
+                if (typeof window.setDailyGoalFromMinutes === "function") {
+                  window.setDailyGoalFromMinutes(prof.studyMinutes || 20);
+                }
+                applyUserLevelFocus(prof.level);
+                showToast(`Welcome, ${prof.fullName}! Starting at ${prof.level}.`);
+              }
 
               // Restore / merge cloud progress seamlessly
               if (data.cloudState) {
@@ -8379,40 +9111,185 @@
         }
       } catch (e) {}
 
+      function renderAuthModalUI() {
+        clearAuthMessages();
+        const stepInd = document.getElementById("authStepIndicator");
+        const step1Wrap = document.getElementById("authStep1Wrap");
+        const step2Wrap = document.getElementById("authStep2Wrap");
+        const forgotBtn = document.getElementById("authForgotPassBtn");
+        const b1 = document.getElementById("authStepBadge1");
+        const b2 = document.getElementById("authStepBadge2");
+        const titleEl = document.getElementById("authTitle");
+        const subEl = document.getElementById("authSubtitle");
+        const submitBtn = document.getElementById("authSubmitBtn");
+
+        if (!authIsSignUp) {
+          authSignUpStep = 1;
+          stepInd.classList.add("hidden");
+          step1Wrap.classList.remove("hidden");
+          step2Wrap.classList.add("hidden");
+          forgotBtn.classList.remove("hidden");
+          titleEl.textContent = "Sign In to Nihonify";
+          subEl.textContent = "Welcome back · Free JLPT N5–N1 Learning";
+          submitBtn.textContent = "Sign In";
+          document.getElementById("authSwitchPrompt").textContent = "Don't have an account?";
+          document.getElementById("authSwitchModeBtn").textContent = "Create Account";
+        } else {
+          stepInd.classList.remove("hidden");
+          forgotBtn.classList.add("hidden");
+          document.getElementById("authSwitchPrompt").textContent = "Already have an account?";
+          document.getElementById("authSwitchModeBtn").textContent = "Sign In";
+          if (authSignUpStep === 1) {
+            step1Wrap.classList.remove("hidden");
+            step2Wrap.classList.add("hidden");
+            b1.className = "px-2.5 py-1 rounded-full bg-indigo-600 text-white";
+            b2.className = "px-2.5 py-1 rounded-full bg-slate-100 text-slate-500";
+            titleEl.textContent = "Create Your Account";
+            subEl.textContent = "Step 1 of 2 · Set your email & password";
+            submitBtn.textContent = "Continue →";
+          } else {
+            step1Wrap.classList.add("hidden");
+            step2Wrap.classList.remove("hidden");
+            b1.className = "px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700";
+            b2.className = "px-2.5 py-1 rounded-full bg-indigo-600 text-white";
+            titleEl.textContent = "Quick Profile";
+            subEl.textContent = "Step 2 of 2 · Personalize your Nihonify experience";
+            submitBtn.textContent = "Create Account & Start";
+          }
+        }
+      }
+
+      // Wire Onboarding Pill Groups
+      function wirePillGroup(groupId, key, onPick) {
+        const grp = document.getElementById(groupId);
+        if (!grp) return;
+        grp.querySelectorAll(".ob-pill").forEach(btn => {
+          btn.addEventListener("click", () => {
+            grp.querySelectorAll(".ob-pill").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            obSelections[key] = btn.getAttribute("data-val") || "";
+            if (typeof onPick === "function") onPick(btn, obSelections[key]);
+          });
+        });
+      }
+      wirePillGroup("obProfessionGroup", "profession");
+      wirePillGroup("obLevelGroup", "level");
+      wirePillGroup("obGoalGroup", "goal", (_btn, val) => {
+        const animeWrap = document.getElementById("obAnimeWrap");
+        if (animeWrap) animeWrap.classList.toggle("hidden", val !== "Anime & Culture");
+      });
+      wirePillGroup("obStudyTimeGroup", "studyTime", (btn) => {
+        obSelections.studyMinutes = Number(btn.getAttribute("data-mins")) || 20;
+      });
+      wirePillGroup("obReferralGroup", "referral");
+
       document.getElementById("authSwitchModeBtn").addEventListener("click", () => {
         authIsSignUp = !authIsSignUp;
-        document.getElementById("authNameWrap").classList.toggle("hidden", !authIsSignUp);
-        document.getElementById("authTitle").textContent = authIsSignUp ? "Create Account" : "Sign In to Nihonify";
-        document.getElementById("authSubmitBtn").textContent = authIsSignUp ? "Create Account" : "Sign In";
-        document.getElementById("authSwitchPrompt").textContent = authIsSignUp ? "Already have an account?" : "Don't have an account?";
-        document.getElementById("authSwitchModeBtn").textContent = authIsSignUp ? "Sign In" : "Create Account";
-        authErrEl.classList.add("hidden");
+        authSignUpStep = 1;
+        renderAuthModalUI();
+      });
+
+      document.getElementById("authBackToStep1Btn").addEventListener("click", () => {
+        authSignUpStep = 1;
+        renderAuthModalUI();
+      });
+
+      // 1-Tap Firebase Forgot Password (Sign In only)
+      document.getElementById("authForgotPassBtn").addEventListener("click", async () => {
+        clearAuthMessages();
+        if (!fbAuth) {
+          showAuthError("Firebase is offline. Please check your internet connection.");
+          return;
+        }
+        const email = document.getElementById("authEmailInput").value.trim();
+        if (!email || !email.includes("@")) {
+          showAuthError("Please enter your registered email above first, then tap Forgot Password.");
+          return;
+        }
+        try {
+          await fbAuth.sendPasswordResetEmail(email);
+          showAuthSuccess(`Password reset link sent to ${email}. Check your inbox or spam folder.`);
+        } catch (err) {
+          showAuthError(err.message || "Could not send password reset email.");
+        }
       });
 
       document.getElementById("authSubmitBtn").addEventListener("click", async () => {
+        clearAuthMessages();
         if (!fbAuth) {
           showAuthError("Firebase is offline. Please check your internet connection.");
           return;
         }
         const email = document.getElementById("authEmailInput").value.trim();
         const pass = document.getElementById("authPassInput").value.trim();
-        const name = document.getElementById("authNameInput").value.trim();
-        authErrEl.classList.add("hidden");
-        if (!email || pass.length < 6) {
+        if (!email || !email.includes("@") || pass.length < 6) {
           showAuthError("Enter a valid email and password (min 6 characters).");
           return;
         }
-        try {
-          if (authIsSignUp) {
+
+        if (authIsSignUp && authSignUpStep === 1) {
+          authSignUpStep = 2;
+          renderAuthModalUI();
+          return;
+        }
+
+        const submitBtn = document.getElementById("authSubmitBtn");
+        if (authIsSignUp && authSignUpStep === 2) {
+          const fullName = document.getElementById("obFullName").value.trim();
+          const ageRaw = document.getElementById("obAge").value.trim();
+          const age = Number(ageRaw);
+          const location = document.getElementById("obLocation").value.trim();
+          const favoriteAnime = document.getElementById("obFavoriteAnime").value.trim();
+
+          if (!fullName) { showAuthError("Please enter your Full Name."); return; }
+          if (!ageRaw || isNaN(age) || age < 5 || age > 110) { showAuthError("Please enter a valid Age."); return; }
+          if (!location) { showAuthError("Please enter your City & State / Country."); return; }
+          if (!obSelections.profession) { showAuthError("Please select your Student / Profession status."); return; }
+          if (!obSelections.level) { showAuthError("Please select your Current Japanese Level."); return; }
+          if (!obSelections.goal) { showAuthError("Please select your Main Goal."); return; }
+          if (!obSelections.studyTime) { showAuthError("Please select your Daily Study Time."); return; }
+          if (!obSelections.referral) { showAuthError("Please select how you heard about Kanji Studio."); return; }
+
+          pendingSignupProfile = {
+            fullName,
+            age,
+            location,
+            profession: obSelections.profession,
+            level: obSelections.level,
+            goal: obSelections.goal,
+            favoriteAnime: obSelections.goal === "Anime & Culture" ? favoriteAnime : "",
+            studyTime: obSelections.studyTime,
+            studyMinutes: obSelections.studyMinutes || 20,
+            referral: obSelections.referral
+          };
+
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Creating account...";
+          try {
             const cred = await fbAuth.createUserWithEmailAndPassword(email, pass);
-            if (name && cred.user) {
-              await cred.user.updateProfile({ displayName: name });
+            if (fullName && cred.user) {
+              await cred.user.updateProfile({ displayName: fullName });
             }
-          } else {
-            await fbAuth.signInWithEmailAndPassword(email, pass);
+          } catch (err) {
+            pendingSignupProfile = null;
+            showAuthError(err.message || "Could not create account.");
+          } finally {
+            submitBtn.disabled = false;
+            renderAuthModalUI();
           }
+          return;
+        }
+
+        // Sign In flow
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Signing in...";
+        try {
+          await fbAuth.signInWithEmailAndPassword(email, pass);
         } catch (err) {
           showAuthError(err.message || "Authentication failed.");
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Sign In";
         }
       });
 
@@ -8444,34 +9321,67 @@
             listEl.innerHTML = '<div class="text-slate-400 text-center py-4">No users found yet.</div>';
             return;
           }
+          users.sort((a, b) => {
+            const ta = (a.createdAt && a.createdAt.seconds) ? a.createdAt.seconds : 0;
+            const tb = (b.createdAt && b.createdAt.seconds) ? b.createdAt.seconds : 0;
+            return tb - ta;
+          });
           users.forEach(u => {
             const isBlocked = !!u.blocked;
             const isVip = !!u.vipUnlocked;
+            const p = (u.profile && typeof u.profile === "object") ? u.profile : {};
+            const joinDate = (u.createdAt && typeof u.createdAt.toDate === "function")
+              ? u.createdAt.toDate().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
+              : "—";
             const row = document.createElement("div");
-            row.className = "p-3 rounded-2xl border border-slate-200 bg-slate-50 flex items-center justify-between gap-2";
+            row.className = "p-3 rounded-2xl border border-slate-200 bg-slate-50 space-y-2";
             row.innerHTML = `
-              <div class="min-w-0 flex-1">
-                <div class="font-bold text-slate-900 truncate">
-                  ${u.name || "User"}
-                  ${isVip ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700 ml-1">VIP</span>' : ""}
-                  ${isBlocked ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 ml-1">Removed</span>' : ""}
+              <div class="flex items-center justify-between gap-2">
+                <button type="button" class="user-info-toggle min-w-0 flex-1 text-left group">
+                  <div class="font-bold text-slate-900 truncate flex items-center gap-1 flex-wrap">
+                    <span class="group-hover:text-indigo-600 transition">${escHtmlStr(p.fullName || u.name || "User")}</span>
+                    ${isVip ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">VIP</span>' : ""}
+                    ${isBlocked ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-100 text-rose-700">Removed</span>' : ""}
+                    <span class="user-chev text-[10px] text-indigo-500 font-semibold ml-0.5">▾ Details</span>
+                  </div>
+                  <div class="text-[11px] text-slate-500 truncate">${escHtmlStr(u.email || "")}${p.level ? ` · ${escHtmlStr(p.level)}` : ""}</div>
+                </button>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <button class="toggle-vip-btn px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition ${
+                    isVip ? "bg-amber-100 text-amber-800 hover:bg-amber-200" : "bg-indigo-600 text-white hover:bg-indigo-700"
+                  }">
+                    ${isVip ? "Lock VIP" : "Unlock VIP"}
+                  </button>
+                  <button class="toggle-block-btn px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition ${
+                    isBlocked ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200" : "bg-rose-100 text-rose-700 hover:bg-rose-200"
+                  }">
+                    ${isBlocked ? "Restore" : "Remove"}
+                  </button>
                 </div>
-                <div class="text-[11px] text-slate-500 truncate">${u.email || ""}</div>
               </div>
-              <div class="flex items-center gap-1.5 shrink-0">
-                <button class="toggle-vip-btn px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition ${
-                  isVip ? "bg-amber-100 text-amber-800 hover:bg-amber-200" : "bg-indigo-600 text-white hover:bg-indigo-700"
-                }">
-                  ${isVip ? "Lock VIP" : "Unlock VIP"}
-                </button>
-                <button class="toggle-block-btn px-2.5 py-1.5 rounded-xl text-[11px] font-bold transition ${
-                  isBlocked ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200" : "bg-rose-100 text-rose-700 hover:bg-rose-200"
-                }">
-                  ${isBlocked ? "Restore" : "Remove"}
-                </button>
+              <div class="user-detail-box hidden rounded-xl bg-white border border-slate-200 p-2.5 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[11px]">
+                <div><span class="text-slate-400">Name:</span> <span class="font-semibold text-slate-800">${escHtmlStr(p.fullName || u.name || "—")}</span></div>
+                <div><span class="text-slate-400">Age:</span> <span class="font-semibold text-slate-800">${escHtmlStr(p.age || "—")}</span></div>
+                <div class="col-span-2"><span class="text-slate-400">Email:</span> <span class="font-semibold text-slate-800 break-all">${escHtmlStr(u.email || "—")}</span></div>
+                <div class="col-span-2"><span class="text-slate-400">City / Country:</span> <span class="font-semibold text-slate-800">${escHtmlStr(p.location || "—")}</span></div>
+                <div><span class="text-slate-400">Profession:</span> <span class="font-semibold text-slate-800">${escHtmlStr(p.profession || "—")}</span></div>
+                <div><span class="text-slate-400">Level:</span> <span class="font-semibold text-indigo-600">${escHtmlStr(p.level || "—")}</span></div>
+                <div><span class="text-slate-400">Main Goal:</span> <span class="font-semibold text-slate-800">${escHtmlStr(p.goal || "—")}</span></div>
+                <div><span class="text-slate-400">Daily Time:</span> <span class="font-semibold text-slate-800">${escHtmlStr(p.studyTime || "—")}</span></div>
+                ${p.favoriteAnime ? `<div class="col-span-2"><span class="text-slate-400">Favorite Anime:</span> <span class="font-semibold text-slate-800">${escHtmlStr(p.favoriteAnime)}</span></div>` : ""}
+                <div><span class="text-slate-400">Heard Via:</span> <span class="font-semibold text-slate-800">${escHtmlStr(p.referral || "—")}</span></div>
+                <div><span class="text-slate-400">Joined:</span> <span class="font-semibold text-slate-800">${escHtmlStr(joinDate)}</span></div>
               </div>
             `;
-            row.querySelector(".toggle-vip-btn").addEventListener("click", async () => {
+            const detailBox = row.querySelector(".user-detail-box");
+            const chev = row.querySelector(".user-chev");
+            row.querySelector(".user-info-toggle").addEventListener("click", () => {
+              const opening = detailBox.classList.contains("hidden");
+              detailBox.classList.toggle("hidden", !opening);
+              if (chev) chev.textContent = opening ? "▴ Hide" : "▾ Details";
+            });
+            row.querySelector(".toggle-vip-btn").addEventListener("click", async (e) => {
+              e.stopPropagation();
               try {
                 await fbDb.collection("users").doc(u.uid).set({ vipUnlocked: !isVip }, { merge: true });
                 showToast(!isVip ? `VIP unlocked for ${u.email}` : `VIP locked for ${u.email}`);
@@ -8480,7 +9390,8 @@
                 showToast("Could not update VIP status.");
               }
             });
-            row.querySelector(".toggle-block-btn").addEventListener("click", async () => {
+            row.querySelector(".toggle-block-btn").addEventListener("click", async (e) => {
+              e.stopPropagation();
               try {
                 await fbDb.collection("users").doc(u.uid).set({ blocked: !isBlocked }, { merge: true });
                 showToast(isBlocked ? `${u.email} restored` : `${u.email} removed`);
@@ -8559,7 +9470,7 @@
         }
 
         // 1. Close open utility modals first
-        const modalIds = ["addToSetModal", "pickKanjiForSetModal", "radicalDetailModal", "wcPausedModal", "quizPausedModal", "unlockAllModal", "resetConfirmModal", "usersAdminModal", "searchOverlayModal", "studyPickerModal"];
+        const modalIds = ["mtConfirmModal", "addToSetModal", "pickKanjiForSetModal", "radicalDetailModal", "wcPausedModal", "quizPausedModal", "unlockAllModal", "resetConfirmModal", "usersAdminModal", "searchOverlayModal", "studyPickerModal"];
         for (const mid of modalIds) {
           const el = document.getElementById(mid);
           if (el && !el.classList.contains("hidden")) {
@@ -8585,6 +9496,13 @@
         const qActiveEl = document.getElementById("quizActive");
         if (state.activeMode === "quiz" && qActiveEl && !qActiveEl.classList.contains("hidden")) {
           document.getElementById("quizPausedModal").classList.remove("hidden");
+          return;
+        }
+
+        // 4b. If in Active JLPT Mock Test -> trigger Exam Exit/Submit modal
+        const mtActiveEl = document.getElementById("mtActivePanel");
+        if (state.activeTab === "mocktest" && state.activeMode === "browse" && mtActiveEl && !mtActiveEl.classList.contains("hidden")) {
+          if (typeof window.openMockExitConfirm === "function") window.openMockExitConfirm();
           return;
         }
 
@@ -8963,6 +9881,8 @@
             state.activeTab = "lookalikes";
           } else if (act === "speedwrite") {
             state.activeTab = "speedwrite";
+          } else if (act === "mocktest") {
+            state.activeTab = "mocktest";
           } else if (act === "home") {
             state.activeTab = "home";
           } else if (act === "kanji-folders") {
@@ -9934,6 +10854,662 @@
         renderActiveView();
       });
       updateSpeedBestUI();
+
+      // =========================================================================
+      // JLPT TIMED MOCK TEST ENGINE (v5.0 — N5–N1 Exam, Scorecard & Mistake Review)
+      // =========================================================================
+      const MT_PRESETS = {
+        mini:     { label: "Mini Mock",     count: 20, seconds: 10 * 60 },
+        standard: { label: "Standard Mock", count: 35, seconds: 20 * 60 },
+        full:     { label: "Full Mock",     count: 50, seconds: 30 * 60 }
+      };
+
+      const mt = {
+        level: "N5",
+        preset: "standard",
+        running: false,
+        timerId: null,
+        totalSeconds: 1200,
+        timeLeft: 1200,
+        startedAt: 0,
+        questions: [], // { section, sectionTitle, target, promptMain, promptSub, promptHint, options: [{label, isKanji, char}], correctIdx, chosenIdx, flagged }
+        idx: 0,
+        reviewFilter: "mistakes", // "mistakes" | "all"
+        confirmMode: "submit" // "submit" | "exit"
+      };
+
+      function stopMockTimer() {
+        if (mt.timerId) {
+          clearInterval(mt.timerId);
+          mt.timerId = null;
+        }
+        mt.running = false;
+      }
+
+      function formatMmSs(sec) {
+        const sVal = Math.max(0, Math.floor(sec));
+        const m = Math.floor(sVal / 60);
+        const r = sVal % 60;
+        return `${String(m).padStart(2, "0")}:${String(r).padStart(2, "0")}`;
+      }
+
+      function updateMockSubtitles() {
+        const bestObj = state.mockBest && state.mockBest[mt.level];
+        const lbl = document.getElementById("mtBestLabel");
+        const sc = document.getElementById("mtBestScore");
+        const stEl = document.getElementById("mtBestStatus");
+        if (lbl) lbl.textContent = `JLPT ${mt.level} (${LEVEL_META[mt.level].sub}) · Pass mark: 60%`;
+        if (bestObj && typeof bestObj.pct === "number") {
+          if (sc) sc.textContent = `${bestObj.pct}%`;
+          if (stEl) {
+            stEl.textContent = bestObj.passed ? "✓ PASSED" : "KEEP TRYING";
+            stEl.className = bestObj.passed ? "text-[10px] font-extrabold text-emerald-600 uppercase" : "text-[10px] font-extrabold text-rose-500 uppercase";
+          }
+        } else {
+          if (sc) sc.textContent = "--";
+          if (stEl) {
+            stEl.textContent = "Not taken";
+            stEl.className = "text-[10px] font-bold text-slate-400 uppercase";
+          }
+        }
+
+        const passedLevels = ["N5", "N4", "N3", "N2", "N1"].filter(l => state.mockBest && state.mockBest[l] && state.mockBest[l].passed);
+        const drawerSub = document.getElementById("drawerMockBestSub");
+        if (drawerSub) {
+          drawerSub.textContent = passedLevels.length
+            ? `Passed: ${passedLevels.join(", ")} · ${(state.mockHistory || []).length} taken`
+            : "N5–N1 Timed Exam & Scorecard";
+        }
+        const homeSub = document.getElementById("homeMockSubText");
+        if (homeSub && passedLevels.length) {
+          homeSub.textContent = `Passed: ${passedLevels.join(", ")} · ${(state.mockHistory || []).length} mock${(state.mockHistory || []).length === 1 ? "" : "s"} completed`;
+        }
+      }
+
+      function renderMockHistory() {
+        const card = document.getElementById("mtHistoryCard");
+        const list = document.getElementById("mtHistoryList");
+        const totEl = document.getElementById("mtTotalAttempts");
+        const hist = Array.isArray(state.mockHistory) ? state.mockHistory : [];
+        if (!card || !list) return;
+        if (!hist.length) {
+          card.classList.add("hidden");
+          return;
+        }
+        card.classList.remove("hidden");
+        if (totEl) totEl.textContent = `${hist.length} test${hist.length === 1 ? "" : "s"}`;
+        list.innerHTML = "";
+        hist.slice(0, 5).forEach(h => {
+          const row = document.createElement("div");
+          row.className = "flex items-center justify-between gap-2 px-3 py-2 rounded-2xl bg-slate-50 border border-slate-100 text-xs";
+          const dStr = h.ts ? new Date(h.ts).toLocaleDateString() : "";
+          row.innerHTML = `
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="px-2 py-0.5 rounded-lg bg-indigo-100 text-indigo-700 font-extrabold text-[11px] shrink-0">${h.level}</span>
+              <div class="min-w-0">
+                <div class="font-bold text-slate-800 truncate">${h.score}/${h.total} (${h.pct}%) · ${formatStudyTime(h.timeSpent) || "0s"}</div>
+                <div class="text-[10px] text-slate-400">${dStr}</div>
+              </div>
+            </div>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold shrink-0 ${h.passed ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}">${h.passed ? "PASS" : "FAIL"}</span>
+          `;
+          list.appendChild(row);
+        });
+      }
+
+      window.renderMockTestSetup = renderMockTestSetup;
+      function renderMockTestSetup() {
+        stopMockTimer();
+        document.getElementById("mtSetupPanel").classList.remove("hidden");
+        document.getElementById("mtActivePanel").classList.add("hidden");
+        document.getElementById("mtResultPanel").classList.add("hidden");
+        document.getElementById("mtPaletteBox").classList.add("hidden");
+
+        document.querySelectorAll(".mt-lvl-btn").forEach(b => {
+          const act = b.dataset.mtLevel === mt.level;
+          b.className = `mt-lvl-btn py-2.5 rounded-xl text-xs font-extrabold border transition ${
+            act ? "bg-indigo-600 text-white border-indigo-600 shadow-xs" : "bg-slate-50 text-slate-700 border-slate-200 hover:border-indigo-300"
+          }`;
+        });
+        document.querySelectorAll(".mt-preset-btn").forEach(b => {
+          const act = b.dataset.mtPreset === mt.preset;
+          b.className = `mt-preset-btn py-2.5 px-2 rounded-xl border text-center transition ${
+            act ? "bg-indigo-600 text-white border-indigo-600 shadow-xs" : "bg-slate-50 text-slate-700 border-slate-200 hover:border-indigo-300"
+          }`;
+        });
+        updateMockSubtitles();
+        renderMockHistory();
+      }
+
+      function pickDistractors(target, pool, needed) {
+        const chosen = [];
+        const used = new Set([target.char]);
+        // Prioritize look-alike Kanji if available in the same level/dictionary
+        const laGroups = KANJI_LOOKALIKES[target.char] || [];
+        for (const gi of laGroups) {
+          const grp = LOOKALIKE_GROUPS[gi];
+          if (!grp) continue;
+          for (const ch of grp.chars) {
+            if (!used.has(ch) && KANJI_MAP[ch] && !KANJI_MAP[ch].isKana) {
+              chosen.push(KANJI_MAP[ch]);
+              used.add(ch);
+              if (chosen.length >= Math.min(2, needed)) break;
+            }
+          }
+          if (chosen.length >= Math.min(2, needed)) break;
+        }
+        const rest = shuffle(pool.filter(x => !used.has(x.char)));
+        for (const item of rest) {
+          if (chosen.length >= needed) break;
+          chosen.push(item);
+          used.add(item.char);
+        }
+        return chosen;
+      }
+
+      function cleanReadingDisplay(k) {
+        const onClean = k.on && k.on !== "—" ? k.on : "";
+        const kunClean = k.kun && k.kun !== "—" ? k.kun : "";
+        if (onClean && kunClean) return `${onClean.split(",")[0].trim()} / ${kunClean.split(",")[0].trim()}`;
+        return (onClean || kunClean || "—").split(",")[0].trim();
+      }
+
+      function buildMockQuestions(level, count) {
+        const pool = ALL_KANJI.filter(k => k.level === level);
+        const total = Math.min(count, pool.length);
+        const selected = shuffle(pool).slice(0, total);
+        const s1End = Math.ceil(total / 3);
+        const s2End = Math.ceil((total * 2) / 3);
+
+        return selected.map((target, idx) => {
+          let section, sectionTitle, promptSub, promptMain, promptHint = "";
+          if (idx < s1End) {
+            section = "reading";
+            sectionTitle = "Section 1 · Reading (漢字読み)";
+            promptSub = "Choose the correct reading for this Kanji";
+            promptMain = target.char;
+          } else if (idx < s2End) {
+            section = "meaning";
+            sectionTitle = "Section 2 · Meaning (意味)";
+            promptSub = "Choose the best English meaning for this Kanji";
+            promptMain = target.char;
+          } else {
+            section = "recognition";
+            sectionTitle = "Section 3 · Recognition (表記)";
+            promptSub = "Select the Kanji that matches this meaning & reading";
+            promptMain = target.meaning;
+            promptHint = cleanReadingDisplay(target);
+          }
+
+          const distractors = pickDistractors(target, pool, 3);
+          const rawOpts = shuffle([target, ...distractors]);
+          const options = rawOpts.map(opt => {
+            if (section === "reading") {
+              return { label: cleanReadingDisplay(opt), isKanji: false, char: opt.char };
+            } else if (section === "meaning") {
+              return { label: opt.meaning, isKanji: false, char: opt.char };
+            } else {
+              return { label: opt.char, isKanji: true, char: opt.char };
+            }
+          });
+          const correctIdx = options.findIndex(o => o.char === target.char);
+          return {
+            section,
+            sectionTitle,
+            target,
+            promptMain,
+            promptSub,
+            promptHint,
+            options,
+            correctIdx,
+            chosenIdx: -1,
+            flagged: false
+          };
+        });
+      }
+
+      function renderMockPalette() {
+        const grid = document.getElementById("mtPaletteGrid");
+        if (!grid) return;
+        grid.innerHTML = "";
+        mt.questions.forEach((q, i) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          let cls = "bg-slate-100 text-slate-600 border-slate-200";
+          if (i === mt.idx) cls = "bg-indigo-600 text-white border-indigo-600 ring-2 ring-indigo-300";
+          else if (q.flagged) cls = "bg-amber-100 text-amber-800 border-amber-300";
+          else if (q.chosenIdx >= 0) cls = "bg-emerald-100 text-emerald-800 border-emerald-300";
+          btn.className = `h-8 rounded-lg border text-xs font-extrabold flex items-center justify-center transition ${cls}`;
+          btn.textContent = i + 1;
+          btn.addEventListener("click", () => {
+            mt.idx = i;
+            renderMockQuestion();
+          });
+          grid.appendChild(btn);
+        });
+      }
+
+      function renderMockQuestion() {
+        const q = mt.questions[mt.idx];
+        if (!q) return;
+        const total = mt.questions.length;
+        const answered = mt.questions.filter(x => x.chosenIdx >= 0).length;
+
+        document.getElementById("mtAnsweredCount").textContent = answered;
+        document.getElementById("mtTotalQCount").textContent = total;
+        document.getElementById("mtProgressBar").style.width = `${Math.round(((mt.idx + 1) / total) * 100)}%`;
+        document.getElementById("mtQNumLabel").textContent = `Q ${mt.idx + 1} / ${total}`;
+
+        const secBadge = document.getElementById("mtSectionBadge");
+        secBadge.textContent = q.sectionTitle;
+        if (q.section === "reading") secBadge.className = "text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700";
+        else if (q.section === "meaning") secBadge.className = "text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-sky-50 text-sky-700";
+        else secBadge.className = "text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700";
+
+        const flagBtn = document.getElementById("mtFlagBtn");
+        flagBtn.textContent = q.flagged ? "🚩 Flagged" : "🚩 Flag";
+        flagBtn.className = q.flagged
+          ? "px-2.5 py-1 rounded-xl border border-amber-400 bg-amber-100 text-xs font-bold text-amber-800 transition"
+          : "px-2.5 py-1 rounded-xl border border-slate-200 bg-slate-50 hover:bg-amber-50 text-xs font-bold text-slate-600 transition";
+
+        document.getElementById("mtPromptSubtitle").textContent = q.promptSub;
+        const pMain = document.getElementById("mtPromptMain");
+        pMain.textContent = q.promptMain;
+        pMain.className = q.section === "recognition"
+          ? "text-xl sm:text-2xl font-extrabold text-slate-900 px-2 capitalize"
+          : "kanji-font text-6xl sm:text-7xl font-black text-slate-900";
+
+        const pHint = document.getElementById("mtPromptHint");
+        if (q.promptHint) {
+          pHint.textContent = `Reading: ${q.promptHint}`;
+          pHint.classList.remove("hidden");
+        } else {
+          pHint.classList.add("hidden");
+        }
+
+        const optsEl = document.getElementById("mtOptionsGrid");
+        optsEl.innerHTML = "";
+        const letters = ["A", "B", "C", "D"];
+        q.options.forEach((opt, oi) => {
+          const selected = q.chosenIdx === oi;
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = `p-3.5 rounded-2xl border-2 text-left flex items-center gap-3 transition ${
+            selected
+              ? "border-indigo-600 bg-indigo-50 text-indigo-900 shadow-xs"
+              : "border-slate-200 bg-slate-50 hover:border-indigo-300 hover:bg-indigo-50/40 text-slate-800"
+          }`;
+          btn.innerHTML = `
+            <span class="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-extrabold shrink-0 ${
+              selected ? "bg-indigo-600 text-white" : "bg-white border border-slate-200 text-slate-500"
+            }">${letters[oi]}</span>
+            <span class="${opt.isKanji ? "kanji-font text-3xl font-black" : "text-xs sm:text-sm font-bold"} leading-snug break-words flex-1">${escapeHtml(opt.label)}</span>
+          `;
+          btn.addEventListener("click", () => {
+            q.chosenIdx = oi;
+            sfx.flip();
+            renderMockQuestion();
+          });
+          optsEl.appendChild(btn);
+        });
+
+        const prevBtn = document.getElementById("mtPrevQBtn");
+        prevBtn.disabled = mt.idx === 0;
+        prevBtn.className = mt.idx === 0
+          ? "py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-bold text-slate-300 cursor-not-allowed"
+          : "py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 transition";
+
+        const nextBtn = document.getElementById("mtNextQBtn");
+        nextBtn.textContent = mt.idx + 1 >= total ? "Review & Submit ✓" : "Next →";
+
+        renderMockPalette();
+      }
+
+      function startMockTest() {
+        pushUserNav();
+        const cfg = MT_PRESETS[mt.preset] || MT_PRESETS.standard;
+        mt.questions = buildMockQuestions(mt.level, cfg.count);
+        mt.idx = 0;
+        mt.totalSeconds = cfg.seconds;
+        mt.timeLeft = cfg.seconds;
+        mt.startedAt = Date.now();
+        mt.running = true;
+
+        document.getElementById("mtExamLevelBadge").textContent = `JLPT ${mt.level}`;
+        const tBadge = document.getElementById("mtTimerBadge");
+        tBadge.textContent = `⏱ ${formatMmSs(mt.timeLeft)}`;
+        tBadge.className = "px-3 py-1 rounded-xl bg-indigo-50 text-indigo-700 font-black text-sm";
+
+        document.getElementById("mtSetupPanel").classList.add("hidden");
+        document.getElementById("mtResultPanel").classList.add("hidden");
+        document.getElementById("mtPaletteBox").classList.add("hidden");
+        document.getElementById("mtActivePanel").classList.remove("hidden");
+
+        renderMockQuestion();
+        stopMockTimer();
+        mt.running = true;
+        mt.timerId = setInterval(() => {
+          mt.timeLeft--;
+          tBadge.textContent = `⏱ ${formatMmSs(mt.timeLeft)}`;
+          if (mt.timeLeft <= 60) {
+            tBadge.className = "px-3 py-1 rounded-xl bg-rose-100 text-rose-600 font-black text-sm animate-pulse";
+          } else if (mt.timeLeft <= 120) {
+            tBadge.className = "px-3 py-1 rounded-xl bg-amber-100 text-amber-700 font-black text-sm";
+          }
+          if (mt.timeLeft <= 0) {
+            showToast("⏱ Time's up! Auto-submitting your exam.");
+            finishMockTest();
+          }
+        }, 1000);
+      }
+
+      function renderMockReviewList() {
+        const listEl = document.getElementById("mtReviewList");
+        const mTab = document.getElementById("mtRevMistakesTab");
+        const aTab = document.getElementById("mtRevAllTab");
+        if (!listEl) return;
+
+        const mistakes = mt.questions.map((q, i) => ({ q, i })).filter(x => x.q.chosenIdx !== x.q.correctIdx);
+        mTab.textContent = `❌ Mistakes (${mistakes.length})`;
+        aTab.textContent = `📋 All (${mt.questions.length})`;
+        mTab.className = mt.reviewFilter === "mistakes"
+          ? "px-2.5 py-1 rounded-lg text-[11px] font-bold bg-rose-600 text-white transition"
+          : "px-2.5 py-1 rounded-lg text-[11px] font-bold bg-slate-100 text-slate-600 transition";
+        aTab.className = mt.reviewFilter === "all"
+          ? "px-2.5 py-1 rounded-lg text-[11px] font-bold bg-indigo-600 text-white transition"
+          : "px-2.5 py-1 rounded-lg text-[11px] font-bold bg-slate-100 text-slate-600 transition";
+
+        const items = mt.reviewFilter === "mistakes" ? mistakes : mt.questions.map((q, i) => ({ q, i }));
+        listEl.innerHTML = "";
+        if (!items.length) {
+          listEl.innerHTML = `<div class="text-center py-6 text-xs font-bold text-emerald-600">🎉 Zero mistakes! Flawless JLPT ${mt.level} score!</div>`;
+          return;
+        }
+
+        items.forEach(({ q, i }) => {
+          const isOk = q.chosenIdx === q.correctIdx;
+          const userAns = q.chosenIdx >= 0 ? q.options[q.chosenIdx].label : "Not answered";
+          const corrAns = q.options[q.correctIdx].label;
+          const card = document.createElement("div");
+          card.className = `p-3 rounded-2xl border space-y-2 ${isOk ? "bg-emerald-50/50 border-emerald-200" : "bg-rose-50/50 border-rose-200"}`;
+          card.innerHTML = `
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="kanji-font w-11 h-11 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-2xl font-black text-slate-900 shrink-0">${q.target.char}</div>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="text-[10px] font-extrabold text-slate-500">Q${i + 1}</span>
+                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${isOk ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}">${isOk ? "✓ Correct" : "✗ Missed"}</span>
+                  </div>
+                  <div class="text-xs font-bold text-slate-900 truncate mt-0.5">${escapeHtml(q.target.meaning)}</div>
+                  <div class="text-[11px] text-slate-500 truncate kanji-font">${escapeHtml(cleanReadingDisplay(q.target))}</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 shrink-0">
+                <button type="button" class="mt-rev-speak w-8 h-8 rounded-lg bg-white border border-slate-200 text-xs hover:bg-slate-50 flex items-center justify-center" title="Pronounce">🔊</button>
+                <button type="button" class="mt-rev-study px-2.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold transition">Study</button>
+              </div>
+            </div>
+            <div class="text-[11px] flex flex-wrap gap-x-4 gap-y-1 pt-1 border-t border-black/5">
+              ${!isOk ? `<span class="text-rose-700 font-semibold">Your answer: <strong class="kanji-font">${escapeHtml(userAns)}</strong></span>` : ""}
+              <span class="text-emerald-700 font-semibold">Correct: <strong class="kanji-font">${escapeHtml(corrAns)}</strong></span>
+            </div>
+          `;
+          card.querySelector(".mt-rev-speak").addEventListener("click", () => {
+            speakJapanese(q.target.kun !== "—" ? q.target.kun : q.target.on);
+          });
+          card.querySelector(".mt-rev-study").addEventListener("click", () => {
+            state.detailReturnMode = "browse";
+            openKanjiModal(q.target.char);
+          });
+          listEl.appendChild(card);
+        });
+      }
+
+      function finishMockTest() {
+        stopMockTimer();
+        document.getElementById("mtConfirmModal").classList.add("hidden");
+        const total = mt.questions.length;
+        const timeSpent = Math.max(1, mt.totalSeconds - mt.timeLeft);
+        let score = 0;
+        const secStats = {
+          reading:     { label: "Kanji Reading (漢字読み)", ok: 0, total: 0, color: "bg-rose-500" },
+          meaning:     { label: "Meaning (意味)",          ok: 0, total: 0, color: "bg-sky-500" },
+          recognition: { label: "Recognition (表記)",      ok: 0, total: 0, color: "bg-emerald-500" }
+        };
+        const missedChars = [];
+
+        mt.questions.forEach(q => {
+          secStats[q.section].total++;
+          const ok = q.chosenIdx === q.correctIdx;
+          if (ok) {
+            score++;
+            secStats[q.section].ok++;
+            recordPracticeAndAutoStar(q.target.char, "quiz");
+            recordSrsResult(q.target.char, true);
+          } else {
+            missedChars.push(q.target.char);
+            recordSrsResult(q.target.char, false);
+          }
+        });
+
+        const pct = total ? Math.round((score / total) * 100) : 0;
+        const scaled = Math.round((pct / 100) * 180);
+        const passed = pct >= 60;
+        bumpTodayActivity(Math.min(10, Math.max(2, Math.ceil(score / 3))));
+
+        // Save best & history
+        if (!state.mockBest) state.mockBest = {};
+        const prev = state.mockBest[mt.level];
+        if (!prev || pct >= (prev.pct || 0)) {
+          state.mockBest[mt.level] = { pct, score, total, passed, date: Date.now() };
+        }
+        if (!Array.isArray(state.mockHistory)) state.mockHistory = [];
+        state.mockHistory.unshift({ level: mt.level, score, total, pct, passed, timeSpent, ts: Date.now() });
+        state.mockHistory = state.mockHistory.slice(0, 20);
+        saveState();
+        updateMockSubtitles();
+
+        if (passed) sfx.complete();
+        else sfx.wrong();
+
+        const passBadge = document.getElementById("mtPassBadge");
+        passBadge.textContent = passed ? "🏆 PASSED (合格)" : "💪 KEEP PRACTICING (不合格)";
+        passBadge.className = passed
+          ? "inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-extrabold"
+          : "inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-rose-100 text-rose-700 text-xs font-extrabold";
+
+        document.getElementById("mtResTitle").textContent = `JLPT ${mt.level} Mock Scorecard`;
+        document.getElementById("mtResPct").textContent = `${pct}%`;
+        document.getElementById("mtResRaw").textContent = `(${score} / ${total})`;
+        document.getElementById("mtResScaled").textContent = `${scaled} / 180`;
+        document.getElementById("mtResTime").textContent = formatStudyTime(timeSpent) || `${timeSpent}s`;
+
+        const bdEl = document.getElementById("mtSectionBreakdown");
+        bdEl.innerHTML = "";
+        Object.values(secStats).forEach(st => {
+          const spct = st.total ? Math.round((st.ok / st.total) * 100) : 0;
+          const row = document.createElement("div");
+          row.className = "space-y-1";
+          row.innerHTML = `
+            <div class="flex items-center justify-between text-xs font-semibold">
+              <span class="text-slate-700">${st.label}</span>
+              <span class="font-bold text-slate-900">${st.ok}/${st.total} (${spct}%)</span>
+            </div>
+            <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+              <div class="h-full ${st.color} rounded-full transition-all duration-300" style="width:${spct}%"></div>
+            </div>
+          `;
+          bdEl.appendChild(row);
+        });
+
+        const uniqueMissed = [...new Set(missedChars)];
+        const addDoubtBtn = document.getElementById("mtAddDoubtBtn");
+        const pracMistBtn = document.getElementById("mtPracticeMistakesBtn");
+        addDoubtBtn.classList.toggle("hidden", uniqueMissed.length === 0);
+        pracMistBtn.classList.toggle("hidden", uniqueMissed.length === 0);
+        addDoubtBtn.onclick = () => {
+          ensureDoubtSet();
+          const doubt = state.customSets.find(x => x.id === "doubt");
+          if (doubt) {
+            const set = new Set(doubt.chars || []);
+            uniqueMissed.forEach(c => set.add(c));
+            doubt.chars = Array.from(set);
+            saveState();
+            updateDrawerCustomSetsSub();
+            showToast(`📌 Added ${uniqueMissed.length} missed Kanji to Doubt List!`);
+          }
+        };
+        pracMistBtn.onclick = () => {
+          openStudyPicker(`JLPT ${mt.level} Mock Mistakes (${uniqueMissed.length})`, uniqueMissed, null);
+        };
+
+        mt.reviewFilter = uniqueMissed.length > 0 ? "mistakes" : "all";
+        renderMockReviewList();
+
+        document.getElementById("mtActivePanel").classList.add("hidden");
+        document.getElementById("mtResultPanel").classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function openMockConfirm(mode) {
+        mt.confirmMode = mode;
+        const answered = mt.questions.filter(q => q.chosenIdx >= 0).length;
+        const unanswered = mt.questions.length - answered;
+        const flagged = mt.questions.filter(q => q.flagged).length;
+        const titleEl = document.getElementById("mtConfirmTitle");
+        const descEl = document.getElementById("mtConfirmDesc");
+        const okBtn = document.getElementById("mtConfirmOkBtn");
+        if (mode === "exit") {
+          titleEl.textContent = "Leave Mock Exam?";
+          descEl.textContent = `You have ${formatMmSs(mt.timeLeft)} left and ${answered}/${mt.questions.length} answered. Submit now or discard?`;
+          okBtn.textContent = "Submit & Grade";
+          okBtn.className = "py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-bold text-white shadow-sm transition";
+        } else {
+          titleEl.textContent = "Submit Mock Exam?";
+          descEl.textContent = `Answered: ${answered}/${mt.questions.length}` + (unanswered ? ` · Unanswered: ${unanswered}` : "") + (flagged ? ` · Flagged: ${flagged}` : "");
+          okBtn.textContent = "Submit Now";
+          okBtn.className = "py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-xs font-bold text-white shadow-sm transition";
+        }
+        document.getElementById("mtConfirmModal").classList.remove("hidden");
+      }
+      window.openMockExitConfirm = () => openMockConfirm("exit");
+
+      // Mock Test Event Bindings
+      const homeMockBtn = document.getElementById("homeMockTestBtn");
+      if (homeMockBtn) {
+        homeMockBtn.addEventListener("click", () => {
+          pushUserNav();
+          state.activeTab = "mocktest";
+          state.activeMode = "browse";
+          saveState();
+          renderActiveView();
+        });
+      }
+      document.getElementById("mtDrawerBtn").addEventListener("click", () => {
+        if (mt.running) { openMockConfirm("exit"); return; }
+        openLeftDrawer();
+      });
+      document.getElementById("mtBackHomeBtn").addEventListener("click", () => {
+        if (mt.running) { openMockConfirm("exit"); return; }
+        pushUserNav();
+        state.activeTab = "home";
+        state.activeMode = "browse";
+        saveState();
+        renderActiveView();
+      });
+      document.querySelectorAll(".mt-lvl-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          mt.level = btn.dataset.mtLevel;
+          renderMockTestSetup();
+        });
+      });
+      document.querySelectorAll(".mt-preset-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          mt.preset = btn.dataset.mtPreset;
+          renderMockTestSetup();
+        });
+      });
+      document.getElementById("mtStartBtn").addEventListener("click", startMockTest);
+      document.getElementById("mtRetakeBtn").addEventListener("click", startMockTest);
+      document.getElementById("mtChangeLevelBtn").addEventListener("click", renderMockTestSetup);
+      document.getElementById("mtPaletteToggleBtn").addEventListener("click", () => {
+        document.getElementById("mtPaletteBox").classList.toggle("hidden");
+      });
+      document.getElementById("mtFlagBtn").addEventListener("click", () => {
+        const q = mt.questions[mt.idx];
+        if (!q) return;
+        q.flagged = !q.flagged;
+        renderMockQuestion();
+      });
+      document.getElementById("mtPrevQBtn").addEventListener("click", () => {
+        if (mt.idx > 0) {
+          mt.idx--;
+          renderMockQuestion();
+        }
+      });
+      document.getElementById("mtNextQBtn").addEventListener("click", () => {
+        if (mt.idx + 1 >= mt.questions.length) {
+          openMockConfirm("submit");
+        } else {
+          mt.idx++;
+          renderMockQuestion();
+        }
+      });
+      document.getElementById("mtSubmitOpenBtn").addEventListener("click", () => openMockConfirm("submit"));
+      document.getElementById("mtConfirmCancelBtn").addEventListener("click", () => {
+        document.getElementById("mtConfirmModal").classList.add("hidden");
+        if (mt.running) pushUserNav();
+      });
+      document.getElementById("mtConfirmOkBtn").addEventListener("click", finishMockTest);
+      document.getElementById("mtConfirmModal").addEventListener("click", (e) => {
+        if (e.target.id === "mtConfirmModal") document.getElementById("mtConfirmModal").classList.add("hidden");
+      });
+      document.getElementById("mtRevMistakesTab").addEventListener("click", () => {
+        mt.reviewFilter = "mistakes";
+        renderMockReviewList();
+      });
+      document.getElementById("mtRevAllTab").addEventListener("click", () => {
+        mt.reviewFilter = "all";
+        renderMockReviewList();
+      });
+      updateMockSubtitles();
+
+      // Daily Goal & Streak Tracker UI Listeners (v5.1)
+      const dgEditBtn = document.getElementById("dgEditBtn");
+      const dgEditor = document.getElementById("dgTargetEditor");
+      const dgCustomInput = document.getElementById("dgCustomInput");
+      const dgCustomSaveBtn = document.getElementById("dgCustomSaveBtn");
+      if (dgEditBtn && dgEditor) {
+        dgEditBtn.addEventListener("click", () => {
+          const opening = dgEditor.classList.contains("hidden");
+          dgEditor.classList.toggle("hidden", !opening);
+          dgEditBtn.textContent = opening ? "Close" : "Edit";
+          if (opening && dgCustomInput) {
+            dgCustomInput.value = ensureDailyGoalState().target;
+          }
+        });
+        dgEditor.querySelectorAll(".dg-preset-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const val = Number(btn.getAttribute("data-dg-target"));
+            setDailyGoalTarget(val);
+            dgEditor.classList.add("hidden");
+            dgEditBtn.textContent = "Edit";
+          });
+        });
+      }
+      if (dgCustomSaveBtn && dgCustomInput) {
+        dgCustomSaveBtn.addEventListener("click", () => {
+          const val = Number(dgCustomInput.value);
+          if (!val || val < 1 || val > 200) {
+            showToast("Please enter a target between 1 and 200.");
+            return;
+          }
+          setDailyGoalTarget(val);
+          if (dgEditor) dgEditor.classList.add("hidden");
+          if (dgEditBtn) dgEditBtn.textContent = "Edit";
+        });
+      }
 
       // Initial render
       renderGlobalProgress();
