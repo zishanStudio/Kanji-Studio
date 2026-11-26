@@ -1224,20 +1224,30 @@
       <div id="settingsMascotOptions" class="space-y-3"></div>
     </section>
 
-    <!-- ABOUT JAPANESE LANGUAGE BEGINNER GUIDE (v4.9.2) -->
+    <!-- ABOUT CENTER: 2 FOLDERS (ABOUT JAPANESE + ABOUT NIHONIFY v6.1) -->
     <section id="view-aboutjp" class="hidden max-w-2xl mx-auto space-y-4 pb-6">
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2.5 min-w-0">
           <button id="aboutJpDrawerBtn" class="w-9 h-9 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 shadow-sm flex items-center justify-center font-bold text-base shrink-0" title="Menu">☰</button>
           <div class="min-w-0">
-            <h2 class="text-base sm:text-lg font-bold text-slate-900 truncate">About Japanese <span class="kanji-font text-rose-600">日本語ガイド</span></h2>
-            <p class="text-xs text-slate-500">Complete beginner guide to Japanese scripts &amp; learning order</p>
+            <h2 id="aboutMainTitle" class="text-base sm:text-lg font-bold text-slate-900 truncate">About &amp; Guides <span class="kanji-font text-rose-600">ガイド</span></h2>
+            <p id="aboutMainSub" class="text-xs text-slate-500">Japanese language guide &amp; complete Nihonify app manual</p>
           </div>
         </div>
         <div class="flex items-center gap-1.5 shrink-0">
           <button id="aboutJpLangBtn" type="button" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-sm transition">EN / हिन्दी</button>
           <button id="aboutJpBackHomeBtn" class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition">← Home</button>
         </div>
+      </div>
+
+      <!-- 2-Folder Switcher -->
+      <div class="grid grid-cols-2 gap-2 p-1.5 rounded-2xl bg-slate-100 border border-slate-200">
+        <button id="aboutFolderJpBtn" type="button" class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-1.5 bg-white text-indigo-700 shadow-sm border border-indigo-200">
+          <span>🇯🇵</span><span>About Japanese</span>
+        </button>
+        <button id="aboutFolderAppBtn" type="button" class="py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900">
+          <span>📱</span><span>About Nihonify</span>
+        </button>
       </div>
 
       <div id="aboutJpContent" class="space-y-3.5"></div>
@@ -10873,9 +10883,46 @@
       });
 
       // =========================================================================
-      // ABOUT JAPANESE LANGUAGE BEGINNER GUIDE (v4.9.2 — EN + Hindi/Hinglish)
+      // ABOUT CENTER: 2 FOLDERS (ABOUT JAPANESE + ABOUT NIHONIFY v6.1)
       // =========================================================================
       let aboutJpLang = "en"; // "en" | "hi"
+      let aboutActiveFolder = "jp"; // "jp" | "app"
+
+      function updateAboutFolderTabs() {
+        const jpBtn = document.getElementById("aboutFolderJpBtn");
+        const appBtn = document.getElementById("aboutFolderAppBtn");
+        const titleEl = document.getElementById("aboutMainTitle");
+        const subEl = document.getElementById("aboutMainSub");
+        const hi = aboutJpLang === "hi";
+        if (jpBtn) {
+          jpBtn.innerHTML = `<span>🇯🇵</span><span>${hi ? "जापानी भाषा गाइड" : "About Japanese"}</span>`;
+          jpBtn.className = aboutActiveFolder === "jp"
+            ? "py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-1.5 bg-white text-indigo-700 shadow-sm border border-indigo-200"
+            : "py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900";
+        }
+        if (appBtn) {
+          appBtn.innerHTML = `<span>📱</span><span>${hi ? "Nihonify ऐप गाइड" : "About Nihonify"}</span>`;
+          appBtn.className = aboutActiveFolder === "app"
+            ? "py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-1.5 bg-white text-indigo-700 shadow-sm border border-indigo-200"
+            : "py-2.5 px-3 rounded-xl text-xs sm:text-sm font-extrabold transition flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-900";
+        }
+        if (titleEl) {
+          titleEl.innerHTML = aboutActiveFolder === "jp"
+            ? `About Japanese <span class="kanji-font text-rose-600">日本語ガイド</span>`
+            : `About Nihonify <span class="kanji-font text-indigo-600">v6.1</span>`;
+        }
+        if (subEl) {
+          if (aboutActiveFolder === "jp") {
+            subEl.textContent = hi
+              ? "जापानी लिपियों और सीखने के सही क्रम की पूरी शुरुआत"
+              : "Complete beginner guide to Japanese scripts & learning order";
+          } else {
+            subEl.textContent = hi
+              ? "ऐप के सभी फीचर्स, स्टार्स, अनलॉक, सेटिंग्स और नए अपडेट्स"
+              : "All tools, stars, unlock methods, settings & latest updates";
+          }
+        }
+      }
 
       function renderAboutJpView() {
         const box = document.getElementById("aboutJpContent");
@@ -10883,150 +10930,339 @@
         if (!box) return;
         const hi = aboutJpLang === "hi";
         if (langBtn) langBtn.textContent = hi ? "Switch to English" : "हिन्दी में पढ़ें";
+        updateAboutFolderTabs();
 
-        box.innerHTML = `
-          <!-- Intro Card: How Japanese Works -->
-          <div class="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-2.5">
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 text-rose-600 text-[11px] font-extrabold">
-              🇯🇵 ${hi ? "जापानी भाषा की शुरुआत" : "How Japanese Writing Works"}
-            </div>
-            <h3 class="text-base font-extrabold text-slate-900">
-              ${hi ? "जापानी में 3 लिपियाँ (Scripts) एक साथ चलती हैं!" : "Japanese uses 3 writing scripts together!"}
-            </h3>
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              ${hi
-                ? "अंग्रेज़ी में सिर्फ़ 1 alphabet (A–Z) होता है, लेकिन जापानी भाषा में <strong>Hiragana (हिरागाना)</strong>, <strong>Katakana (काताकाना)</strong> और <strong>Kanji (कांजी)</strong> तीनों मिलकर एक वाक्य बनाते हैं। नीचे एक असली उदाहरण देखें:"
-                : "Unlike English (which only has A–Z), Japanese combines <strong>Hiragana</strong>, <strong>Katakana</strong>, and <strong>Kanji</strong> inside the same sentence. Here is a real example:"}
-            </p>
-            <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3.5 text-center space-y-1.5">
-              <div class="kanji-font text-xl sm:text-2xl font-black tracking-wide">
-                <span class="text-indigo-600">私</span><span class="text-rose-500">は</span><span class="text-teal-600">コーヒー</span><span class="text-rose-500">を</span><span class="text-indigo-600">飲</span><span class="text-rose-500">みます。</span>
+        if (aboutActiveFolder === "app") {
+          box.innerHTML = `
+            <!-- 1. What is Nihonify & Levels -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-2.5">
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 text-[11px] font-extrabold">
+                📱 ${hi ? "Nihonify ऐप क्या है?" : "Welcome to Nihonify"}
               </div>
-              <div class="text-[11px] font-semibold text-slate-500">Watashi wa koohii o nomimasu. — "${hi ? "मैं कॉफ़ी पीता हूँ।" : "I drink coffee."}"</div>
-              <div class="flex items-center justify-center flex-wrap gap-2 pt-1 text-[11px] font-bold">
-                <span class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-600">あ Hiragana (Grammar)</span>
-                <span class="px-2 py-0.5 rounded-full bg-teal-50 text-teal-600">ア Katakana (Coffee)</span>
-                <span class="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600">漢 Kanji (I / Drink)</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- 1. Hiragana -->
-          <div class="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-2.5">
-            <div class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2.5">
-                <span class="w-10 h-10 rounded-2xl bg-rose-500 text-white kanji-font font-black text-xl flex items-center justify-center shrink-0">あ</span>
-                <div>
-                  <h3 class="text-sm sm:text-base font-extrabold text-slate-900">1. Hiragana (ひらがな)</h3>
-                  <div class="text-[11px] font-semibold text-rose-600">${hi ? "जापान का असली बेसिक Alphabet · 71 अक्षर" : "Japan's Basic Alphabet · 71 Characters"}</div>
+              <h3 class="text-base font-extrabold text-slate-900">
+                ${hi ? "एक ही ऐप में Zero से JLPT N1 तक की पूरी तैयारी" : "Complete Japanese Learning from Zero to JLPT N1"}
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                ${hi
+                  ? "Nihonify को खास तौर पर इस तरह बनाया गया है कि बिल्कुल नया स्टूडेंट भी बिना किसी कन्फ्यूजन के स्टेप-बाय-स्टेप जापानी पढ़ना, लिखना और बोलना सीख सके। इसमें कुल <strong>7 मुख्य लेवल्स</strong> हैं:"
+                  : "Nihonify is built so even a complete beginner can learn to read, write, and recognize Japanese step by step without confusion. It includes <strong>7 main levels</strong>:"}
+              </p>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+                <div class="rounded-2xl bg-rose-50 border border-rose-200 p-2.5">
+                  <div class="font-extrabold text-rose-700">あ Hiragana</div>
+                  <div class="text-[11px] text-slate-600">${hi ? "71 बेसिक अक्षर · हमेशा खुला" : "71 basic chars · Always open"}</div>
+                </div>
+                <div class="rounded-2xl bg-teal-50 border border-teal-200 p-2.5">
+                  <div class="font-extrabold text-teal-700">ア Katakana</div>
+                  <div class="text-[11px] text-slate-600">${hi ? "71 विदेशी शब्द अक्षर · हमेशा खुला" : "71 loanword chars · Always open"}</div>
+                </div>
+                <div class="rounded-2xl bg-emerald-50 border border-emerald-200 p-2.5">
+                  <div class="font-extrabold text-emerald-700">JLPT N5</div>
+                  <div class="text-[11px] text-slate-600">${hi ? "80 शुरुआती Kanji · पहले से खुला" : "80 starter Kanji · Unlocked"}</div>
+                </div>
+                <div class="rounded-2xl bg-sky-50 border border-sky-200 p-2.5">
+                  <div class="font-extrabold text-sky-700">JLPT N4 &amp; N3</div>
+                  <div class="text-[11px] text-slate-600">${hi ? "167 + 368 रोज़मर्रा के Kanji" : "167 + 368 everyday Kanji"}</div>
+                </div>
+                <div class="rounded-2xl bg-amber-50 border border-amber-200 p-2.5">
+                  <div class="font-extrabold text-amber-700">JLPT N2 &amp; N1</div>
+                  <div class="text-[11px] text-slate-600">${hi ? "376 + 1,146 एडवांस Kanji" : "376 + 1,146 advanced Kanji"}</div>
+                </div>
+                <div class="rounded-2xl bg-purple-50 border border-purple-200 p-2.5">
+                  <div class="font-extrabold text-purple-700">部首 Radicals</div>
+                  <div class="text-[11px] text-slate-600">${hi ? "214 Kangxi बिल्डिंग ब्लॉक्स" : "214 Kangxi building blocks"}</div>
                 </div>
               </div>
-              <button data-about-jump="Hiragana" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-[11px] font-bold text-rose-700 shrink-0 transition">${hi ? "सीखें →" : "Start →"}</button>
             </div>
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              ${hi
-                ? "<strong>यह क्या है?</strong> यह जापानी भाषा का सबसे बुनियादी phonetic alphabet है (जैसे हिन्दी में अ-आ-इ-ई)। हर अक्षर की एक पक्की आवाज़ होती है (あ = a, か = ka, さ = sa)।"
-                : "<strong>What is it?</strong> The core phonetic alphabet of Japanese. Every character represents one fixed syllable sound (あ = a, か = ka, さ = sa)."}
-            </p>
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              ${hi
-                ? "<strong>क्यों पढ़ते हैं?</strong> जापानी के grammar words, verb endings, और Kanji के ऊपर उसका उच्चारण (<strong>Furigana</strong>) लिखने के लिए Hiragana ही इस्तेमाल होता है। <strong>बिल्कुल नए learners को सबसे पहले यही सीखना चाहिए!</strong>"
-                : "<strong>Why learn it?</strong> It is used for native words, grammar particles, verb endings, and pronunciation guides (<strong>Furigana</strong>) above Kanji. <strong>Every beginner starts here first!</strong>"}
-            </p>
-          </div>
 
-          <!-- 2. Katakana -->
-          <div class="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-2.5">
-            <div class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2.5">
-                <span class="w-10 h-10 rounded-2xl bg-teal-600 text-white kanji-font font-black text-xl flex items-center justify-center shrink-0">ア</span>
-                <div>
-                  <h3 class="text-sm sm:text-base font-extrabold text-slate-900">2. Katakana (カタカナ)</h3>
-                  <div class="text-[11px] font-semibold text-teal-600">${hi ? "विदेशी शब्दों का Alphabet · 71 अक्षर" : "Foreign Words Alphabet · 71 Characters"}</div>
+            <!-- 2. Every Study Tool Explained Simply -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-3">
+              <div class="flex items-center justify-between gap-2">
+                <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+                  🧰 ${hi ? "ऐप के सभी फीचर्स और टूल्स (आसान भाषा में)" : "Every Study Tool Explained Simply"}
+                </h3>
+              </div>
+              <div class="space-y-2.5 text-xs sm:text-sm text-slate-600">
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3 space-y-1">
+                  <div class="font-extrabold text-slate-900">🃏 Flashcards &amp; ✍️ Writing Challenge</div>
+                  <p>${hi
+                    ? "<strong>Flashcards</strong> से आप कार्ड पलटकर अक्षर का मतलब और आवाज़ (Audio) सुन सकते हैं। <strong>Writing Challenge</strong> में स्क्रीन पर उंगली या स्टाइलस से सही <strong>Stroke Order</strong> में लिखने की प्रैक्टिस होती है।"
+                    : "<strong>Flashcards</strong> let you flip cards and hear pronunciation. <strong>Writing Challenge</strong> lets you draw characters on-screen with real stroke-order checking."}</p>
+                </div>
+
+                <div class="rounded-2xl bg-orange-50/70 border border-orange-200 p-3 space-y-1">
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="font-extrabold text-orange-800">⚡ Speed Writing (स्पीड राइटिंग)</div>
+                    <button data-about-jump="speedwrite" class="px-2.5 py-1 rounded-lg bg-orange-500 text-white text-[11px] font-bold shrink-0">${hi ? "खोलें →" : "Open →"}</button>
+                  </div>
+                  <p>${hi
+                    ? "यह एक तेज़-तर्रार टाइमर गेम है! इसमें आपको समय खत्म होने से पहले स्क्रीन पर दिखाए गए अक्षर को फटाफट लिखना होता है। इससे हाथ की स्पीड और याददाश्त दोनों तेज़ होती हैं।"
+                    : "A fast timed drawing challenge! Draw the prompted character before the clock runs out to sharpen muscle memory and recall speed."}</p>
+                </div>
+
+                <div class="rounded-2xl bg-indigo-50/70 border border-indigo-200 p-3 space-y-1">
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="font-extrabold text-indigo-800">📁 Custom Sets (कस्टम सेट्स)</div>
+                    <button data-about-jump="customsets" class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white text-[11px] font-bold shrink-0">${hi ? "खोलें →" : "Open →"}</button>
+                  </div>
+                  <p>${hi
+                    ? "अपना खुद का पढ़ाई का फोल्डर! जो Kanji आपको कठिन लगती हैं या जिन्हें आप एग्जाम के लिए अलग से दोहराना चाहते हैं, उन्हें चुनकर अपना पर्सनल सेट बना सकते हैं और उस पर Quiz/Flashcards चला सकते हैं।"
+                    : "Your personal study folders! Pick any characters you find tricky or want to revise for a test, save them in a Custom Set, and run Flashcards, Quiz, or Writing on them."}</p>
+                </div>
+
+                <div class="rounded-2xl bg-purple-50/70 border border-purple-200 p-3 space-y-1">
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="font-extrabold text-purple-800">部首 214 Radicals &amp; 👀 Lookalikes</div>
+                    <button data-about-jump="lookalikes" class="px-2.5 py-1 rounded-lg bg-purple-600 text-white text-[11px] font-bold shrink-0">${hi ? "देखें →" : "Open →"}</button>
+                  </div>
+                  <p>${hi
+                    ? "<strong>Radicals</strong> से आप बड़ी Kanji के छोटे हिस्से पहचानना सीखते हैं। <strong>Lookalikes</strong> उन एक जैसे दिखने वाले अक्षरों (जैसे <strong>人</strong> और <strong>入</strong>, या <strong>土</strong> और <strong>士</strong>) का फर्क साफ दिखाता है ताकि आप कभी कन्फ्यूज़ न हों।"
+                    : "<strong>Radicals</strong> teach the building blocks inside Kanji. <strong>Lookalikes</strong> compare confusing twin characters side-by-side (like <strong>人</strong> vs <strong>入</strong> or <strong>土</strong> vs <strong>士</strong>) so you never mix them up."}</p>
+                </div>
+
+                <div class="rounded-2xl bg-emerald-50/70 border border-emerald-200 p-3 space-y-1">
+                  <div class="flex items-center justify-between gap-2">
+                    <div class="font-extrabold text-emerald-800">🎯 JLPT Timed Mock Test &amp; 📖 Learn by Reading</div>
+                    <button data-about-jump="mocktest" class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-[11px] font-bold shrink-0">${hi ? "टेस्ट दें →" : "Try →"}</button>
+                  </div>
+                  <p>${hi
+                    ? "<strong>Timed Mock Test</strong> असली JLPT परीक्षा जैसा टाइमर टेस्ट लेता है और गलतियों का रिव्यू दिखाता है। <strong>Learn by Reading</strong> में आप असली जापानी वाक्य Furigana के साथ पढ़ सकते हैं।"
+                    : "<strong>Timed Mock Test</strong> simulates a real JLPT exam with countdown timer, score breakdown, and mistake review. <strong>Learn by Reading</strong> lets you read real Japanese sentences with Furigana."}</p>
                 </div>
               </div>
-              <button data-about-jump="Katakana" class="px-3 py-1.5 rounded-xl bg-teal-50 hover:bg-teal-100 border border-teal-200 text-[11px] font-bold text-teal-700 shrink-0 transition">${hi ? "सीखें →" : "Start →"}</button>
             </div>
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              ${hi
-                ? "<strong>यह क्या है?</strong> Katakana में भी बिल्कुल वही 71 आवाज़ें होती हैं जो Hiragana में हैं, बस इसके अक्षर थोड़े सीधे और sharp दिखते हैं (ア = a, カ = ka)।"
-                : "<strong>What is it?</strong> The exact same 71 sounds as Hiragana, written in sharper, angular strokes (ア = a, カ = ka)."}
-            </p>
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              ${hi
-                ? "<strong>क्यों पढ़ते हैं?</strong> English/विदेशी शब्द (जैसे <strong>スマホ</strong> = Smartphone, <strong>インド</strong> = India, <strong>ラーメン</strong> = Ramen), आपका अपना नाम, और manga के sound effects लिखने के लिए Katakana ज़रूरी है।"
-                : "<strong>Why learn it?</strong> Used for foreign/English loanwords (<strong>スマホ</strong> Smartphone, <strong>インド</strong> India, <strong>コーヒー</strong> Coffee), foreign names, restaurant menus, and manga sound effects."}
-            </p>
-          </div>
 
-          <!-- 3. Radicals -->
-          <div class="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-2.5">
-            <div class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2.5">
-                <span class="w-10 h-10 rounded-2xl bg-purple-600 text-white kanji-font font-black text-xl flex items-center justify-center shrink-0">部</span>
-                <div>
-                  <h3 class="text-sm sm:text-base font-extrabold text-slate-900">3. Radicals (部首 · Bushu)</h3>
-                  <div class="text-[11px] font-semibold text-purple-600">${hi ? "Kanji के Building Blocks · 214 Kangxi Radicals" : "Building Blocks of Kanji · 214 Radicals"}</div>
+            <!-- 3. Star System (Gray, Yellow, Pink, Red) -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-2.5">
+              <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+                ⭐ ${hi ? "Star सिस्टम: Pink Star और Red Star कैसे मिलते हैं?" : "Star System: How to Earn Pink & Red Stars"}
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                ${hi
+                  ? "ऐप में हर अक्षर के 4 स्टार लेवल होते हैं। जैसे-जैसे आप प्रैक्टिस करते हैं, आपका स्टार अपने आप ऊपर बढ़ता है:"
+                  : "Every character has 4 study tiers. As you practice Writing and Quizzes, your star automatically upgrades:"}
+              </p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3">
+                  <div class="font-extrabold text-slate-600">★ Unseen (Gray Star)</div>
+                  <div class="text-[11px] text-slate-500 mt-0.5">${hi ? "अभी तक इस अक्षर की शुरुआत नहीं की गई है।" : "Not started yet."}</div>
+                </div>
+                <div class="rounded-2xl bg-yellow-50 border border-yellow-200 p-3">
+                  <div class="font-extrabold text-yellow-700">★ New (Yellow Star)</div>
+                  <div class="text-[11px] text-slate-600 mt-0.5">${hi ? "जब आप अक्षर को पहली बार खोलकर Flashcard, Quiz या Writing शुरू करते हैं।" : "Earned when you start studying or practicing a character."}</div>
+                </div>
+                <div class="rounded-2xl bg-pink-50 border border-pink-200 p-3">
+                  <div class="font-extrabold text-pink-600">★ Seen (Pink Star) — 20W + 25Q</div>
+                  <div class="text-[11px] text-slate-600 mt-0.5">${hi ? "<strong>20 बार Writing</strong> + <strong>25 बार Quiz</strong> सही करने पर Pink Star मिलता है। <strong>यही अगले लेवल को अनलॉक करता है!</strong>" : "Unlocked at <strong>20 Writing + 25 Quiz</strong> practices (or set manually). <strong>Needed to unlock next JLPT level!</strong>"}</div>
+                </div>
+                <div class="rounded-2xl bg-rose-50 border border-rose-200 p-3">
+                  <div class="font-extrabold text-rose-600">★ Known (Red Star) — 50W + 50Q</div>
+                  <div class="text-[11px] text-slate-600 mt-0.5">${hi ? "<strong>50 बार Writing</strong> + <strong>50 बार Quiz</strong> पूरा करने पर Red Star मिलता है — यानी यह अक्षर आपको पक्का याद हो गया!" : "Unlocked at <strong>50 Writing + 50 Quiz</strong> practices — marks full mastery!"}</div>
                 </div>
               </div>
-              <button data-about-jump="radicals" class="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-[11px] font-bold text-purple-700 shrink-0 transition">${hi ? "देखें →" : "Explore →"}</button>
             </div>
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              ${hi
-                ? "<strong>यह क्या हैं?</strong> Radicals छोटे-छोटे हिस्से (Lego blocks) हैं जिनसे मिलकर बड़ी Kanji बनती हैं।"
-                : "<strong>What are they?</strong> Small visual components (like Lego bricks) that combine to form every Kanji character."}
-            </p>
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              ${hi
-                ? "<strong>क्यों पढ़ते हैं?</strong> अगर आपको Radicals पता हों, तो Kanji रटना नहीं पड़ता! जैसे <strong>氵 (पानी)</strong> दिखे तो समझ जाओ शब्द पानी से जुड़ा है (<strong>海</strong> समुद्र, <strong>泳</strong> तैरना, <strong>池</strong> तालाब); और <strong>木 (पेड़)</strong> → <strong>林 (बाग)</strong> → <strong>森 (जंगल)</strong>!"
-                : "<strong>Why learn them?</strong> Radicals turn memorizing 2,000+ Kanji into logic! Spot <strong>氵 (water)</strong> and you immediately know <strong>海</strong> (sea), <strong>泳</strong> (swim), and <strong>池</strong> (pond) relate to water — and <strong>木</strong> (tree) → <strong>林</strong> (woods) → <strong>森</strong> (forest)!"}
-            </p>
-          </div>
 
-          <!-- 4. Kanji -->
-          <div class="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-2.5">
-            <div class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2.5">
-                <span class="w-10 h-10 rounded-2xl bg-indigo-600 text-white kanji-font font-black text-xl flex items-center justify-center shrink-0">漢</span>
-                <div>
-                  <h3 class="text-sm sm:text-base font-extrabold text-slate-900">4. Kanji (漢字) &amp; JLPT N5–N1</h3>
-                  <div class="text-[11px] font-semibold text-indigo-600">${hi ? "अर्थ वाले चिह्न · 2,137 Jōyō Kanji" : "Meaning Characters · 2,137 Jōyō Kanji"}</div>
+            <!-- 4. How to Unlock Levels & Features (3 Ways) -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-2.5">
+              <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+                🔓 ${hi ? "सभी लेवल्स (N4, N3, N2, N1) अनलॉक करने के 3 तरीके" : "3 Ways to Unlock All JLPT Levels"}
+              </h3>
+              <ol class="text-xs sm:text-sm text-slate-600 space-y-2 list-decimal list-inside">
+                <li>
+                  <strong>${hi ? "Achievement से (Pink ★ लाकर):" : "By Achievement (Pink ★):"}</strong>
+                  ${hi
+                    ? "पिछले लेवल के हर अक्षर पर <strong>Pink Star (Seen)</strong> हासिल करें (जैसे N5 के सभी 80 Kanji पर Pink ★ लाने पर N4 अपने आप खुल जाएगा)।"
+                    : "Reach <strong>Pink ★ (Seen)</strong> on all characters in the previous level (e.g., Pink ★ on all N5 Kanji automatically unlocks N4)."}
+                </li>
+                <li>
+                  <strong>${hi ? "VIP Redeem Code से:" : "By VIP Redeem Code:"}</strong>
+                  ${hi
+                    ? "मेन्यू में <strong>Designer / Unlock</strong> पर जाकर Designer से मिला सिंगल-यूज़ VIP कोड डालें — सारे लेवल्स तुरंत आपके अकाउंट में अनलॉक हो जाएंगे।"
+                    : "Open <strong>Designer / Unlock</strong> from the top-right menu and enter a single-use VIP code from the Designer to unlock every level."}
+                </li>
+                <li>
+                  <strong>${hi ? "Designer / Admin द्वारा:" : "By Designer / Admin Access:"}</strong>
+                  ${hi
+                    ? "वेरिफाइड Designer अकाउंट से एडमिन खुद सभी लेवल्स या VIP एक्सेस दे सकते हैं।"
+                    : "Verified Designer / Admin access can unlock all levels directly."}
+                </li>
+              </ol>
+            </div>
+
+            <!-- 5. Settings, Sync & Security -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-2.5">
+              <div class="flex items-center justify-between gap-2">
+                <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+                  ⚙️ ${hi ? "Settings, Themes और Account सुरक्षा" : "Settings, Customization & Account Safety"}
+                </h3>
+                <button data-about-jump="settings" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold shrink-0">${hi ? "Settings →" : "Settings →"}</button>
+              </div>
+              <ul class="text-xs sm:text-sm text-slate-600 space-y-1.5 list-disc list-inside">
+                <li><strong>Themes &amp; Mascot:</strong> ${hi ? "Settings में जाकर Light/Dark मोड, 10+ कलर थीम्स और अपना पसंदीदा Mascot चुन सकते हैं।" : "Pick Light/Dark mode, custom color themes, and your study Mascot inside Settings."}</li>
+                <li><strong>Daily Goal &amp; Streak:</strong> ${hi ? "हर दिन का लक्ष्य (10/20/30 मिनट) सेट करें और लगातार रोज़ पढ़कर Streak बनाएं।" : "Set your daily study target and build a daily learning streak."}</li>
+                <li><strong>Verified Sync &amp; 1-Device Lock:</strong> ${hi ? "आपका डेटा क्लाउड में सेव रहता है। सुरक्षा के लिए हर अकाउंट एक समय में 1 ही डिवाइस पर लॉगिन रहता है और ईमेल वेरिफिकेशन ज़रूरी है।" : "Cloud progress syncs automatically after Email Verification, protected by a 1-Device Active Session lock."}</li>
+                <li><strong>Privacy &amp; Terms:</strong> ${hi ? "Settings में जाकर आप कभी भी हमारी Privacy Policy और Terms पढ़ सकते हैं।" : "Read the full Privacy Policy & Terms anytime inside Settings."}</li>
+              </ul>
+            </div>
+
+            <!-- 6. Latest Updates (v6.1) -->
+            <div class="bg-indigo-50/70 rounded-3xl border border-indigo-200 p-4 sm:p-5 space-y-2">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-700">
+                🆕 ${hi ? "Latest Updates · वर्ज़न v6.1 में नया क्या है?" : "Latest Updates · What's New (v5.0 → v6.1)"}
+              </div>
+              <ul class="text-xs sm:text-sm text-slate-700 space-y-1.5 list-disc list-inside font-medium">
+                <li><strong>v6.1:</strong> ${hi ? "नया 2-फोल्डर About सेक्शन (About Japanese + About Nihonify), आसान टूल्स गाइड, स्टार नियम और Changelog।" : "New 2-folder About Center (About Japanese + About Nihonify), beginner tool manual, star guide & changelog."}</li>
+                <li><strong>v6.0:</strong> ${hi ? "Privacy Policy & Terms, और तेज़ Network-First ऑफ़लाइन सपोर्ट।" : "Built-in Privacy Policy & Terms modal plus faster Network-First offline updates."}</li>
+                <li><strong>v5.5–v5.9:</strong> ${hi ? "Compulsory Email Verification (ऑटो-चेक के साथ), Anti-Tamper VIP Redeem Codes, 1-Device Lock और Google Cloud डोमेन सुरक्षा।" : "Compulsory Email Verification with auto-check, Anti-Tamper VIP Redeem Codes, 1-Device Lock & domain security."}</li>
+                <li><strong>v5.0–v5.4:</strong> ${hi ? "JLPT Timed Mock Test, Daily Goal & Streak Tracker, 2-Step Onboarding और स्मार्ट मेन्यू।" : "JLPT Timed Mock Test, Daily Goal & Streak Tracker, 2-Step Onboarding & smart role menus."}</li>
+              </ul>
+            </div>
+          `;
+        } else {
+          box.innerHTML = `
+            <!-- Intro Card: How Japanese Works -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-2.5">
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 text-rose-600 text-[11px] font-extrabold">
+                🇯🇵 ${hi ? "जापानी भाषा की शुरुआत" : "How Japanese Writing Works"}
+              </div>
+              <h3 class="text-base font-extrabold text-slate-900">
+                ${hi ? "जापानी में 3 लिपियाँ (Scripts) एक साथ चलती हैं!" : "Japanese uses 3 writing scripts together!"}
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                ${hi
+                  ? "अंग्रेज़ी में सिर्फ़ 1 alphabet (A–Z) होता है, लेकिन जापानी भाषा में <strong>Hiragana (हिरागाना)</strong>, <strong>Katakana (काताकाना)</strong> और <strong>Kanji (कांजी)</strong> तीनों मिलकर एक वाक्य बनाते हैं। नीचे एक असली उदाहरण देखें:"
+                  : "Unlike English (which only has A–Z), Japanese combines <strong>Hiragana</strong>, <strong>Katakana</strong>, and <strong>Kanji</strong> inside the same sentence. Here is a real example:"}
+              </p>
+              <div class="rounded-2xl bg-slate-50 border border-slate-200 p-3.5 text-center space-y-1.5">
+                <div class="kanji-font text-xl sm:text-2xl font-black tracking-wide">
+                  <span class="text-indigo-600">私</span><span class="text-rose-500">は</span><span class="text-teal-600">コーヒー</span><span class="text-rose-500">を</span><span class="text-indigo-600">飲</span><span class="text-rose-500">みます。</span>
+                </div>
+                <div class="text-[11px] font-semibold text-slate-500">Watashi wa koohii o nomimasu. — "${hi ? "मैं कॉफ़ी पीता हूँ।" : "I drink coffee."}"</div>
+                <div class="flex items-center justify-center flex-wrap gap-2 pt-1 text-[11px] font-bold">
+                  <span class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-600">あ Hiragana (Grammar)</span>
+                  <span class="px-2 py-0.5 rounded-full bg-teal-50 text-teal-600">ア Katakana (Coffee)</span>
+                  <span class="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600">漢 Kanji (I / Drink)</span>
                 </div>
               </div>
-              <button data-about-jump="kanji" class="px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-[11px] font-bold text-indigo-700 shrink-0 transition">${hi ? "N5–N1 →" : "Open →"}</button>
             </div>
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              ${hi
-                ? "<strong>यह क्या है?</strong> Kanji ऐसे चिह्न (symbols) हैं जिनका खुद का एक मतलब होता है — जैसे <strong>日</strong> (सूरज/दिन), <strong>山</strong> (पहाड़), <strong>水</strong> (पानी)।"
-                : "<strong>What is it?</strong> Characters that carry meaning directly — like <strong>日</strong> (sun/day), <strong>山</strong> (mountain), and <strong>水</strong> (water)."}
-            </p>
-            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              ${hi
-                ? "<strong>क्यों पढ़ते हैं?</strong> जापानी वाक्यों में शब्दों के बीच space नहीं होता, इसलिए Kanji पढ़ने को तेज़ और साफ़ बनाती है। हर Kanji की दो readings होती हैं: <strong>On'yomi (音読み)</strong> जो compound words में आती है (जैसे 日本 <em>Nihon</em>) और <strong>Kun'yomi (訓読み)</strong> जो अकेले शब्द में आती है (जैसे 日 <em>hi</em>)।"
-                : "<strong>Why learn it?</strong> Japanese does not put spaces between words, so Kanji makes reading fast and clear. Most Kanji have two readings: <strong>On'yomi</strong> (used in compound words like 日本 <em>Nihon</em>) and <strong>Kun'yomi</strong> (native Japanese reading like 日 <em>hi</em>)."}
-            </p>
-            <div class="grid grid-cols-5 gap-1.5 pt-1 text-center text-[11px]">
-              <div class="rounded-xl bg-emerald-50 border border-emerald-200 py-1.5"><div class="font-extrabold text-emerald-700">N5</div><div class="text-[10px] text-slate-500">80</div></div>
-              <div class="rounded-xl bg-sky-50 border border-sky-200 py-1.5"><div class="font-extrabold text-sky-700">N4</div><div class="text-[10px] text-slate-500">167</div></div>
-              <div class="rounded-xl bg-indigo-50 border border-indigo-200 py-1.5"><div class="font-extrabold text-indigo-700">N3</div><div class="text-[10px] text-slate-500">368</div></div>
-              <div class="rounded-xl bg-amber-50 border border-amber-200 py-1.5"><div class="font-extrabold text-amber-700">N2</div><div class="text-[10px] text-slate-500">376</div></div>
-              <div class="rounded-xl bg-rose-50 border border-rose-200 py-1.5"><div class="font-extrabold text-rose-700">N1</div><div class="text-[10px] text-slate-500">1,146</div></div>
-            </div>
-          </div>
 
-          <!-- 5. Recommended Study Order -->
-          <div class="bg-indigo-50/70 rounded-3xl border border-indigo-200 p-4 sm:p-5 space-y-2">
-            <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-700">
-              ${hi ? "🚀 नए Learners के लिए सही Step-by-Step रास्ता" : "🚀 Best Step-by-Step Path for Complete Beginners"}
+            <!-- 1. Hiragana -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-2.5">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-10 h-10 rounded-2xl bg-rose-500 text-white kanji-font font-black text-xl flex items-center justify-center shrink-0">あ</span>
+                  <div>
+                    <h3 class="text-sm sm:text-base font-extrabold text-slate-900">1. Hiragana (ひらがな)</h3>
+                    <div class="text-[11px] font-semibold text-rose-600">${hi ? "जापान का असली बेसिक Alphabet · 71 अक्षर" : "Japan's Basic Alphabet · 71 Characters"}</div>
+                  </div>
+                </div>
+                <button data-about-jump="Hiragana" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-[11px] font-bold text-rose-700 shrink-0 transition">${hi ? "सीखें →" : "Start →"}</button>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                ${hi
+                  ? "<strong>यह क्या है?</strong> यह जापानी भाषा का सबसे बुनियादी phonetic alphabet है (जैसे हिन्दी में अ-आ-इ-ई)। हर अक्षर की एक पक्की आवाज़ होती है (あ = a, か = ka, さ = sa)।"
+                  : "<strong>What is it?</strong> The core phonetic alphabet of Japanese. Every character represents one fixed syllable sound (あ = a, か = ka, さ = sa)."}
+              </p>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                ${hi
+                  ? "<strong>क्यों पढ़ते हैं?</strong> जापानी के grammar words, verb endings, और Kanji के ऊपर उसका उच्चारण (<strong>Furigana</strong>) लिखने के लिए Hiragana ही इस्तेमाल होता है। <strong>बिल्कुल नए learners को सबसे पहले यही सीखना चाहिए!</strong>"
+                  : "<strong>Why learn it?</strong> It is used for native words, grammar particles, verb endings, and pronunciation guides (<strong>Furigana</strong>) above Kanji. <strong>Every beginner starts here first!</strong>"}
+              </p>
             </div>
-            <ol class="text-xs sm:text-sm text-slate-700 space-y-1.5 list-decimal list-inside font-medium">
-              <li>${hi ? "पहले <strong>Hiragana</strong> (71 अक्षर) पूरा करें — Writing Challenge से लिखकर याद करें।" : "Master <strong>Hiragana</strong> (71 chars) first using Flashcards + Writing Challenge."}</li>
-              <li>${hi ? "फिर <strong>Katakana</strong> (71 अक्षर) सीखें ताकि English/विदेशी शब्द पढ़ सकें।" : "Learn <strong>Katakana</strong> (71 chars) so you can read foreign words &amp; menus."}</li>
-              <li>${hi ? "<strong>Important Radicals</strong> पर नज़र डालें ताकि Kanji के टुकड़े समझ आएं।" : "Browse <strong>Important Radicals</strong> to recognize Kanji building blocks."}</li>
-              <li>${hi ? "<strong>JLPT N5 (Set 1)</strong> से शुरू करके <strong>N1</strong> तक आगे बढ़ें — और <strong>Learn by Reading</strong> से वाक्य पढ़ें!" : "Start <strong>JLPT N5 (Set 1)</strong> and climb up to <strong>N1</strong> using Quiz, Writing &amp; Learn by Reading!"}</li>
-            </ol>
-          </div>
-        `;
+
+            <!-- 2. Katakana -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-2.5">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-10 h-10 rounded-2xl bg-teal-600 text-white kanji-font font-black text-xl flex items-center justify-center shrink-0">ア</span>
+                  <div>
+                    <h3 class="text-sm sm:text-base font-extrabold text-slate-900">2. Katakana (カタカナ)</h3>
+                    <div class="text-[11px] font-semibold text-teal-600">${hi ? "विदेशी शब्दों का Alphabet · 71 अक्षर" : "Foreign Words Alphabet · 71 Characters"}</div>
+                  </div>
+                </div>
+                <button data-about-jump="Katakana" class="px-3 py-1.5 rounded-xl bg-teal-50 hover:bg-teal-100 border border-teal-200 text-[11px] font-bold text-teal-700 shrink-0 transition">${hi ? "सीखें →" : "Start →"}</button>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                ${hi
+                  ? "<strong>यह क्या है?</strong> Katakana में भी बिल्कुल वही 71 आवाज़ें होती हैं जो Hiragana में हैं, बस इसके अक्षर थोड़े सीधे और sharp दिखते हैं (ア = a, カ = ka)।"
+                  : "<strong>What is it?</strong> The exact same 71 sounds as Hiragana, written in sharper, angular strokes (ア = a, カ = ka)."}
+              </p>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                ${hi
+                  ? "<strong>क्यों पढ़ते हैं?</strong> English/विदेशी शब्द (जैसे <strong>スマホ</strong> = Smartphone, <strong>インド</strong> = India, <strong>ラーメン</strong> = Ramen), आपका अपना नाम, और manga के sound effects लिखने के लिए Katakana ज़रूरी है।"
+                  : "<strong>Why learn it?</strong> Used for foreign/English loanwords (<strong>スマホ</strong> Smartphone, <strong>インド</strong> India, <strong>コーヒー</strong> Coffee), foreign names, restaurant menus, and manga sound effects."}
+              </p>
+            </div>
+
+            <!-- 3. Radicals -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-2.5">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-10 h-10 rounded-2xl bg-purple-600 text-white kanji-font font-black text-xl flex items-center justify-center shrink-0">部</span>
+                  <div>
+                    <h3 class="text-sm sm:text-base font-extrabold text-slate-900">3. Radicals (部首 · Bushu)</h3>
+                    <div class="text-[11px] font-semibold text-purple-600">${hi ? "Kanji के Building Blocks · 214 Kangxi Radicals" : "Building Blocks of Kanji · 214 Radicals"}</div>
+                  </div>
+                </div>
+                <button data-about-jump="radicals" class="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-[11px] font-bold text-purple-700 shrink-0 transition">${hi ? "देखें →" : "Explore →"}</button>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                ${hi
+                  ? "<strong>यह क्या हैं?</strong> Radicals छोटे-छोटे हिस्से (Lego blocks) हैं जिनसे मिलकर बड़ी Kanji बनती हैं।"
+                  : "<strong>What are they?</strong> Small visual components (like Lego bricks) that combine to form every Kanji character."}
+              </p>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                ${hi
+                  ? "<strong>क्यों पढ़ते हैं?</strong> अगर आपको Radicals पता हों, तो Kanji रटना नहीं पड़ता! जैसे <strong>氵 (पानी)</strong> दिखे तो समझ जाओ शब्द पानी से जुड़ा है (<strong>海</strong> समुद्र, <strong>泳</strong> तैरना, <strong>池</strong> तालाब); और <strong>木 (पेड़)</strong> → <strong>林 (बाग)</strong> → <strong>森 (जंगल)</strong>!"
+                  : "<strong>Why learn them?</strong> Radicals turn memorizing 2,000+ Kanji into logic! Spot <strong>氵 (water)</strong> and you immediately know <strong>海</strong> (sea), <strong>泳</strong> (swim), and <strong>池</strong> (pond) relate to water — and <strong>木</strong> (tree) → <strong>林</strong> (woods) → <strong>森</strong> (forest)!"}
+              </p>
+            </div>
+
+            <!-- 4. Kanji -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-2.5">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                  <span class="w-10 h-10 rounded-2xl bg-indigo-600 text-white kanji-font font-black text-xl flex items-center justify-center shrink-0">漢</span>
+                  <div>
+                    <h3 class="text-sm sm:text-base font-extrabold text-slate-900">4. Kanji (漢字) &amp; JLPT N5–N1</h3>
+                    <div class="text-[11px] font-semibold text-indigo-600">${hi ? "अर्थ वाले चिह्न · 2,137 Jōyō Kanji" : "Meaning Characters · 2,137 Jōyō Kanji"}</div>
+                  </div>
+                </div>
+                <button data-about-jump="kanji" class="px-3 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-[11px] font-bold text-indigo-700 shrink-0 transition">${hi ? "N5–N1 →" : "Open →"}</button>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                ${hi
+                  ? "<strong>यह क्या है?</strong> Kanji ऐसे चिह्न (symbols) हैं जिनका खुद का एक मतलब होता है — जैसे <strong>日</strong> (सूरज/दिन), <strong>山</strong> (पहाड़), <strong>水</strong> (पानी)।"
+                  : "<strong>What is it?</strong> Characters that carry meaning directly — like <strong>日</strong> (sun/day), <strong>山</strong> (mountain), and <strong>水</strong> (water)."}
+              </p>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                ${hi
+                  ? "<strong>क्यों पढ़ते हैं?</strong> जापानी वाक्यों में शब्दों के बीच space नहीं होता, इसलिए Kanji पढ़ने को तेज़ और साफ़ बनाती है। हर Kanji की दो readings होती हैं: <strong>On'yomi (音読み)</strong> जो compound words में आती है (जैसे 日本 <em>Nihon</em>) और <strong>Kun'yomi (訓読み)</strong> जो अकेले शब्द में आती है (जैसे 日 <em>hi</em>)।"
+                  : "<strong>Why learn it?</strong> Japanese does not put spaces between words, so Kanji makes reading fast and clear. Most Kanji have two readings: <strong>On'yomi</strong> (used in compound words like 日本 <em>Nihon</em>) and <strong>Kun'yomi</strong> (native Japanese reading like 日 <em>hi</em>)."}
+              </p>
+              <div class="grid grid-cols-5 gap-1.5 pt-1 text-center text-[11px]">
+                <div class="rounded-xl bg-emerald-50 border border-emerald-200 py-1.5"><div class="font-extrabold text-emerald-700">N5</div><div class="text-[10px] text-slate-500">80</div></div>
+                <div class="rounded-xl bg-sky-50 border border-sky-200 py-1.5"><div class="font-extrabold text-sky-700">N4</div><div class="text-[10px] text-slate-500">167</div></div>
+                <div class="rounded-xl bg-indigo-50 border border-indigo-200 py-1.5"><div class="font-extrabold text-indigo-700">N3</div><div class="text-[10px] text-slate-500">368</div></div>
+                <div class="rounded-xl bg-amber-50 border border-amber-200 py-1.5"><div class="font-extrabold text-amber-700">N2</div><div class="text-[10px] text-slate-500">376</div></div>
+                <div class="rounded-xl bg-rose-50 border border-rose-200 py-1.5"><div class="font-extrabold text-rose-700">N1</div><div class="text-[10px] text-slate-500">1,146</div></div>
+              </div>
+            </div>
+
+            <!-- 5. Recommended Study Order -->
+            <div class="bg-indigo-50/70 rounded-3xl border border-indigo-200 p-4 sm:p-5 space-y-2">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-700">
+                ${hi ? "🚀 नए Learners के लिए सही Step-by-Step रास्ता" : "🚀 Best Step-by-Step Path for Complete Beginners"}
+              </div>
+              <ol class="text-xs sm:text-sm text-slate-700 space-y-1.5 list-decimal list-inside font-medium">
+                <li>${hi ? "पहले <strong>Hiragana</strong> (71 अक्षर) पूरा करें — Writing Challenge से लिखकर याद करें।" : "Master <strong>Hiragana</strong> (71 chars) first using Flashcards + Writing Challenge."}</li>
+                <li>${hi ? "फिर <strong>Katakana</strong> (71 अक्षर) सीखें ताकि English/विदेशी शब्द पढ़ सकें।" : "Learn <strong>Katakana</strong> (71 chars) so you can read foreign words &amp; menus."}</li>
+                <li>${hi ? "<strong>Important Radicals</strong> पर नज़र डालें ताकि Kanji के टुकड़े समझ आएं।" : "Browse <strong>Important Radicals</strong> to recognize Kanji building blocks."}</li>
+                <li>${hi ? "<strong>JLPT N5 (Set 1)</strong> से शुरू करके <strong>N1</strong> तक आगे बढ़ें — और <strong>Learn by Reading</strong> से वाक्य पढ़ें!" : "Start <strong>JLPT N5 (Set 1)</strong> and climb up to <strong>N1</strong> using Quiz, Writing &amp; Learn by Reading!"}</li>
+              </ol>
+            </div>
+          `;
+        }
 
         box.querySelectorAll("[data-about-jump]").forEach(btn => {
           btn.addEventListener("click", () => {
@@ -11041,6 +11277,8 @@
             } else if (target === "kanji") {
               state.activeTab = "kanji";
               state.activeKanjiLevel = null;
+            } else if (target === "speedwrite" || target === "customsets" || target === "lookalikes" || target === "mocktest" || target === "settings") {
+              state.activeTab = target;
             }
             saveState();
             renderActiveView();
@@ -11061,6 +11299,20 @@
         aboutJpLang = aboutJpLang === "en" ? "hi" : "en";
         renderAboutJpView();
       });
+      const folderJpBtn = document.getElementById("aboutFolderJpBtn");
+      const folderAppBtn = document.getElementById("aboutFolderAppBtn");
+      if (folderJpBtn) {
+        folderJpBtn.addEventListener("click", () => {
+          aboutActiveFolder = "jp";
+          renderAboutJpView();
+        });
+      }
+      if (folderAppBtn) {
+        folderAppBtn.addEventListener("click", () => {
+          aboutActiveFolder = "app";
+          renderAboutJpView();
+        });
+      }
       const homeAboutBtn = document.getElementById("homeAboutJpBtn");
       if (homeAboutBtn) {
         homeAboutBtn.addEventListener("click", () => {
