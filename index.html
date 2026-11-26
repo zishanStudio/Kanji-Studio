@@ -2477,7 +2477,8 @@
           <h3 class="text-base font-extrabold text-slate-900">Verify Your Email</h3>
           <p class="text-xs text-slate-500 leading-relaxed">We sent a verification link to:</p>
           <div id="authVerifyEmailText" class="text-xs font-bold text-indigo-600 break-all">—</div>
-          <p class="text-[11px] text-slate-500 leading-relaxed pt-1">Open your inbox (or Spam folder), tap the Firebase verification link, then tap below to enter Nihonify.</p>
+          <p class="text-[11px] text-slate-500 leading-relaxed pt-1">Open your inbox (or Spam folder), tap the <strong>newest (bottom)</strong> Firebase link, then come back here.</p>
+          <p class="text-[10px] text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1.5 leading-snug">Tip: Purane links expire ho jaate hain — agar Gmail me multiple emails hon, to sabse neeche wala latest email hi kholein.</p>
         </div>
         <div class="space-y-2 pt-1">
           <button id="authCheckVerifiedBtn" type="button" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition">✓ I've Verified — Continue</button>
@@ -9536,7 +9537,101 @@
         }
       } catch (e) {}
 
-      let verifyResendCooldownUntil = 0;
+      let verifyResendCooldownUntil = (() => {
+        try { return Number(localStorage.getItem("nihonify_verify_cooldown_until") || 0) || 0; } catch (e) { return 0; }
+      })();
+      let verifyCooldownTimer = null;
+      let lastAutoVerifyCheckAt = 0;
+      let autoVerifyChecking = false;
+
+      function setVerifyCooldown(ms) {
+        verifyResendCooldownUntil = Date.now() + ms;
+        try { localStorage.setItem("nihonify_verify_cooldown_until", String(verifyResendCooldownUntil)); } catch (e) {}
+        updateResendCooldownUI();
+      }
+
+      function updateResendCooldownUI() {
+        const resendBtn = document.getElementById("authResendVerifyBtn");
+        if (!resendBtn) return;
+        const left = Math.ceil((verifyResendCooldownUntil - Date.now()) / 1000);
+        if (left > 0) {
+          resendBtn.disabled = true;
+          resendBtn.classList.add("opacity-60", "cursor-not-allowed");
+          resendBtn.textContent = `⏳ Resend available in ${left}s`;
+          if (!verifyCooldownTimer) {
+            verifyCooldownTimer = setInterval(updateResendCooldownUI, 1000);
+          }
+        } else {
+          resendBtn.disabled = false;
+          resendBtn.classList.remove("opacity-60", "cursor-not-allowed");
+          resendBtn.textContent = "📨 Resend Verification Email";
+          if (verifyCooldownTimer) {
+            clearInterval(verifyCooldownTimer);
+            verifyCooldownTimer = null;
+          }
+        }
+      }
+
+      async function sendVerificationEmailSafe(user) {
+        if (!user) return;
+        const isProdHost = /^https?:\/\/(zishanstudio\.github\.io|localhost|127\.0\.0\.1)/i.test(window.location.href);
+        if (isProdHost) {
+          try {
+            await user.sendEmailVerification({
+              url: window.location.origin + window.location.pathname,
+              handleCodeInApp: false
+            });
+            return;
+          } catch (e) {
+            if (e && (e.code === "auth/unauthorized-continue-uri" || e.code === "auth/invalid-continue-uri")) {
+              await user.sendEmailVerification();
+              return;
+            }
+            throw e;
+          }
+        }
+        await user.sendEmailVerification();
+      }
+
+      async function tryAutoCheckEmailVerified() {
+        if (autoVerifyChecking || isCreatingAccount) return;
+        if (!fbAuth || !fbAuth.currentUser || fbAuth.currentUser.emailVerified) return;
+        const vWrap = document.getElementById("authVerifyWrap");
+        if (!vWrap || vWrap.classList.contains("hidden")) return;
+        const now = Date.now();
+        if (now - lastAutoVerifyCheckAt < 3500) return;
+        lastAutoVerifyCheckAt = now;
+        autoVerifyChecking = true;
+        try {
+          await fbAuth.currentUser.reload();
+          if (fbAuth.currentUser && fbAuth.currentUser.emailVerified) {
+            try { await fbAuth.currentUser.getIdToken(true); } catch (e) {}
+            showAuthSuccess("Email verified! Entering Nihonify...");
+            const ok = (typeof window.initializeVerifiedUserSession === "function")
+              ? await window.initializeVerifiedUserSession(fbAuth.currentUser, true)
+              : false;
+            if (ok) {
+              applyTheme();
+              renderActiveView();
+              if (typeof window.renderSettingsHome === "function") window.renderSettingsHome();
+              showToast("✓ Email verified! Welcome to Nihonify.");
+            }
+          }
+        } catch (e) {
+          // Silent on auto-check; manual button handles errors
+        } finally {
+          autoVerifyChecking = false;
+        }
+      }
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          setTimeout(tryAutoCheckEmailVerified, 600);
+        }
+      });
+      window.addEventListener("focus", () => {
+        setTimeout(tryAutoCheckEmailVerified, 600);
+      });
 
       function showAuthVerifyScreen(show, email) {
         const vWrap = document.getElementById("authVerifyWrap");
@@ -9559,6 +9654,7 @@
           if (titleEl) titleEl.textContent = "Email Verification Required";
           if (subEl) subEl.textContent = "One quick step to protect your account";
           if (emailText) emailText.textContent = email || "";
+          updateResendCooldownUI();
         } else {
           vWrap.classList.add("hidden");
           if (subBtn) subBtn.classList.remove("hidden");
@@ -9609,12 +9705,23 @@
           showAuthError(`Please wait ${secs}s before requesting another link.`);
           return;
         }
+        const resendBtn = document.getElementById("authResendVerifyBtn");
+        resendBtn.disabled = true;
+        resendBtn.textContent = "Sending link...";
         try {
-          await fbAuth.currentUser.sendEmailVerification();
-          verifyResendCooldownUntil = Date.now() + 30000;
-          showAuthSuccess("Verification link resent! Check your Gmail inbox or Spam folder.");
+          await sendVerificationEmailSafe(fbAuth.currentUser);
+          setVerifyCooldown(60000);
+          showAuthSuccess("New verification link sent! Open the LATEST (bottom) email in Gmail — older links are now expired.");
         } catch (err) {
-          showAuthError(err.message || "Could not resend verification email.");
+          const code = err && err.code ? String(err.code) : "";
+          if (code === "auth/too-many-requests") {
+            setVerifyCooldown(180000);
+            showAuthError("Firebase temporarily paused emails for this device due to too many requests. Wait 10–15 min (or use the latest link already in your inbox/Spam).");
+          } else {
+            resendBtn.disabled = false;
+            resendBtn.textContent = "📨 Resend Verification Email";
+            showAuthError(formatAuthError(err, "Could not resend verification email."));
+          }
         }
       });
 
@@ -9815,12 +9922,15 @@
                 } catch (e) {}
               }
               let verifySent = false;
+              let verifyErrCode = "";
               try {
-                await createdUser.sendEmailVerification();
+                await sendVerificationEmailSafe(createdUser);
                 verifySent = true;
-                verifyResendCooldownUntil = Date.now() + 30000;
+                setVerifyCooldown(60000);
               } catch (verErr) {
                 verifySent = false;
+                verifyErrCode = verErr && verErr.code ? String(verErr.code) : "";
+                if (verifyErrCode === "auth/too-many-requests") setVerifyCooldown(180000);
               }
               state.currentUserEmail = String(createdUser.email || email).trim().toLowerCase();
               state.currentUserVerified = false;
