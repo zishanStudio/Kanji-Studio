@@ -1,12 +1,14 @@
 {
-  "name": "Nihonify — 漢字学習 (JLPT N5–N1)",
-  "short_name": "Nihonify",
-  "description": "Learn Japanese Hiragana, Katakana, 214 Radicals, and 2,137 JLPT N5–N1 Kanji with offline stroke writing, flashcards, quizzes, and reading practice.",
+  "id": "./",
+  "short_name": "Kanji Studio",
+  "name": "漢字学習 · Created by Zishan & Its Team",
+  "description": "Learn Japanese Hiragana, Katakana & JLPT N5–N1 Kanji with flashcards, quizzes, timed mock tests, and writing practice.",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#3730a3",
-  "theme_color": "#4338ca",
   "orientation": "portrait",
+  "background_color": "#4347a8",
+  "theme_color": "#4f46e5",
   "icons": [
     {
       "src": "icon-192.png",
@@ -19,12 +21,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
-    },
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
     }
   ]
 }
