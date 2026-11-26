@@ -1156,6 +1156,21 @@
           </div>
           <span id="settingsVipChevron" class="text-slate-400 text-xl font-bold shrink-0">›</span>
         </button>
+
+        <!-- Folder 4: Privacy Policy & Terms (v6.0) -->
+        <button id="settingsLegalBtn" type="button" class="w-full text-left bg-white hover:border-indigo-300 rounded-3xl border border-slate-200 p-4 shadow-sm flex items-center justify-between gap-3.5 transition">
+          <div class="flex items-center gap-3.5 min-w-0 flex-1">
+            <div class="w-14 h-14 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-2xl shrink-0">📜</div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h3 class="text-sm sm:text-base font-extrabold text-slate-900">Privacy &amp; Terms</h3>
+                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">v6.0</span>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">Data privacy, security &amp; fair usage terms</p>
+            </div>
+          </div>
+          <span class="text-slate-400 text-xl font-bold shrink-0">›</span>
+        </button>
       </div>
     </section>
 
@@ -2185,8 +2200,13 @@
 
   </main>
 
-  <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6">
-    Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v5.8</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan &amp; Its Team</span>
+  <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6 space-y-1">
+    <div>Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v6.0</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan &amp; Its Team</span></div>
+    <div>
+      <button id="footerPrivacyBtn" type="button" class="text-[11px] font-semibold text-indigo-500 hover:underline">Privacy Policy</button>
+      <span class="mx-1.5 text-slate-300">·</span>
+      <button id="footerTermsBtn" type="button" class="text-[11px] font-semibold text-indigo-500 hover:underline">Terms of Use</button>
+    </div>
   </footer>
 
   <!-- Bottom Navigation Bar (Home | Hiragana | Katakana | Kanji) -->
@@ -2472,6 +2492,12 @@
         <span id="authSwitchPrompt">Don't have an account?</span>
         <button id="authSwitchModeBtn" type="button" class="text-indigo-600 font-bold hover:underline ml-1">Create Account</button>
       </div>
+      <div class="text-center text-[10px] text-slate-400 pt-0.5">
+        By continuing, you agree to our
+        <button id="authPrivacyLinkBtn" type="button" class="text-indigo-500 font-semibold hover:underline">Privacy Policy</button>
+        &amp;
+        <button id="authTermsLinkBtn" type="button" class="text-indigo-500 font-semibold hover:underline">Terms</button>.
+      </div>
     </div>
   </div>
 
@@ -2529,6 +2555,61 @@
       <div class="grid grid-cols-2 gap-2.5 pt-1">
         <button id="exitNoBtn" class="py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 transition">No</button>
         <button id="exitYesBtn" class="py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-xs font-bold text-white shadow-sm transition">Yes, Exit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Privacy Policy & Terms of Use Modal (v6.0) -->
+  <div id="legalModal" class="hidden fixed inset-0 z-[95] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white w-full max-w-lg max-h-[86vh] rounded-3xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden">
+      <div class="px-5 py-3.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+        <div>
+          <h3 class="text-sm font-bold text-slate-900">📜 Privacy Policy &amp; Terms</h3>
+          <p class="text-[11px] text-slate-500">Nihonify (漢字学習) · v6.0 · Created by Zishan &amp; Its Team</p>
+        </div>
+        <button id="legalModalCloseBtn" type="button" class="p-1.5 rounded-lg hover:bg-slate-200 text-slate-500 font-bold text-lg leading-none">&times;</button>
+      </div>
+      <div class="px-4 pt-3 pb-2 border-b border-slate-100 bg-white flex items-center gap-2">
+        <button id="legalTabPrivacyBtn" type="button" class="flex-1 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold transition">Privacy Policy</button>
+        <button id="legalTabTermsBtn" type="button" class="flex-1 py-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs font-bold transition">Terms of Use</button>
+      </div>
+      <div id="legalPrivacyBody" class="p-5 overflow-y-auto space-y-3 text-xs text-slate-600 leading-relaxed flex-1">
+        <p class="font-semibold text-slate-800">Last updated: November 2026</p>
+        <div>
+          <h4 class="font-bold text-slate-900 mb-1">1. Information We Collect</h4>
+          <p>When you create a Nihonify account, we store your email address, name, age, city/country, learning level, study goal, daily target, and Japanese learning progress (Kanji mastery, daily streak, SRS queue, custom sets, and JLPT mock scores) securely using Google Firebase Authentication and Cloud Firestore.</p>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 mb-1">2. How We Use Your Data</h4>
+          <p>Your data is used strictly to sync your study progress across sessions, personalize your Japanese level and daily goal, verify your email, and protect your account with single-device security. We do <strong>not</strong> sell, rent, or share your personal data with third-party advertisers.</p>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 mb-1">3. Data Security &amp; Local Storage</h4>
+          <p>All communication uses HTTPS encryption, strict Firestore server-side rules, and verified email authentication. Offline study data is cached locally on your device so you can practice even without internet.</p>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 mb-1">4. Account &amp; Data Deletion</h4>
+          <p>You can reset your study progress anytime from the top menu. To permanently delete your account and cloud profile, contact the Nihonify team at <span class="font-semibold text-indigo-600">zishan41965@gmail.com</span>.</p>
+        </div>
+      </div>
+      <div id="legalTermsBody" class="hidden p-5 overflow-y-auto space-y-3 text-xs text-slate-600 leading-relaxed flex-1">
+        <p class="font-semibold text-slate-800">Last updated: November 2026</p>
+        <div>
+          <h4 class="font-bold text-slate-900 mb-1">1. Educational Purpose</h4>
+          <p>Nihonify (漢字学習) is a Japanese language learning platform for Hiragana, Katakana, Radicals, and JLPT N5–N1 Kanji practice. Content is provided for educational and self-study purposes.</p>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 mb-1">2. Account &amp; Single-Device Fair Use</h4>
+          <p>Each account requires a verified email address and is intended for personal use on one active device at a time. Signing in on a second device automatically signs out the previous device.</p>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 mb-1">3. VIP Access &amp; Redeem Codes</h4>
+          <p>VIP redeem codes are single-use and permanently linked to the account that redeems them. Attempting to tamper with client storage, bypass locks, or abuse the service may result in account suspension.</p>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 mb-1">4. Updates &amp; Contact</h4>
+          <p>Features and study content may be updated over time to improve learning quality. For support or feedback, contact <span class="font-semibold text-indigo-600">zishan41965@gmail.com</span>.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -10065,7 +10146,7 @@
         }
 
         // 1. Close open utility modals first
-        const modalIds = ["mtConfirmModal", "addToSetModal", "pickKanjiForSetModal", "radicalDetailModal", "wcPausedModal", "quizPausedModal", "unlockAllModal", "resetConfirmModal", "usersAdminModal", "searchOverlayModal", "studyPickerModal"];
+        const modalIds = ["legalModal", "mtConfirmModal", "addToSetModal", "pickKanjiForSetModal", "radicalDetailModal", "wcPausedModal", "quizPausedModal", "unlockAllModal", "resetConfirmModal", "usersAdminModal", "searchOverlayModal", "studyPickerModal"];
         for (const mid of modalIds) {
           const el = document.getElementById(mid);
           if (el && !el.classList.contains("hidden")) {
@@ -12151,6 +12232,36 @@
           if (dgEditBtn) dgEditBtn.textContent = "Edit";
         });
       }
+
+      // Privacy Policy & Terms Modal Listeners (v6.0)
+      const legalModal = document.getElementById("legalModal");
+      const legalTabPrivacy = document.getElementById("legalTabPrivacyBtn");
+      const legalTabTerms = document.getElementById("legalTabTermsBtn");
+      const legalPrivacyBody = document.getElementById("legalPrivacyBody");
+      const legalTermsBody = document.getElementById("legalTermsBody");
+      function openLegalModal(tab) {
+        if (!legalModal) return;
+        const isPriv = tab !== "terms";
+        if (legalTabPrivacy) legalTabPrivacy.className = isPriv ? "flex-1 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold transition" : "flex-1 py-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs font-bold transition";
+        if (legalTabTerms) legalTabTerms.className = !isPriv ? "flex-1 py-2 rounded-xl bg-indigo-600 text-white text-xs font-bold transition" : "flex-1 py-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs font-bold transition";
+        if (legalPrivacyBody) legalPrivacyBody.classList.toggle("hidden", !isPriv);
+        if (legalTermsBody) legalTermsBody.classList.toggle("hidden", isPriv);
+        pushUserNav();
+        legalModal.classList.remove("hidden");
+      }
+      if (legalTabPrivacy) legalTabPrivacy.addEventListener("click", () => openLegalModal("privacy"));
+      if (legalTabTerms) legalTabTerms.addEventListener("click", () => openLegalModal("terms"));
+      const legalCloseBtn = document.getElementById("legalModalCloseBtn");
+      if (legalCloseBtn) legalCloseBtn.addEventListener("click", () => legalModal.classList.add("hidden"));
+      if (legalModal) legalModal.addEventListener("click", (e) => { if (e.target.id === "legalModal") legalModal.classList.add("hidden"); });
+      ["footerPrivacyBtn", "authPrivacyLinkBtn", "settingsLegalBtn"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener("click", () => openLegalModal("privacy"));
+      });
+      ["footerTermsBtn", "authTermsLinkBtn"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener("click", () => openLegalModal("terms"));
+      });
 
       // Initial render
       renderGlobalProgress();
