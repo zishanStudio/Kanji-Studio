@@ -2,6 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <script>
+    (function () {
+      try {
+        if (/github\.io|netlify\.app/i.test(location.hostname)) {
+          var m = document.createElement("meta");
+          m.httpEquiv = "Content-Security-Policy";
+          m.content = "default-src 'self' https: data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://cdn.tailwindcss.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com wss://*.firebaseio.com https://cdn.jsdelivr.net https://kanjiapi.dev https://raw.githubusercontent.com; object-src 'none'; base-uri 'self'; form-action 'self';";
+          document.head.appendChild(m);
+        }
+      } catch (e) {}
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="description" content="Learn Japanese Kanji level by level from JLPT N5 to N1 with readings, meanings, flashcards, multiple-choice quizzes, and stylus/touch writing practice." />
   <meta name="keywords" content="Japanese Kanji, JLPT N5, JLPT N4, JLPT N3, JLPT N2, JLPT N1, Kanji Study, Learn Japanese, Kanji Flashcards, Kanji Quiz" />
@@ -2174,7 +2186,7 @@
   </main>
 
   <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6">
-    Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v5.7</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan &amp; Its Team</span>
+    Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v5.8</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan &amp; Its Team</span>
   </footer>
 
   <!-- Bottom Navigation Bar (Home | Hiragana | Katakana | Kanji) -->
@@ -5013,6 +5025,26 @@
     // STATE & PERSISTENCE
     // =========================================================================
     const STORAGE_KEY = "kanji_studio_state_v1";
+
+    // v5.8 XSS & Script Injection Protection helpers
+    function sanitizeUserText(val, maxLen) {
+      const cleaned = String(val == null ? "" : val)
+        .replace(/[<>]/g, "")
+        .replace(/javascript:/gi, "")
+        .replace(/on\w+\s*=/gi, "")
+        .replace(/[\u0000-\u001F\u007F]/g, "")
+        .trim();
+      return maxLen ? cleaned.slice(0, maxLen) : cleaned;
+    }
+
+    function escapeHtmlSafe(val) {
+      return String(val == null ? "" : val)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
     let state = {
       activeTab: "home", // 'home' | 'Hiragana' | 'Katakana' | 'kanji'
       activeKanjiLevel: null, // null = folders list, or 'N5'..'N1'
@@ -8749,6 +8781,22 @@
       let authIsSignUp = false;
       let authSignUpStep = 1;
       let pendingSignupProfile = null;
+      let pendingFreshLoginSession = false;
+
+      function generateDeviceSessionId() {
+        return "sess_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 10);
+      }
+
+      function getLocalSessionId() {
+        try { return localStorage.getItem("nihonify_session_id") || ""; } catch (e) { return ""; }
+      }
+
+      function setLocalSessionId(sid) {
+        try {
+          if (sid) localStorage.setItem("nihonify_session_id", sid);
+          else localStorage.removeItem("nihonify_session_id");
+        } catch (e) {}
+      }
       const authModal = document.getElementById("authGateModal");
       const authErrEl = document.getElementById("authErrorMsg");
       const authOkEl = document.getElementById("authSuccessMsg");
@@ -8980,7 +9028,7 @@
               cloud.customSets.forEach(cs => {
                 if (!cs || !cs.id || !cs.name) return;
                 if (!byId[cs.id]) {
-                  const copy = { id: cs.id, name: cs.name, chars: Array.isArray(cs.chars) ? [...new Set(cs.chars)] : [], createdAt: cs.createdAt || Date.now() };
+                  const copy = { id: cs.id, name: sanitizeUserText(cs.name, 48) || "Custom Set", chars: Array.isArray(cs.chars) ? [...new Set(cs.chars)] : [], createdAt: cs.createdAt || Date.now() };
                   state.customSets.push(copy);
                   byId[cs.id] = copy;
                   changed = true;
@@ -9164,15 +9212,38 @@
                 authModal.classList.remove("hidden");
                 return;
               }
+              // v5.8 1 Account = 1 Active Device Lock (enforced for all non-Designer accounts)
+              const isDesignerAcc = state.currentUserEmail === "zishan41965@gmail.com";
+              let localSid = getLocalSessionId();
+              if (!isDesignerAcc) {
+                if (pendingFreshLoginSession || !data.activeSessionId) {
+                  localSid = generateDeviceSessionId();
+                  setLocalSessionId(localSid);
+                  pendingFreshLoginSession = false;
+                } else if (!localSid || data.activeSessionId !== localSid) {
+                  activeCloudUid = null;
+                  setLocalSessionId("");
+                  try { localStorage.removeItem("nihonify_auth_ok"); } catch (e) {}
+                  document.documentElement.classList.add("ks-auth-locked");
+                  await fbAuth.signOut();
+                  showAuthError("Signed out because this account was logged in on another device.");
+                  authModal.classList.remove("hidden");
+                  return;
+                }
+              }
+
               const userPayload = {
                 uid: user.uid,
-                name: (pendingSignupProfile && pendingSignupProfile.fullName) || data.name || user.displayName || user.email.split("@")[0],
+                name: sanitizeUserText((pendingSignupProfile && pendingSignupProfile.fullName) || data.name || user.displayName || user.email.split("@")[0], 60),
                 email: user.email,
                 blocked: false,
                 vipUnlocked: !!data.vipUnlocked,
                 lastActive: firebase.firestore.FieldValue.serverTimestamp(),
                 createdAt: data.createdAt || firebase.firestore.FieldValue.serverTimestamp()
               };
+              if (!isDesignerAcc && localSid) {
+                userPayload.activeSessionId = localSid;
+              }
               if (pendingSignupProfile) {
                 userPayload.profile = pendingSignupProfile;
               }
@@ -9217,12 +9288,28 @@
                 const live = liveSnap.data() || {};
                 if (live.blocked) {
                   if (userDocUnsub) { userDocUnsub(); userDocUnsub = null; }
+                  setLocalSessionId("");
                   try { localStorage.removeItem("nihonify_auth_ok"); } catch (e) {}
                   document.documentElement.classList.add("ks-auth-locked");
                   await fbAuth.signOut();
                   showAuthError("Your access has been removed by the Designer.");
                   authModal.classList.remove("hidden");
                   return;
+                }
+                // v5.8 Real-Time 1-Device Lock: auto sign out this phone if another device logs in
+                if (state.currentUserEmail !== "zishan41965@gmail.com") {
+                  const mySid = getLocalSessionId();
+                  if (live.activeSessionId && mySid && live.activeSessionId !== mySid) {
+                    if (userDocUnsub) { userDocUnsub(); userDocUnsub = null; }
+                    activeCloudUid = null;
+                    setLocalSessionId("");
+                    try { localStorage.removeItem("nihonify_auth_ok"); } catch (e) {}
+                    document.documentElement.classList.add("ks-auth-locked");
+                    await fbAuth.signOut();
+                    showAuthError("Signed out because this account was logged in on another device.");
+                    authModal.classList.remove("hidden");
+                    return;
+                  }
                 }
                 if (!state.isDesigner) {
                   const newVip = !!live.vipUnlocked;
@@ -9404,6 +9491,7 @@
                 email: u.email,
                 emailVerified: true,
                 blocked: false,
+                activeSessionId: (() => { const s = generateDeviceSessionId(); setLocalSessionId(s); return s; })(),
                 lastActive: firebase.firestore.FieldValue.serverTimestamp(),
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
               };
@@ -9585,11 +9673,11 @@
 
         const submitBtn = document.getElementById("authSubmitBtn");
         if (authIsSignUp && authSignUpStep === 2) {
-          const fullName = document.getElementById("obFullName").value.trim();
+          const fullName = sanitizeUserText(document.getElementById("obFullName").value, 60);
           const ageRaw = document.getElementById("obAge").value.trim();
           const age = Number(ageRaw);
-          const location = document.getElementById("obLocation").value.trim();
-          const favoriteAnime = document.getElementById("obFavoriteAnime").value.trim();
+          const location = sanitizeUserText(document.getElementById("obLocation").value, 80);
+          const favoriteAnime = sanitizeUserText(document.getElementById("obFavoriteAnime").value, 140);
 
           if (!fullName) { showAuthError("Please enter your Full Name."); return; }
           if (!ageRaw || isNaN(age) || age < 5 || age > 110) { showAuthError("Please enter a valid Age."); return; }
@@ -9616,6 +9704,7 @@
           submitBtn.disabled = true;
           submitBtn.textContent = "Creating account...";
           try {
+            pendingFreshLoginSession = true;
             const cred = await fbAuth.createUserWithEmailAndPassword(email, pass);
             if (cred.user) {
               if (fullName) await cred.user.updateProfile({ displayName: fullName });
@@ -9657,6 +9746,7 @@
         submitBtn.disabled = true;
         submitBtn.textContent = "Signing in...";
         try {
+          pendingFreshLoginSession = true;
           await fbAuth.signInWithEmailAndPassword(email, pass);
         } catch (err) {
           showAuthError(err.message || "Authentication failed.");
@@ -9668,6 +9758,7 @@
 
       document.getElementById("signOutMenuBtn").addEventListener("click", async () => {
         menuDrop.classList.add("hidden");
+        setLocalSessionId("");
         if (fbAuth) await fbAuth.signOut();
       });
 
@@ -10878,7 +10969,7 @@
 
       function createCustomSetByName(rawName, initialChar) {
         ensureDoubtSet();
-        const name = (rawName || "").trim();
+        const name = sanitizeUserText(rawName, 48);
         if (!name) {
           showToast("Enter a folder name first.");
           return null;
@@ -10934,7 +11025,7 @@
           }`;
           row.innerHTML = `
             <div class="min-w-0 flex-1">
-              <div class="text-xs font-bold truncate">${s.id === "doubt" ? "📌 " : "📁 "}${s.name}</div>
+              <div class="text-xs font-bold truncate">${s.id === "doubt" ? "📌 " : "📁 "}${escapeHtmlSafe(s.name)}</div>
               <div class="text-[10px] text-slate-500">${(s.chars || []).length} characters</div>
             </div>
             <span class="text-xs font-extrabold px-2 py-0.5 rounded-lg ${has ? "bg-amber-600 text-white" : "bg-white border border-slate-200 text-slate-500"}">${has ? "✓ Added" : "+ Add"}</span>
@@ -11030,7 +11121,7 @@
           card.innerHTML = `
             <div class="flex items-center justify-between gap-2">
               <div class="min-w-0 flex-1">
-                <h3 class="text-sm sm:text-base font-bold text-slate-900 truncate">${s.id === "doubt" ? "📌 " : "📁 "}${s.name}</h3>
+                <h3 class="text-sm sm:text-base font-bold text-slate-900 truncate">${s.id === "doubt" ? "📌 " : "📁 "}${escapeHtmlSafe(s.name)}</h3>
                 <p class="text-[11px] text-slate-500">${chars.length} ${chars.length === 1 ? "character" : "characters"}</p>
               </div>
               <div class="flex items-center gap-1.5 shrink-0">
