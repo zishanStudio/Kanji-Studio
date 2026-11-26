@@ -598,20 +598,22 @@
     .dg-ring-bg { stroke: rgba(148, 163, 184, 0.25); }
     .dg-ring-fill { transition: stroke-dashoffset 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
     .dg-preset-btn.active { background: #4f46e5; color: #ffffff; border-color: #4f46e5; }
-    body.dark .dg-preset-btn { background: rgba(30,41,59,0.7); color: #cbd5e1; border-color: #334155; }
-    body.dark .dg-preset-btn.active { background: #6366f1; color: #ffffff; border-color: #6366f1; }
-    body.dark #dgTargetEditor { background: rgba(15,23,42,0.55); border-color: #334155; }
-    body.dark #dgCustomInput { background: #0f172a; color: #f8fafc; border-color: #334155; }
+    html.dark .dg-preset-btn { background: rgba(30,41,59,0.7); color: #cbd5e1; border-color: #334155; }
+    html.dark .dg-preset-btn.active { background: #6366f1; color: #ffffff; border-color: #6366f1; }
+    html.dark #dgTargetEditor { background: rgba(15,23,42,0.55); border-color: #334155; }
+    html.dark #dgCustomInput { background: #0f172a; color: #f8fafc; border-color: #334155; }
     @keyframes dgFlamePulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
     .dg-flame-active { display: inline-block; animation: dgFlamePulse 1.8s ease-in-out infinite; }
 
     /* v5.2 Smart 2-Step Onboarding & Designer Details */
     .ob-pill { transition: all 0.15s ease; }
     .ob-pill.active { background: #4f46e5 !important; color: #ffffff !important; border-color: #4f46e5 !important; box-shadow: 0 2px 6px rgba(79,70,229,0.28); }
-    body.dark #authGateModal > div { background: #0f172a; border-color: #334155; color: #f8fafc; }
-    body.dark #authGateModal input { background: #1e293b; color: #f8fafc; border-color: #334155; }
-    body.dark .ob-pill { background: #1e293b; color: #cbd5e1; border-color: #334155; }
-    body.dark .user-detail-box { background: #0f172a; border-color: #334155; color: #e2e8f0; }
+    html.dark #authGateModal > div { background: #0f172a; border-color: #334155; color: #f8fafc; }
+    html.dark #authGateModal #authTitle, html.dark #authVerifyWrap h3 { color: #f8fafc; }
+    html.dark #authGateModal label { color: #cbd5e1; }
+    html.dark #authGateModal input { background: #1e293b; color: #f8fafc; border-color: #334155; }
+    html.dark .ob-pill { background: #1e293b; color: #cbd5e1; border-color: #334155; }
+    html.dark .user-detail-box { background: #0f172a; border-color: #334155; color: #e2e8f0; }
   </style>
   <script src="strokes-data.js" defer></script>
 </head>
@@ -2457,7 +2459,7 @@
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1.5">How did you hear about Kanji Studio? <span class="text-rose-500">*</span></label>
+          <label class="block text-xs font-semibold text-slate-600 mb-1.5">How did you hear about Nihonify? <span class="text-rose-500">*</span></label>
           <div id="obReferralGroup" class="flex flex-wrap gap-1.5">
             <button type="button" data-val="Friend" class="ob-pill px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">Friend</button>
             <button type="button" data-val="WhatsApp" class="ob-pill px-2.5 py-1.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-700">WhatsApp</button>
@@ -8863,6 +8865,7 @@
       let authSignUpStep = 1;
       let pendingSignupProfile = null;
       let pendingFreshLoginSession = false;
+      let isCreatingAccount = false;
 
       function generateDeviceSessionId() {
         return "sess_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 10);
@@ -8891,10 +8894,25 @@
         referral: ""
       };
 
+      function formatAuthError(err, fallback) {
+        const code = err && err.code ? String(err.code) : "";
+        if (code === "auth/email-already-in-use") return "This email is already registered. Please Sign In instead, or use a different email.";
+        if (code === "auth/invalid-email") return "Please enter a valid email address.";
+        if (code === "auth/weak-password") return "Password is too weak. Please use at least 6 characters.";
+        if (code === "auth/user-not-found" || code === "auth/wrong-password" || code === "auth/invalid-credential" || code === "auth/invalid-login-credentials") {
+          return "Incorrect email or password. Please check and try again.";
+        }
+        if (code === "auth/too-many-requests") return "Too many attempts. Please wait a minute and try again.";
+        if (code === "auth/network-request-failed") return "Network error. Please check your internet connection and try again.";
+        if (code === "auth/operation-not-allowed") return "Email/Password sign-up is currently disabled in Firebase.";
+        return (err && err.message) ? err.message : (fallback || "Authentication failed.");
+      }
+
       function showAuthError(msg) {
         if (authOkEl) authOkEl.classList.add("hidden");
         authErrEl.textContent = msg;
         authErrEl.classList.remove("hidden");
+        try { authErrEl.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch (e) {}
       }
 
       function showAuthSuccess(msg) {
@@ -8902,6 +8920,7 @@
         if (authOkEl) {
           authOkEl.textContent = msg;
           authOkEl.classList.remove("hidden");
+          try { authOkEl.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch (e) {}
         }
       }
 
@@ -9224,42 +9243,11 @@
             if (activeCloudUid) pushCloudState(false);
           });
 
-          fbAuth.onAuthStateChanged(async (user) => {
+          window.initializeVerifiedUserSession = async function(user, forceFreshSession) {
+            if (!user) return false;
             const signOutBtn = document.getElementById("signOutMenuBtn");
             if (userDocUnsub) { userDocUnsub(); userDocUnsub = null; }
-            if (!user) {
-              activeCloudUid = null;
-              try { localStorage.removeItem("nihonify_auth_ok"); } catch (e) {}
-              document.documentElement.classList.add("ks-auth-locked");
-              state.currentUserEmail = "";
-              state.currentUserVerified = false;
-              state.isDesigner = false;
-              state.unlockAll = false;
-              applyTheme();
-              if (typeof window.renderSettingsHome === "function") window.renderSettingsHome();
-              setCloudSyncBadge("offline", "☁️ Sign in to sync");
-              if (signOutBtn) signOutBtn.classList.add("hidden");
-              showAuthVerifyScreen(false);
-              authModal.classList.remove("hidden");
-              return;
-            }
-
-            // v5.5 Compulsory Email Verification Gate: block app entry until Gmail/email is verified
-            if (!user.emailVerified) {
-              activeCloudUid = null;
-              try { localStorage.removeItem("nihonify_auth_ok"); } catch (e) {}
-              document.documentElement.classList.add("ks-auth-locked");
-              state.currentUserEmail = String(user.email || "").trim().toLowerCase();
-              state.currentUserVerified = false;
-              state.isDesigner = false;
-              state.unlockAll = false;
-              applyTheme();
-              setCloudSyncBadge("offline", "✉️ Verify email to sync");
-              if (signOutBtn) signOutBtn.classList.add("hidden");
-              showAuthVerifyScreen(true, user.email || "");
-              authModal.classList.remove("hidden");
-              return;
-            }
+            if (forceFreshSession) pendingFreshLoginSession = true;
 
             showAuthVerifyScreen(false);
             activeCloudUid = user.uid;
@@ -9291,7 +9279,7 @@
                 await fbAuth.signOut();
                 showAuthError("Your access has been removed by the Designer.");
                 authModal.classList.remove("hidden");
-                return;
+                return false;
               }
               // v5.8 1 Account = 1 Active Device Lock (enforced for all non-Designer accounts)
               const isDesignerAcc = state.currentUserEmail === "zishan41965@gmail.com";
@@ -9309,7 +9297,7 @@
                   await fbAuth.signOut();
                   showAuthError("Signed out because this account was logged in on another device.");
                   authModal.classList.remove("hidden");
-                  return;
+                  return false;
                 }
               }
 
@@ -9317,6 +9305,7 @@
                 uid: user.uid,
                 name: sanitizeUserText((pendingSignupProfile && pendingSignupProfile.fullName) || data.name || user.displayName || user.email.split("@")[0], 60),
                 email: user.email,
+                emailVerified: true,
                 blocked: false,
                 vipUnlocked: !!data.vipUnlocked,
                 lastActive: firebase.firestore.FieldValue.serverTimestamp(),
@@ -9409,6 +9398,52 @@
             document.documentElement.classList.remove("ks-auth-locked");
             if (signOutBtn) signOutBtn.classList.remove("hidden");
             authModal.classList.add("hidden");
+            return true;
+          };
+
+          fbAuth.onAuthStateChanged(async (user) => {
+            const signOutBtn = document.getElementById("signOutMenuBtn");
+            if (userDocUnsub) { userDocUnsub(); userDocUnsub = null; }
+            if (!user) {
+              activeCloudUid = null;
+              try { localStorage.removeItem("nihonify_auth_ok"); } catch (e) {}
+              document.documentElement.classList.add("ks-auth-locked");
+              state.currentUserEmail = "";
+              state.currentUserVerified = false;
+              state.isDesigner = false;
+              state.unlockAll = false;
+              applyTheme();
+              if (typeof window.renderSettingsHome === "function") window.renderSettingsHome();
+              setCloudSyncBadge("offline", "☁️ Sign in to sync");
+              if (signOutBtn) signOutBtn.classList.add("hidden");
+              renderAuthModalUI(true);
+              authModal.classList.remove("hidden");
+              return;
+            }
+
+            // Wait for createUserWithEmailAndPassword + sendEmailVerification to finish cleanly
+            if (isCreatingAccount && !user.emailVerified) {
+              return;
+            }
+
+            // v5.5 Compulsory Email Verification Gate: block app entry until Gmail/email is verified
+            if (!user.emailVerified) {
+              activeCloudUid = null;
+              try { localStorage.removeItem("nihonify_auth_ok"); } catch (e) {}
+              document.documentElement.classList.add("ks-auth-locked");
+              state.currentUserEmail = String(user.email || "").trim().toLowerCase();
+              state.currentUserVerified = false;
+              state.isDesigner = false;
+              state.unlockAll = false;
+              applyTheme();
+              setCloudSyncBadge("offline", "✉️ Verify email to sync");
+              if (signOutBtn) signOutBtn.classList.add("hidden");
+              showAuthVerifyScreen(true, user.email || "");
+              authModal.classList.remove("hidden");
+              return;
+            }
+
+            await window.initializeVerifiedUserSession(user, false);
           });
 
           window.refreshVipFromFirestore = async function(showFeedback) {
@@ -9545,57 +9580,20 @@
           if (fbAuth.currentUser.emailVerified) {
             try { await fbAuth.currentUser.getIdToken(true); } catch (e) {}
             showAuthSuccess("Email verified! Entering Nihonify...");
-            // Force refresh auth state cleanly
-            const u = fbAuth.currentUser;
-            state.currentUserVerified = true;
-            state.currentUserEmail = String(u.email || "").trim().toLowerCase();
-            if (state.currentUserEmail === "zishan41965@gmail.com") state.isDesigner = true;
-            try { localStorage.setItem("nihonify_auth_ok", "1"); } catch (e) {}
-            document.documentElement.classList.remove("ks-auth-locked");
-            showAuthVerifyScreen(false);
-            authModal.classList.add("hidden");
-            const signOutBtn = document.getElementById("signOutMenuBtn");
-            if (signOutBtn) signOutBtn.classList.remove("hidden");
-            // Trigger profile + cloud sync via reload or direct save
-            if (fbDb) {
-              const docRef = fbDb.collection("users").doc(u.uid);
-              let prof = pendingSignupProfile;
-              if (!prof) {
-                try {
-                  const raw = localStorage.getItem("nihonify_pending_profile_" + u.uid);
-                  if (raw) prof = JSON.parse(raw);
-                } catch (e) {}
-              }
-              const payload = {
-                uid: u.uid,
-                name: (prof && prof.fullName) || u.displayName || u.email.split("@")[0],
-                email: u.email,
-                emailVerified: true,
-                blocked: false,
-                activeSessionId: (() => { const s = generateDeviceSessionId(); setLocalSessionId(s); return s; })(),
-                lastActive: firebase.firestore.FieldValue.serverTimestamp(),
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-              };
-              if (prof) payload.profile = prof;
-              await docRef.set(payload, { merge: true });
-              if (prof) {
-                pendingSignupProfile = null;
-                try { localStorage.removeItem("nihonify_pending_profile_" + u.uid); } catch (e) {}
-                if (typeof window.setDailyGoalFromMinutes === "function") {
-                  window.setDailyGoalFromMinutes(prof.studyMinutes || 20);
-                }
-                applyUserLevelFocus(prof.level);
-              }
+            const ok = (typeof window.initializeVerifiedUserSession === "function")
+              ? await window.initializeVerifiedUserSession(fbAuth.currentUser, true)
+              : false;
+            if (ok) {
+              applyTheme();
+              renderActiveView();
+              if (typeof window.renderSettingsHome === "function") window.renderSettingsHome();
+              showToast("✓ Email verified! Welcome to Nihonify.");
             }
-            applyTheme();
-            renderActiveView();
-            if (typeof window.renderSettingsHome === "function") window.renderSettingsHome();
-            showToast("✓ Email verified! Welcome to Nihonify.");
           } else {
             showAuthError("Email not verified yet. Please tap the link in your inbox (or Spam folder), then try again.");
           }
         } catch (err) {
-          showAuthError(err.message || "Could not check verification status.");
+          showAuthError(formatAuthError(err, "Could not check verification status."));
         } finally {
           btn.disabled = false;
           btn.textContent = "✓ I've Verified — Continue";
@@ -9629,9 +9627,9 @@
         renderAuthModalUI();
       });
 
-      function renderAuthModalUI() {
+      function renderAuthModalUI(keepMessages) {
         showAuthVerifyScreen(false);
-        clearAuthMessages();
+        if (!keepMessages) clearAuthMessages();
         const stepInd = document.getElementById("authStepIndicator");
         const step1Wrap = document.getElementById("authStep1Wrap");
         const step2Wrap = document.getElementById("authStep2Wrap");
@@ -9741,8 +9739,13 @@
         }
         const email = document.getElementById("authEmailInput").value.trim();
         const pass = document.getElementById("authPassInput").value.trim();
-        if (!email || !email.includes("@") || pass.length < 6) {
-          showAuthError("Enter a valid email and password (min 6 characters).");
+        const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        if (!emailValid || pass.length < 6) {
+          if (authIsSignUp && authSignUpStep === 2) {
+            authSignUpStep = 1;
+            renderAuthModalUI(true);
+          }
+          showAuthError("Enter a valid email address and password (min 6 characters).");
           return;
         }
 
@@ -9761,13 +9764,13 @@
           const favoriteAnime = sanitizeUserText(document.getElementById("obFavoriteAnime").value, 140);
 
           if (!fullName) { showAuthError("Please enter your Full Name."); return; }
-          if (!ageRaw || isNaN(age) || age < 5 || age > 110) { showAuthError("Please enter a valid Age."); return; }
+          if (!ageRaw || isNaN(age) || age < 5 || age > 110) { showAuthError("Please enter a valid Age (5–110)."); return; }
           if (!location) { showAuthError("Please enter your City & State / Country."); return; }
           if (!obSelections.profession) { showAuthError("Please select your Student / Profession status."); return; }
           if (!obSelections.level) { showAuthError("Please select your Current Japanese Level."); return; }
           if (!obSelections.goal) { showAuthError("Please select your Main Goal."); return; }
           if (!obSelections.studyTime) { showAuthError("Please select your Daily Study Time."); return; }
-          if (!obSelections.referral) { showAuthError("Please select how you heard about Kanji Studio."); return; }
+          if (!obSelections.referral) { showAuthError("Please select how you heard about Nihonify."); return; }
 
           pendingSignupProfile = {
             fullName,
@@ -9784,20 +9787,25 @@
 
           submitBtn.disabled = true;
           submitBtn.textContent = "Creating account...";
+          isCreatingAccount = true;
+          let createdUser = null;
           try {
             pendingFreshLoginSession = true;
             const cred = await fbAuth.createUserWithEmailAndPassword(email, pass);
-            if (cred.user) {
-              if (fullName) await cred.user.updateProfile({ displayName: fullName });
+            createdUser = cred && cred.user ? cred.user : null;
+            if (createdUser) {
+              if (fullName) {
+                try { await createdUser.updateProfile({ displayName: fullName }); } catch (e) {}
+              }
               try {
-                localStorage.setItem("nihonify_pending_profile_" + cred.user.uid, JSON.stringify(pendingSignupProfile));
+                localStorage.setItem("nihonify_pending_profile_" + createdUser.uid, JSON.stringify(pendingSignupProfile));
               } catch (e) {}
               if (fbDb) {
                 try {
-                  await fbDb.collection("users").doc(cred.user.uid).set({
-                    uid: cred.user.uid,
+                  await fbDb.collection("users").doc(createdUser.uid).set({
+                    uid: createdUser.uid,
                     name: fullName,
-                    email: cred.user.email,
+                    email: createdUser.email,
                     blocked: false,
                     vipUnlocked: false,
                     profile: pendingSignupProfile,
@@ -9806,18 +9814,41 @@
                   }, { merge: true });
                 } catch (e) {}
               }
-              await cred.user.sendEmailVerification();
-              verifyResendCooldownUntil = Date.now() + 30000;
-              showAuthVerifyScreen(true, cred.user.email || email);
-              showAuthSuccess("Account created! Verification link sent to your email.");
+              let verifySent = false;
+              try {
+                await createdUser.sendEmailVerification();
+                verifySent = true;
+                verifyResendCooldownUntil = Date.now() + 30000;
+              } catch (verErr) {
+                verifySent = false;
+              }
+              state.currentUserEmail = String(createdUser.email || email).trim().toLowerCase();
+              state.currentUserVerified = false;
+              setCloudSyncBadge("offline", "✉️ Verify email to sync");
+              showAuthVerifyScreen(true, createdUser.email || email);
+              authModal.classList.remove("hidden");
+              if (verifySent) {
+                showAuthSuccess("Account created! Verification link sent to your email (check Inbox or Spam).");
+              } else {
+                showAuthError("Account created, but we couldn't send the verification email yet. Tap 'Resend Verification Email' below.");
+              }
             }
           } catch (err) {
-            pendingSignupProfile = null;
-            showAuthError(err.message || "Could not create account.");
+            pendingFreshLoginSession = false;
+            if (!createdUser) pendingSignupProfile = null;
+            const code = err && err.code ? String(err.code) : "";
+            if (code === "auth/email-already-in-use" || code === "auth/invalid-email" || code === "auth/weak-password") {
+              authSignUpStep = 1;
+              renderAuthModalUI(true);
+            }
+            showAuthError(formatAuthError(err, "Could not create account."));
           } finally {
+            isCreatingAccount = false;
             submitBtn.disabled = false;
-            if (!fbAuth || !fbAuth.currentUser || fbAuth.currentUser.emailVerified) {
-              renderAuthModalUI();
+            if (!createdUser) {
+              submitBtn.textContent = (authIsSignUp && authSignUpStep === 2)
+                ? "Create Account & Start"
+                : (authIsSignUp ? "Continue →" : "Sign In");
             }
           }
           return;
@@ -9830,7 +9861,8 @@
           pendingFreshLoginSession = true;
           await fbAuth.signInWithEmailAndPassword(email, pass);
         } catch (err) {
-          showAuthError(err.message || "Authentication failed.");
+          pendingFreshLoginSession = false;
+          showAuthError(formatAuthError(err, "Authentication failed."));
         } finally {
           submitBtn.disabled = false;
           submitBtn.textContent = "Sign In";
