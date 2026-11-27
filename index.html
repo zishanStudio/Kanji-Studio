@@ -927,7 +927,7 @@
                 <span class="ks-home-label text-[11px] font-bold uppercase tracking-wider text-indigo-600">Daily Study Goal</span>
                 <span id="dgDoneBadge" class="hidden text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">✓ DONE</span>
               </div>
-              <div id="dgCountHeadline" class="ks-home-title text-base font-extrabold text-slate-900 leading-tight mt-0.5">0 / 10 Kanji today</div>
+              <div id="dgCountHeadline" class="ks-home-title text-base font-extrabold text-slate-900 leading-tight mt-0.5">0 / 10 Characters today</div>
               <div id="dgSubStatus" class="ks-home-muted text-[11px] text-slate-500 truncate mt-0.5">10 more to reach today's target</div>
             </div>
           </div>
@@ -1074,7 +1074,7 @@
           <div class="min-w-0">
             <div class="flex items-center gap-1.5">
               <span class="ks-home-title text-xs sm:text-sm font-bold text-slate-900 truncate">Practice Progress Tracker</span>
-              <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 shrink-0">v6.7</span>
+              <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 shrink-0">v6.8</span>
             </div>
             <div id="homePracticeTrackerSub" class="ks-home-muted text-[11px] text-slate-500 truncate">See Writing &amp; Quiz counts per Set · Next Set unlock status</div>
           </div>
@@ -1214,7 +1214,7 @@
             <div class="min-w-0 flex-1">
               <div class="flex items-center gap-2 flex-wrap">
                 <h3 class="text-sm sm:text-base font-extrabold text-slate-900">Privacy &amp; Terms</h3>
-                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">v6.7</span>
+                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">v6.8</span>
               </div>
               <p class="text-xs text-slate-500 mt-0.5">Data privacy, security &amp; fair usage terms</p>
             </div>
@@ -1823,7 +1823,7 @@
       <div id="quizSetup" class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-5">
         <div>
           <h2 class="text-lg font-bold text-slate-900">Multiple-Choice Quiz</h2>
-          <p class="text-xs text-slate-500 mt-0.5">Test your recognition of readings and meanings for <span id="quizLevelLabel" class="font-bold text-indigo-600">JLPT N5</span>.</p>
+          <p id="quizSetupSub" class="text-xs text-slate-500 mt-0.5">Test your recognition of readings and meanings for <span id="quizLevelLabel" class="font-bold text-indigo-600">JLPT N5</span>.</p>
         </div>
 
         <div class="space-y-3">
@@ -1891,7 +1891,7 @@
           <p class="text-sm text-slate-600 mt-1">You scored <span id="quizFinalScore" class="font-bold text-indigo-600">8 / 10</span> (<span id="quizFinalPct">80%</span>)</p>
         </div>
         <div id="quizMissedBox" class="hidden text-left bg-rose-50 border border-rose-100 rounded-2xl p-3.5 space-y-2">
-          <div class="text-xs font-bold text-rose-700">Missed Kanji to Review:</div>
+          <div id="quizMissedTitle" class="text-xs font-bold text-rose-700">Missed Kanji to Review:</div>
           <div id="quizMissedList" class="flex flex-wrap gap-2"></div>
         </div>
         <div class="flex gap-2.5 pt-2">
@@ -2304,7 +2304,7 @@
   </main>
 
   <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6 space-y-1">
-    <div>Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v6.7</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan &amp; Its Team</span></div>
+    <div>Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v6.8</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan &amp; Its Team</span></div>
     <div>
       <button id="footerPrivacyBtn" type="button" class="text-[11px] font-semibold text-indigo-500 hover:underline">Privacy Policy</button>
       <span class="mx-1.5 text-slate-300">·</span>
@@ -2384,7 +2384,7 @@
           <div class="w-11 h-11 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-lg shrink-0">✍️</div>
           <div>
             <div class="text-sm font-bold text-slate-900">Writing Challenge</div>
-            <div class="text-xs text-slate-500">Draw each kanji with live stroke checking</div>
+            <div class="text-xs text-slate-500">Draw each character with live stroke checking</div>
           </div>
         </button>
         <button data-pick="reading" class="study-pick-btn w-full p-4 rounded-2xl border border-slate-200 hover:border-teal-300 hover:bg-teal-50/50 flex items-center gap-3.5 text-left transition">
@@ -2669,7 +2669,7 @@
       <div class="px-5 py-3.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
         <div>
           <h3 class="text-sm font-bold text-slate-900">📜 Privacy Policy &amp; Terms</h3>
-          <p class="text-[11px] text-slate-500">Nihonify (漢字学習) · v6.7 · Created by Zishan &amp; Its Team</p>
+          <p class="text-[11px] text-slate-500">Nihonify (漢字学習) · v6.8 · Created by Zishan &amp; Its Team</p>
         </div>
         <button id="legalModalCloseBtn" type="button" class="p-1.5 rounded-lg hover:bg-slate-200 text-slate-500 font-bold text-lg leading-none">&times;</button>
       </div>
@@ -5643,14 +5643,14 @@
       if (doneBadge) doneBadge.classList.toggle("hidden", !stats.goalMetToday);
 
       const headline = document.getElementById("dgCountHeadline");
-      if (headline) headline.textContent = `${stats.todayCount} / ${stats.target} Kanji today`;
+      if (headline) headline.textContent = `${stats.todayCount} / ${stats.target} Characters today`;
 
       const sub = document.getElementById("dgSubStatus");
       if (sub) {
         if (stats.goalMetToday) {
           const extra = stats.todayCount - stats.target;
           sub.textContent = extra > 0
-            ? `Goal complete! +${extra} bonus Kanji studied today`
+            ? `Goal complete! +${extra} bonus characters studied today`
             : `Awesome! You hit today's study target`;
         } else if (stats.atRisk) {
           sub.textContent = `${stats.remaining} more to keep your ${stats.currentStreak}-day streak alive`;
@@ -7614,9 +7614,37 @@
       document.getElementById("quizActive").classList.add("hidden");
       document.getElementById("quizSummary").classList.add("hidden");
 
+      const isKana = state.activeLevel === "Hiragana" || state.activeLevel === "Katakana";
+      if (isKana && state.quizType === "kanji-to-reading") {
+        state.quizType = "kanji-to-meaning";
+      }
+      const subEl = document.getElementById("quizSetupSub");
+      if (subEl) {
+        subEl.innerHTML = isKana
+          ? `Test your recognition of sounds &amp; characters for <span id="quizLevelLabel" class="font-bold text-indigo-600">${state.activeLevel}</span>.`
+          : `Test your recognition of readings and meanings for <span id="quizLevelLabel" class="font-bold text-indigo-600">JLPT ${state.activeLevel}</span>.`;
+      }
+      const qGroup = document.getElementById("quizTypeGroup");
+      if (qGroup) {
+        qGroup.className = isKana ? "grid grid-cols-1 sm:grid-cols-2 gap-2" : "grid grid-cols-1 sm:grid-cols-3 gap-2";
+      }
+
       document.querySelectorAll(".qtype-btn").forEach(btn => {
-        const active = btn.dataset.qtype === state.quizType;
+        const qt = btn.dataset.qtype;
+        if (isKana) {
+          if (qt === "kanji-to-meaning") btn.textContent = `${state.activeLevel} → Romaji`;
+          else if (qt === "meaning-to-kanji") btn.textContent = `Romaji → ${state.activeLevel}`;
+          btn.classList.toggle("hidden", qt === "kanji-to-reading");
+        } else {
+          if (qt === "kanji-to-meaning") btn.textContent = "Kanji → Meaning";
+          else if (qt === "meaning-to-kanji") btn.textContent = "Meaning → Kanji";
+          else if (qt === "kanji-to-reading") btn.textContent = "Kanji → Reading";
+          btn.classList.remove("hidden");
+        }
+        const active = qt === state.quizType;
         btn.className = `qtype-btn py-2.5 px-3 rounded-xl border text-xs font-semibold transition ${
+          (isKana && qt === "kanji-to-reading") ? "hidden " : ""
+        }${
           active ? "bg-indigo-600 text-white border-indigo-600" : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
         }`;
       });
@@ -7672,16 +7700,17 @@
 
       const promptLabel = document.getElementById("quizPromptLabel");
       const promptMain = document.getElementById("quizPromptMain");
+      const isKanaTarget = !!q.target.isKana;
       if (state.quizType === "kanji-to-meaning") {
-        promptLabel.textContent = "What does this kanji mean?";
+        promptLabel.textContent = isKanaTarget ? `Which sound is this ${q.target.level}?` : "What does this kanji mean?";
         promptMain.textContent = q.target.char;
         promptMain.className = "kanji-font text-6xl sm:text-7xl font-bold text-slate-900";
       } else if (state.quizType === "meaning-to-kanji") {
-        promptLabel.textContent = "Select the kanji for this meaning:";
+        promptLabel.textContent = isKanaTarget ? `Select the ${q.target.level} for this sound:` : "Select the kanji for this meaning:";
         promptMain.textContent = q.target.meaning;
         promptMain.className = "text-xl sm:text-2xl font-bold text-slate-900 px-2";
       } else {
-        promptLabel.textContent = "Which reading matches this kanji?";
+        promptLabel.textContent = isKanaTarget ? `Which sound matches this ${q.target.level}?` : "Which reading matches this kanji?";
         promptMain.textContent = q.target.char;
         promptMain.className = "kanji-font text-6xl sm:text-7xl font-bold text-slate-900";
       }
@@ -7798,6 +7827,11 @@
       const missedBox = document.getElementById("quizMissedBox");
       const missedList = document.getElementById("quizMissedList");
       if (state.quizMissed.length > 0) {
+        const missedTitleEl = document.getElementById("quizMissedTitle");
+        if (missedTitleEl) {
+          const isKanaLvl = state.activeLevel === "Hiragana" || state.activeLevel === "Katakana";
+          missedTitleEl.textContent = isKanaLvl ? `Missed ${state.activeLevel} to Review:` : "Missed Kanji to Review:";
+        }
         missedBox.classList.remove("hidden");
         missedList.innerHTML = "";
         state.quizMissed.forEach(m => {
@@ -8803,7 +8837,10 @@
       });
       document.getElementById("fcSwapBtn").addEventListener("click", () => {
         state.fcSwapFront = !state.fcSwapFront;
-        document.getElementById("fcSwapBtn").textContent = state.fcSwapFront ? "Front: Meaning" : "Front: Kanji";
+        const isKanaFc = state.activeLevel === "Hiragana" || state.activeLevel === "Katakana";
+        document.getElementById("fcSwapBtn").textContent = state.fcSwapFront
+          ? (isKanaFc ? "Front: Romaji" : "Front: Meaning")
+          : (isKanaFc ? `Front: ${state.activeLevel}` : "Front: Kanji");
         renderFlashcard();
       });
       document.getElementById("fcPrevBtn").addEventListener("click", () => {
@@ -11237,7 +11274,7 @@
         if (titleEl) {
           titleEl.innerHTML = aboutActiveFolder === "jp"
             ? `About Japanese <span class="kanji-font text-rose-600">日本語ガイド</span>`
-            : `About Nihonify <span class="kanji-font text-indigo-600">v6.7</span>`;
+            : `About Nihonify <span class="kanji-font text-indigo-600">v6.8</span>`;
         }
         if (subEl) {
           if (aboutActiveFolder === "jp") {
@@ -11436,9 +11473,10 @@
             <!-- 6. Latest Updates (v6.1) -->
             <div class="bg-indigo-50/70 rounded-3xl border border-indigo-200 p-4 sm:p-5 space-y-2">
               <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-700">
-                🆕 ${hi ? "Latest Updates · वर्ज़न v6.7 में नया क्या है?" : "Latest Updates · What's New (v5.0 → v6.7)"}
+                🆕 ${hi ? "Latest Updates · वर्ज़न v6.8 में नया क्या है?" : "Latest Updates · What's New (v5.0 → v6.8)"}
               </div>
               <ul class="text-xs sm:text-sm text-slate-700 space-y-1.5 list-disc list-inside font-medium">
+                <li><strong>v6.8:</strong> ${hi ? "Hiragana/Katakana में सही लेबल्स (Hiragana/Katakana → Romaji), Daily Goal में 'Characters today', और Flashcards/Quiz Summary में स्मार्ट Kana/Kanji टेक्स्ट।" : "Accurate Hiragana/Katakana labels in Quiz (Hiragana/Katakana → Romaji), 'Characters today' in Daily Goal, and smart Kana/Kanji text across Flashcards & Quiz Summary."}</li>
                 <li><strong>v6.7:</strong> ${hi ? "MCQ Quiz और Detail Writing में Mascot का साइज बड़ा करके Writing Challenge के बराबर कर दिया गया है।" : "Matched Anime Mascot size in MCQ Quiz & Detail Writing to full Writing Challenge size."}</li>
                 <li><strong>v6.6:</strong> ${hi ? "MCQ Quiz में Mascot अब बिल्कुल Writing Challenge की तरह सिर्फ़ जवाब देने पर (सही/गलत रिएक्शन के लिए) दिखेगा और अगले सवाल पर अपने आप छुप जाएगा।" : "MCQ Quiz Mascot now stays hidden while thinking and pops up only on right/wrong answers (just like Writing Challenge)."}</li>
                 <li><strong>v6.5:</strong> ${hi ? "ऐप खोलने या रिफ्रेश करने पर Admin/VIP अकाउंट में 2 सेकंड के लिए दिखने वाला 🔒 Locked फ्लैश पूरी तरह खत्म कर दिया गया है।" : "Eliminated the 2-second 🔒 Locked flash on reload for Admin & VIP accounts while keeping full server-side Anti-Tamper VIP verification."}</li>
