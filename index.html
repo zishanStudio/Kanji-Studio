@@ -1074,7 +1074,7 @@
           <div class="min-w-0">
             <div class="flex items-center gap-1.5">
               <span class="ks-home-title text-xs sm:text-sm font-bold text-slate-900 truncate">Practice Progress Tracker</span>
-              <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 shrink-0">v6.3</span>
+              <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 shrink-0">v6.4</span>
             </div>
             <div id="homePracticeTrackerSub" class="ks-home-muted text-[11px] text-slate-500 truncate">See Writing &amp; Quiz counts per Set · Next Set unlock status</div>
           </div>
@@ -1214,7 +1214,7 @@
             <div class="min-w-0 flex-1">
               <div class="flex items-center gap-2 flex-wrap">
                 <h3 class="text-sm sm:text-base font-extrabold text-slate-900">Privacy &amp; Terms</h3>
-                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">v6.3</span>
+                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">v6.4</span>
               </div>
               <p class="text-xs text-slate-500 mt-0.5">Data privacy, security &amp; fair usage terms</p>
             </div>
@@ -2304,7 +2304,7 @@
   </main>
 
   <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6 space-y-1">
-    <div>Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v6.3</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan &amp; Its Team</span></div>
+    <div>Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v6.4</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan &amp; Its Team</span></div>
     <div>
       <button id="footerPrivacyBtn" type="button" class="text-[11px] font-semibold text-indigo-500 hover:underline">Privacy Policy</button>
       <span class="mx-1.5 text-slate-300">·</span>
@@ -2669,7 +2669,7 @@
       <div class="px-5 py-3.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
         <div>
           <h3 class="text-sm font-bold text-slate-900">📜 Privacy Policy &amp; Terms</h3>
-          <p class="text-[11px] text-slate-500">Nihonify (漢字学習) · v6.3 · Created by Zishan &amp; Its Team</p>
+          <p class="text-[11px] text-slate-500">Nihonify (漢字学習) · v6.4 · Created by Zishan &amp; Its Team</p>
         </div>
         <button id="legalModalCloseBtn" type="button" class="p-1.5 rounded-lg hover:bg-slate-200 text-slate-500 font-bold text-lg leading-none">&times;</button>
       </div>
@@ -7710,7 +7710,7 @@
       const img = document.getElementById("quizMascotImg");
       const pill = document.getElementById("quizMascotPill");
       if (!box || !img || !pill) return;
-      if (state.mascotMode !== "mascot" || typeof getActiveMascotObj !== "function") {
+      if (state.writingMascot === "emoji" || typeof getActiveMascotObj !== "function") {
         box.classList.add("hidden");
         return;
       }
@@ -8424,7 +8424,7 @@
         const img = document.getElementById("modalMascotImg");
         const pill = document.getElementById("modalMascotPill");
         if (!box || !img || !pill) return;
-        if (state.mascotMode !== "mascot" || typeof getActiveMascotObj !== "function") {
+        if (state.writingMascot === "emoji" || typeof getActiveMascotObj !== "function") {
           box.classList.add("hidden");
           return;
         }
@@ -11226,7 +11226,7 @@
         if (titleEl) {
           titleEl.innerHTML = aboutActiveFolder === "jp"
             ? `About Japanese <span class="kanji-font text-rose-600">日本語ガイド</span>`
-            : `About Nihonify <span class="kanji-font text-indigo-600">v6.3</span>`;
+            : `About Nihonify <span class="kanji-font text-indigo-600">v6.4</span>`;
         }
         if (subEl) {
           if (aboutActiveFolder === "jp") {
@@ -11425,9 +11425,10 @@
             <!-- 6. Latest Updates (v6.1) -->
             <div class="bg-indigo-50/70 rounded-3xl border border-indigo-200 p-4 sm:p-5 space-y-2">
               <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-700">
-                🆕 ${hi ? "Latest Updates · वर्ज़न v6.3 में नया क्या है?" : "Latest Updates · What's New (v5.0 → v6.3)"}
+                🆕 ${hi ? "Latest Updates · वर्ज़न v6.4 में नया क्या है?" : "Latest Updates · What's New (v5.0 → v6.4)"}
               </div>
               <ul class="text-xs sm:text-sm text-slate-700 space-y-1.5 list-disc list-inside font-medium">
+                <li><strong>v6.4:</strong> ${hi ? "MCQ Quiz और Detail Writing में कोने वाला Mascot रिएक्शन फिक्स कर दिया गया है।" : "Fixed corner Anime Mascot visibility & reactions in Multiple-Choice Quiz and Detail Writing Practice."}</li>
                 <li><strong>v6.3:</strong> ${hi ? "Writing Challenge में Prompt मोड (By Meaning, On'yomi, Kun'yomi, Romaji), MCQ Quiz और Detail Writing में कोने में Mascot रिएक्शन, और गलत MCQ पर सही ऑप्शन ग्रीन हाईलाइट।" : "Writing Challenge Prompt Modes (By Meaning, On'yomi, Kun'yomi, Romaji), corner Mascot reactions in MCQ Quiz & Detail Writing, and Green correct-answer highlight on wrong MCQ picks."}</li>
                 <li><strong>v6.2:</strong> ${hi ? "नया Practice Progress Tracker फोल्डर (Home और Settings दोनों में), हर Set का Writing/Quiz काउंट, Extra Practice बैज, Home पर Settings बटन और Kana/Kanji बैलेंस्ड स्टार टारगेट।" : "New Practice Progress Tracker folder (on Home & Settings) with per-Set Writing/Quiz counts, extra practice badges, Home Settings shortcut & balanced Kana/Kanji star targets."}</li>
                 <li><strong>v6.1:</strong> ${hi ? "नया 2-फोल्डर About सेक्शन (About Japanese + About Nihonify), आसान टूल्स गाइड, स्टार नियम और Changelog।" : "New 2-folder About Center (About Japanese + About Nihonify), beginner tool manual, star guide & changelog."}</li>
