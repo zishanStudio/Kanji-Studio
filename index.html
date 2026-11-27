@@ -1074,7 +1074,7 @@
           <div class="min-w-0">
             <div class="flex items-center gap-1.5">
               <span class="ks-home-title text-xs sm:text-sm font-bold text-slate-900 truncate">Practice Progress Tracker</span>
-              <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 shrink-0">v6.4</span>
+              <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 shrink-0">v6.7</span>
             </div>
             <div id="homePracticeTrackerSub" class="ks-home-muted text-[11px] text-slate-500 truncate">See Writing &amp; Quiz counts per Set · Next Set unlock status</div>
           </div>
@@ -1214,7 +1214,7 @@
             <div class="min-w-0 flex-1">
               <div class="flex items-center gap-2 flex-wrap">
                 <h3 class="text-sm sm:text-base font-extrabold text-slate-900">Privacy &amp; Terms</h3>
-                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">v6.4</span>
+                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">v6.7</span>
               </div>
               <p class="text-xs text-slate-500 mt-0.5">Data privacy, security &amp; fair usage terms</p>
             </div>
@@ -1863,7 +1863,7 @@
 
         <div class="relative py-4 text-center">
           <div id="quizMascotBox" class="hidden absolute -top-2 right-0 flex flex-col items-center pointer-events-none select-none z-10">
-            <img id="quizMascotImg" src="" alt="Mascot" class="w-14 h-14 sm:w-16 sm:h-16 object-contain drop-shadow-md origin-bottom" />
+            <img id="quizMascotImg" src="" alt="Mascot" class="w-20 h-20 sm:w-24 sm:h-24 object-contain drop-shadow-md origin-bottom" />
             <span id="quizMascotPill" class="-mt-1 px-2 py-0.5 rounded-full text-[9px] font-extrabold text-white bg-indigo-600 shadow-sm kanji-font whitespace-nowrap">頑張れ!</span>
           </div>
           <div id="quizPromptLabel" class="text-xs uppercase tracking-wider font-semibold text-slate-400 mb-2">What does this kanji mean?</div>
@@ -2251,7 +2251,7 @@
               </div>
               <canvas id="modalCanvas" width="260" height="260" class="draw-canvas relative z-10 w-full h-full"></canvas>
               <div id="modalMascotBadge" class="hidden absolute top-1.5 right-1.5 z-20 flex flex-col items-center pointer-events-none select-none">
-                <img id="modalMascotImg" src="" alt="Mascot" class="w-14 h-14 object-contain drop-shadow-md origin-bottom" />
+                <img id="modalMascotImg" src="" alt="Mascot" class="w-20 h-20 sm:w-24 sm:h-24 object-contain drop-shadow-md origin-bottom" />
                 <span id="modalMascotPill" class="-mt-1 px-1.5 py-0.5 rounded-full text-[9px] font-extrabold text-white bg-indigo-600 shadow-sm kanji-font">すごい!</span>
               </div>
             </div>
@@ -2304,7 +2304,7 @@
   </main>
 
   <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6 space-y-1">
-    <div>Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v6.4</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan &amp; Its Team</span></div>
+    <div>Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v6.7</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan &amp; Its Team</span></div>
     <div>
       <button id="footerPrivacyBtn" type="button" class="text-[11px] font-semibold text-indigo-500 hover:underline">Privacy Policy</button>
       <span class="mx-1.5 text-slate-300">·</span>
@@ -2669,7 +2669,7 @@
       <div class="px-5 py-3.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
         <div>
           <h3 class="text-sm font-bold text-slate-900">📜 Privacy Policy &amp; Terms</h3>
-          <p class="text-[11px] text-slate-500">Nihonify (漢字学習) · v6.4 · Created by Zishan &amp; Its Team</p>
+          <p class="text-[11px] text-slate-500">Nihonify (漢字学習) · v6.7 · Created by Zishan &amp; Its Team</p>
         </div>
         <button id="legalModalCloseBtn" type="button" class="p-1.5 rounded-lg hover:bg-slate-200 text-slate-500 font-bold text-lg leading-none">&times;</button>
       </div>
@@ -5316,8 +5316,10 @@
           if (typeof parsed.selectedMascot === "string" && parsed.selectedMascot) state.selectedMascot = parsed.selectedMascot;
           if (typeof parsed.wcPromptMode === "string" && parsed.wcPromptMode) state.wcPromptMode = parsed.wcPromptMode;
           if (typeof parsed.homeMascotEnabled === "boolean") state.homeMascotEnabled = parsed.homeMascotEnabled;
-          // v5.7 Anti-Tamper VIP: Ignore localStorage unlockAll/isDesigner; verified strictly from Firebase server
-          state.unlockAll = false;
+          // v6.5 Zero-Flash VIP Boot Hint (strictly verified & overwritten by Firebase server on connect)
+          let vipHint = false;
+          try { vipHint = localStorage.getItem("nihonify_vip_boot") === "1" && localStorage.getItem("nihonify_auth_ok") === "1"; } catch (e) {}
+          state.unlockAll = vipHint;
           state.isDesigner = false;
           if (parsed.progress) {
             const migrated = {};
@@ -7686,7 +7688,7 @@
 
       const optsContainer = document.getElementById("quizOptions");
       optsContainer.innerHTML = "";
-      if (typeof showQuizMascot === "function") showQuizMascot("idle");
+      const _qmb = document.getElementById("quizMascotBox"); if (_qmb) _qmb.classList.add("hidden");
       q.options.forEach(opt => {
         const btn = document.createElement("button");
         btn.dataset.optChar = opt.char;
@@ -7734,9 +7736,9 @@
         animCls = "ks-mascot-bad";
       }
       img.src = src;
-      img.className = `w-14 h-14 sm:w-16 sm:h-16 object-contain drop-shadow-md origin-bottom ${animCls}`;
+      img.className = `w-20 h-20 sm:w-24 sm:h-24 object-contain drop-shadow-md origin-bottom ${animCls}`;
       pill.textContent = text;
-      pill.className = `-mt-1 px-2 py-0.5 rounded-full text-[9px] font-extrabold text-white shadow-sm kanji-font whitespace-nowrap ${pillCls}`;
+      pill.className = `-mt-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold text-white shadow-sm kanji-font whitespace-nowrap ${pillCls}`;
       box.classList.remove("hidden");
     }
 
@@ -8432,10 +8434,10 @@
         const poses = mObj.wcPoses || {};
         const isBad = mood === "bad";
         img.src = isBad ? (poses.angry || poses.surprised || mObj.img || "") : (poses.happy || mObj.img || "");
-        img.className = `w-14 h-14 object-contain drop-shadow-md origin-bottom ${isBad ? "ks-mascot-bad" : "ks-mascot-best"}`;
+        img.className = `w-20 h-20 sm:w-24 sm:h-24 object-contain drop-shadow-md origin-bottom ${isBad ? "ks-mascot-bad" : "ks-mascot-best"}`;
         const pool = isBad ? (mObj.bad || ["もう一回!"]) : (mObj.best || ["すごい!"]);
         pill.textContent = pool[Math.floor(Math.random() * pool.length)];
-        pill.className = `-mt-1 px-1.5 py-0.5 rounded-full text-[9px] font-extrabold text-white shadow-sm kanji-font ${isBad ? "bg-rose-600" : "bg-emerald-600"}`;
+        pill.className = `-mt-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold text-white shadow-sm kanji-font ${isBad ? "bg-rose-600" : "bg-emerald-600"}`;
         box.classList.remove("hidden");
         if (modalMascotTimer) clearTimeout(modalMascotTimer);
         modalMascotTimer = setTimeout(() => box.classList.add("hidden"), 1800);
@@ -9602,7 +9604,7 @@
               const data = snap.exists ? snap.data() : {};
               if (data.blocked) {
                 activeCloudUid = null;
-                try { localStorage.removeItem("nihonify_auth_ok"); } catch (e) {}
+                try { localStorage.removeItem("nihonify_auth_ok"); localStorage.removeItem("nihonify_vip_boot"); } catch (e) {}
                 document.documentElement.classList.add("ks-auth-locked");
                 await fbAuth.signOut();
                 showAuthError("Your access has been removed by the Designer.");
@@ -9620,7 +9622,7 @@
                 } else if (!localSid || data.activeSessionId !== localSid) {
                   activeCloudUid = null;
                   setLocalSessionId("");
-                  try { localStorage.removeItem("nihonify_auth_ok"); } catch (e) {}
+                  try { localStorage.removeItem("nihonify_auth_ok"); localStorage.removeItem("nihonify_vip_boot"); } catch (e) {}
                   document.documentElement.classList.add("ks-auth-locked");
                   await fbAuth.signOut();
                   showAuthError("Signed out because this account was logged in on another device.");
@@ -9657,8 +9659,12 @@
                 showToast(`Welcome, ${prof.fullName}! Starting at ${prof.level}.`);
               }
 
-              // v5.7 Anti-Tamper VIP: Strictly enforce VIP status from Firestore server
+              // v5.7 + v6.5 Anti-Tamper VIP: Strictly enforce VIP status from Firestore server & sync zero-flash boot hint
               const serverVip = !!data.vipUnlocked || (state.currentUserEmail === "zishan41965@gmail.com" && state.currentUserVerified);
+              try {
+                if (serverVip) localStorage.setItem("nihonify_vip_boot", "1");
+                else localStorage.removeItem("nihonify_vip_boot");
+              } catch (e) {}
               if (state.unlockAll !== serverVip) {
                 state.unlockAll = serverVip;
                 applyTheme();
@@ -9687,7 +9693,7 @@
                 if (live.blocked) {
                   if (userDocUnsub) { userDocUnsub(); userDocUnsub = null; }
                   setLocalSessionId("");
-                  try { localStorage.removeItem("nihonify_auth_ok"); } catch (e) {}
+                  try { localStorage.removeItem("nihonify_auth_ok"); localStorage.removeItem("nihonify_vip_boot"); } catch (e) {}
                   document.documentElement.classList.add("ks-auth-locked");
                   await fbAuth.signOut();
                   showAuthError("Your access has been removed by the Designer.");
@@ -9701,7 +9707,7 @@
                     if (userDocUnsub) { userDocUnsub(); userDocUnsub = null; }
                     activeCloudUid = null;
                     setLocalSessionId("");
-                    try { localStorage.removeItem("nihonify_auth_ok"); } catch (e) {}
+                    try { localStorage.removeItem("nihonify_auth_ok"); localStorage.removeItem("nihonify_vip_boot"); } catch (e) {}
                     document.documentElement.classList.add("ks-auth-locked");
                     await fbAuth.signOut();
                     showAuthError("Signed out because this account was logged in on another device.");
@@ -9711,6 +9717,10 @@
                 }
                 if (!state.isDesigner) {
                   const newVip = !!live.vipUnlocked;
+                  try {
+                    if (newVip) localStorage.setItem("nihonify_vip_boot", "1");
+                    else localStorage.removeItem("nihonify_vip_boot");
+                  } catch (e) {}
                   if (state.unlockAll !== newVip) {
                     state.unlockAll = newVip;
                     saveState();
@@ -9734,7 +9744,7 @@
             if (userDocUnsub) { userDocUnsub(); userDocUnsub = null; }
             if (!user) {
               activeCloudUid = null;
-              try { localStorage.removeItem("nihonify_auth_ok"); } catch (e) {}
+              try { localStorage.removeItem("nihonify_auth_ok"); localStorage.removeItem("nihonify_vip_boot"); } catch (e) {}
               document.documentElement.classList.add("ks-auth-locked");
               state.currentUserEmail = "";
               state.currentUserVerified = false;
@@ -9757,7 +9767,7 @@
             // v5.5 Compulsory Email Verification Gate: block app entry until Gmail/email is verified
             if (!user.emailVerified) {
               activeCloudUid = null;
-              try { localStorage.removeItem("nihonify_auth_ok"); } catch (e) {}
+              try { localStorage.removeItem("nihonify_auth_ok"); localStorage.removeItem("nihonify_vip_boot"); } catch (e) {}
               document.documentElement.classList.add("ks-auth-locked");
               state.currentUserEmail = String(user.email || "").trim().toLowerCase();
               state.currentUserVerified = false;
@@ -9843,6 +9853,7 @@
                 });
               });
               state.unlockAll = true;
+              try { localStorage.setItem("nihonify_vip_boot", "1"); } catch (e) {}
               applyTheme();
               renderActiveView();
               if (typeof window.renderSettingsHome === "function") window.renderSettingsHome();
@@ -11226,7 +11237,7 @@
         if (titleEl) {
           titleEl.innerHTML = aboutActiveFolder === "jp"
             ? `About Japanese <span class="kanji-font text-rose-600">日本語ガイド</span>`
-            : `About Nihonify <span class="kanji-font text-indigo-600">v6.4</span>`;
+            : `About Nihonify <span class="kanji-font text-indigo-600">v6.7</span>`;
         }
         if (subEl) {
           if (aboutActiveFolder === "jp") {
@@ -11425,9 +11436,12 @@
             <!-- 6. Latest Updates (v6.1) -->
             <div class="bg-indigo-50/70 rounded-3xl border border-indigo-200 p-4 sm:p-5 space-y-2">
               <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-700">
-                🆕 ${hi ? "Latest Updates · वर्ज़न v6.4 में नया क्या है?" : "Latest Updates · What's New (v5.0 → v6.4)"}
+                🆕 ${hi ? "Latest Updates · वर्ज़न v6.7 में नया क्या है?" : "Latest Updates · What's New (v5.0 → v6.7)"}
               </div>
               <ul class="text-xs sm:text-sm text-slate-700 space-y-1.5 list-disc list-inside font-medium">
+                <li><strong>v6.7:</strong> ${hi ? "MCQ Quiz और Detail Writing में Mascot का साइज बड़ा करके Writing Challenge के बराबर कर दिया गया है।" : "Matched Anime Mascot size in MCQ Quiz & Detail Writing to full Writing Challenge size."}</li>
+                <li><strong>v6.6:</strong> ${hi ? "MCQ Quiz में Mascot अब बिल्कुल Writing Challenge की तरह सिर्फ़ जवाब देने पर (सही/गलत रिएक्शन के लिए) दिखेगा और अगले सवाल पर अपने आप छुप जाएगा।" : "MCQ Quiz Mascot now stays hidden while thinking and pops up only on right/wrong answers (just like Writing Challenge)."}</li>
+                <li><strong>v6.5:</strong> ${hi ? "ऐप खोलने या रिफ्रेश करने पर Admin/VIP अकाउंट में 2 सेकंड के लिए दिखने वाला 🔒 Locked फ्लैश पूरी तरह खत्म कर दिया गया है।" : "Eliminated the 2-second 🔒 Locked flash on reload for Admin & VIP accounts while keeping full server-side Anti-Tamper VIP verification."}</li>
                 <li><strong>v6.4:</strong> ${hi ? "MCQ Quiz और Detail Writing में कोने वाला Mascot रिएक्शन फिक्स कर दिया गया है।" : "Fixed corner Anime Mascot visibility & reactions in Multiple-Choice Quiz and Detail Writing Practice."}</li>
                 <li><strong>v6.3:</strong> ${hi ? "Writing Challenge में Prompt मोड (By Meaning, On'yomi, Kun'yomi, Romaji), MCQ Quiz और Detail Writing में कोने में Mascot रिएक्शन, और गलत MCQ पर सही ऑप्शन ग्रीन हाईलाइट।" : "Writing Challenge Prompt Modes (By Meaning, On'yomi, Kun'yomi, Romaji), corner Mascot reactions in MCQ Quiz & Detail Writing, and Green correct-answer highlight on wrong MCQ picks."}</li>
                 <li><strong>v6.2:</strong> ${hi ? "नया Practice Progress Tracker फोल्डर (Home और Settings दोनों में), हर Set का Writing/Quiz काउंट, Extra Practice बैज, Home पर Settings बटन और Kana/Kanji बैलेंस्ड स्टार टारगेट।" : "New Practice Progress Tracker folder (on Home & Settings) with per-Set Writing/Quiz counts, extra practice badges, Home Settings shortcut & balanced Kana/Kanji star targets."}</li>
