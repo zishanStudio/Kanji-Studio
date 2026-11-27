@@ -6720,7 +6720,10 @@
     }
 
     function isSetCompleted(chunk) {
-      return chunk.length > 0 && chunk.every(k => getStatus(k.char) !== "unseen");
+      return chunk.length > 0 && chunk.every(k => {
+        const s = getStatus(k.char);
+        return s === "seen" || s === "known";
+      });
     }
 
     function renderKanjiFolders() {
@@ -7058,7 +7061,7 @@
           `;
           setCard.querySelector(".set-study-btn").addEventListener("click", () => {
             if (!setUnlocked) {
-              showToast(`Complete Set ${idx} first to unlock Set ${idx + 1}!`);
+              showToast(`Reach Pink ★ (Seen) on all Set ${idx} characters to unlock Set ${idx + 1}!`);
               return;
             }
             openStudyPicker(setLabel, chunk.map(c => c.char), setKey);
@@ -7410,10 +7413,18 @@
       favBtn.className = `p-1.5 rounded-lg hover:bg-slate-200 text-lg leading-none transition ${isFav ? "text-amber-500" : "text-slate-400"}`;
 
       const st = getStatus(char);
+      const isAdmin = !!state.isDesigner;
+      const canSeen = isAdmin || st === "seen" || st === "known" || (pc.write >= 20 && pc.quiz >= 25);
+      const canKnown = isAdmin || st === "known" || (pc.write >= 50 && pc.quiz >= 50);
       document.querySelectorAll(".mstatus-btn").forEach(btn => {
         const s = btn.dataset.status;
         const active = s === st;
-        let cls = "border-slate-200 bg-white text-slate-600 hover:bg-slate-50";
+        const locked = (s === "seen" && !canSeen) || (s === "known" && !canKnown);
+        const labels = { unseen: "★ Unseen", new: "★ New", seen: locked ? "🔒 Seen" : "★ Seen", known: locked ? "🔒 Known" : "★ Known" };
+        btn.textContent = labels[s] || btn.textContent;
+        let cls = locked
+          ? "border-slate-200 bg-slate-100 text-slate-400 opacity-75"
+          : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50";
         if (active && s === "unseen") cls = "border-slate-500 bg-slate-700 text-white";
         if (active && s === "new") cls = "border-yellow-500 bg-yellow-400 text-slate-900";
         if (active && s === "seen") cls = "border-pink-500 bg-pink-500 text-white";
@@ -8454,7 +8465,21 @@
       });
       document.querySelectorAll(".mstatus-btn").forEach(btn => {
         btn.addEventListener("click", () => {
-          setStatus(state.selectedKanji, btn.dataset.status);
+          const targetStatus = btn.dataset.status;
+          const ch = state.selectedKanji;
+          const curSt = getStatus(ch);
+          const pc = state.practiceCounts[ch] || { write: 0, quiz: 0 };
+          if (!state.isDesigner) {
+            if (targetStatus === "seen" && curSt !== "seen" && curSt !== "known" && !(pc.write >= 20 && pc.quiz >= 25)) {
+              showToast(`🔒 Reach 20 Writing + 25 Quiz (now ${pc.write}W + ${pc.quiz}Q) to unlock Pink ★!`);
+              return;
+            }
+            if (targetStatus === "known" && curSt !== "known" && !(pc.write >= 50 && pc.quiz >= 50)) {
+              showToast(`🔒 Reach 50 Writing + 50 Quiz (now ${pc.write}W + ${pc.quiz}Q) to unlock Red ★!`);
+              return;
+            }
+          }
+          setStatus(ch, targetStatus);
           updateModalButtons();
         });
       });
@@ -11059,7 +11084,7 @@
                 </div>
                 <div class="rounded-2xl bg-pink-50 border border-pink-200 p-3">
                   <div class="font-extrabold text-pink-600">★ Seen (Pink Star) — 20W + 25Q</div>
-                  <div class="text-[11px] text-slate-600 mt-0.5">${hi ? "<strong>20 बार Writing</strong> + <strong>25 बार Quiz</strong> सही करने पर Pink Star मिलता है। <strong>यही अगले लेवल को अनलॉक करता है!</strong>" : "Unlocked at <strong>20 Writing + 25 Quiz</strong> practices (or set manually). <strong>Needed to unlock next JLPT level!</strong>"}</div>
+                  <div class="text-[11px] text-slate-600 mt-0.5">${hi ? "<strong>20 बार Writing</strong> + <strong>25 बार Quiz</strong> सही करने पर Pink Star मिलता है। <strong>यही अगले लेवल को अनलॉक करता है!</strong>" : "Unlocked automatically at <strong>20 Writing + 25 Quiz</strong> practices. <strong>Needed to unlock next Set &amp; JLPT level!</strong>"}</div>
                 </div>
                 <div class="rounded-2xl bg-rose-50 border border-rose-200 p-3">
                   <div class="font-extrabold text-rose-600">★ Known (Red Star) — 50W + 50Q</div>
@@ -11083,14 +11108,14 @@
                 <li>
                   <strong>${hi ? "By Admin (VIP Redeem Code से):" : "By Admin (VIP Redeem Code):"}</strong>
                   ${hi
-                    ? `पहले Admin से Instagram पर संपर्क करें — <a href="https://instagram.com/itsm.ee5970" target="_blank" rel="noopener noreferrer" class="font-bold text-indigo-600 underline hover:text-indigo-700">@itsm.ee5970 (ジシャン🙃)</a> — वे आपको एक सिंगल-यूज़ VIP Redeem Code देंगे। फिर <strong>Settings → Unlock VIP</strong> में जाकर कोड पेस्ट करें, और सारे लेवल्स तुरंत अनलॉक हो जाएंगे।`
-                    : `Contact the Admin on Instagram — <a href="https://instagram.com/itsm.ee5970" target="_blank" rel="noopener noreferrer" class="font-bold text-indigo-600 underline hover:text-indigo-700">@itsm.ee5970 (ジシャン🙃)</a> — to receive a VIP Redeem Code. Then open <strong>Settings → Unlock VIP</strong>, paste the code there, and unlock all levels.`}
+                    ? `पहले Admin से Instagram पर संपर्क करें — <a href="https://instagram.com/itsm.ee5970" target="_blank" rel="noopener noreferrer" class="font-bold text-indigo-600 underline hover:text-indigo-700">@itsm.ee5970</a> — वे आपको एक सिंगल-यूज़ VIP Redeem Code देंगे। फिर <strong>Settings → Unlock VIP</strong> में जाकर कोड पेस्ट करें, और सारे लेवल्स तुरंत अनलॉक हो जाएंगे।`
+                    : `Contact the Admin on Instagram — <a href="https://instagram.com/itsm.ee5970" target="_blank" rel="noopener noreferrer" class="font-bold text-indigo-600 underline hover:text-indigo-700">@itsm.ee5970</a> — to receive a VIP Redeem Code. Then open <strong>Settings → Unlock VIP</strong>, paste the code there, and unlock all levels.`}
                 </li>
                 <li>
                   <strong>${hi ? "By Admin (सीधा अकाउंट अनलॉक):" : "By Admin (Direct Unlock):"}</strong>
                   ${hi
-                    ? `Admin से Instagram पर संपर्क करें — <a href="https://instagram.com/itsm.ee5970" target="_blank" rel="noopener noreferrer" class="font-bold text-indigo-600 underline hover:text-indigo-700">@itsm.ee5970 (ジシャン🙃)</a> — वे सीधे आपके अकाउंट पर सभी लेवल्स अनलॉक कर सकते हैं।`
-                    : `Contact the Admin on Instagram — <a href="https://instagram.com/itsm.ee5970" target="_blank" rel="noopener noreferrer" class="font-bold text-indigo-600 underline hover:text-indigo-700">@itsm.ee5970 (ジシャン🙃)</a> — and the Admin can directly unlock all levels on your account.`}
+                    ? `Admin से Instagram पर संपर्क करें — <a href="https://instagram.com/itsm.ee5970" target="_blank" rel="noopener noreferrer" class="font-bold text-indigo-600 underline hover:text-indigo-700">ジシャン🫠</a> — वे सीधे आपके अकाउंट पर सभी लेवल्स अनलॉक कर सकते हैं।`
+                    : `Contact the Admin on Instagram — <a href="https://instagram.com/itsm.ee5970" target="_blank" rel="noopener noreferrer" class="font-bold text-indigo-600 underline hover:text-indigo-700">ジシャン🫠</a> — and the Admin can directly unlock all levels on your account.`}
                 </li>
               </ol>
             </div>
