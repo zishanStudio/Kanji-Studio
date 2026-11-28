@@ -756,6 +756,22 @@
               </div>
               <span class="text-slate-400 text-sm">›</span>
             </button>
+            <button data-drawer-action="phrases" class="drawer-item w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl hover:bg-slate-50 text-left transition">
+              <span class="w-9 h-9 rounded-full bg-pink-600 text-white flex items-center justify-center font-bold text-sm shrink-0">💬</span>
+              <div class="min-w-0 flex-1">
+                <div class="text-sm font-bold text-slate-900">Daily Japanese Phrases</div>
+                <div class="text-[11px] text-slate-500">Greetings · Travel · N5 · Offline Audio</div>
+              </div>
+              <span class="text-slate-400 text-sm">›</span>
+            </button>
+            <button data-drawer-action="badges" class="drawer-item w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl hover:bg-slate-50 text-left transition">
+              <span class="w-9 h-9 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-sm shrink-0">🏆</span>
+              <div class="min-w-0 flex-1">
+                <div class="text-sm font-bold text-slate-900">Achievements &amp; Badges</div>
+                <div id="drawerBadgesSub" class="text-[11px] text-slate-500">15 Study Milestones</div>
+              </div>
+              <span class="text-slate-400 text-sm">›</span>
+            </button>
             <button data-drawer-action="Hiragana" class="drawer-item w-full flex items-center gap-3 px-2.5 py-2.5 rounded-xl hover:bg-slate-50 text-left transition">
               <span class="w-9 h-9 rounded-full bg-rose-500 text-white flex items-center justify-center kanji-font font-bold text-sm shrink-0">あ</span>
               <div class="min-w-0 flex-1">
@@ -1067,16 +1083,31 @@
         <span class="ks-home-soft-btn px-3 py-1.5 rounded-xl bg-indigo-50 border border-indigo-200 text-[11px] font-bold text-indigo-700 shrink-0">Exam ›</span>
       </button>
 
-      <!-- Practice Progress Tracker Shortcut (v6.2) -->
+      <!-- Daily Japanese Phrases Shortcut (v7.0) -->
+      <button id="homePhrasesBtn" type="button" class="ks-home-card w-full bg-white rounded-2xl border border-slate-200 px-4 py-3 shadow-sm flex items-center justify-between gap-3 text-left transition">
+        <div class="flex items-center gap-3 min-w-0">
+          <span class="w-10 h-10 rounded-xl bg-pink-50 border border-pink-200 flex items-center justify-center text-lg shrink-0">💬</span>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="ks-home-title text-xs sm:text-sm font-bold text-slate-900 truncate">Daily Japanese Phrases</span>
+              <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-pink-100 text-pink-700 shrink-0">🔊 Offline</span>
+            </div>
+            <div class="ks-home-muted text-[11px] text-slate-500 truncate">Greetings, Numbers, Travel &amp; N5 Basics · EN + हिन्दी</div>
+          </div>
+        </div>
+        <span class="ks-home-soft-btn px-3 py-1.5 rounded-xl bg-pink-50 border border-pink-200 text-[11px] font-bold text-pink-700 shrink-0">Learn ›</span>
+      </button>
+
+      <!-- Practice Progress Tracker & Badges Shortcut (v7.0) -->
       <button id="homePracticeTrackerBtn" type="button" class="ks-home-card w-full bg-white rounded-2xl border border-slate-200 px-4 py-3 shadow-sm flex items-center justify-between gap-3 text-left transition">
         <div class="flex items-center gap-3 min-w-0">
           <span class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-lg shrink-0">📊</span>
           <div class="min-w-0">
             <div class="flex items-center gap-1.5">
-              <span class="ks-home-title text-xs sm:text-sm font-bold text-slate-900 truncate">Practice Progress Tracker</span>
-              <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 shrink-0">v6.9</span>
+              <span class="ks-home-title text-xs sm:text-sm font-bold text-slate-900 truncate">Progress &amp; Badges</span>
+              <span id="homeBadgesCountPill" class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700 shrink-0">🏆 0/15</span>
             </div>
-            <div id="homePracticeTrackerSub" class="ks-home-muted text-[11px] text-slate-500 truncate">See Writing &amp; Quiz counts per Set · Next Set unlock status</div>
+            <div id="homePracticeTrackerSub" class="ks-home-muted text-[11px] text-slate-500 truncate">Writing &amp; Quiz counts per Set · 15 Achievement Badges</div>
           </div>
         </div>
         <span class="ks-home-soft-btn px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-[11px] font-bold text-emerald-700 shrink-0">Open ›</span>
@@ -1214,7 +1245,7 @@
             <div class="min-w-0 flex-1">
               <div class="flex items-center gap-2 flex-wrap">
                 <h3 class="text-sm sm:text-base font-extrabold text-slate-900">Privacy &amp; Terms</h3>
-                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">v6.9</span>
+                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">v7.0</span>
               </div>
               <p class="text-xs text-slate-500 mt-0.5">Data privacy, security &amp; fair usage terms</p>
             </div>
@@ -1314,14 +1345,56 @@
         <button id="trackerBackBtn" type="button" class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition shrink-0">← Back</button>
       </div>
 
-      <!-- Overall Summary Cards (Hiragana / Katakana / Kanji) -->
-      <div id="trackerSummaryGrid" class="grid grid-cols-3 gap-2"></div>
+      <!-- Main Mode Switcher: Set Progress vs Badges (v7.0) -->
+      <div class="grid grid-cols-2 gap-2 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm">
+        <button id="trackerModeSetsBtn" type="button" class="py-2 px-3 rounded-xl text-xs font-extrabold bg-indigo-600 text-white shadow-sm transition">📊 Set Progress</button>
+        <button id="trackerModeBadgesBtn" type="button" class="py-2 px-3 rounded-xl text-xs font-extrabold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">🏆 Badges (<span id="trackerBadgesCount">0</span>/15)</button>
+      </div>
 
-      <!-- Section Tabs -->
-      <div id="trackerLevelTabs" class="flex items-center gap-1.5 overflow-x-auto pb-1"></div>
+      <div id="trackerSetsPanel" class="space-y-4">
+        <!-- Overall Summary Cards (Hiragana / Katakana / Kanji) -->
+        <div id="trackerSummaryGrid" class="grid grid-cols-3 gap-2"></div>
 
-      <!-- Set-by-Set Progress List -->
-      <div id="trackerSetsList" class="space-y-3"></div>
+        <!-- Section Tabs -->
+        <div id="trackerLevelTabs" class="flex items-center gap-1.5 overflow-x-auto pb-1"></div>
+
+        <!-- Set-by-Set Progress List -->
+        <div id="trackerSetsList" class="space-y-3"></div>
+      </div>
+
+      <!-- Achievement Badges Panel (v7.0) -->
+      <div id="trackerBadgesPanel" class="hidden space-y-3">
+        <div id="badgesSummaryBanner" class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border border-amber-200 p-4 flex items-center justify-between gap-3"></div>
+        <div id="badgesGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+      </div>
+    </section>
+
+    <!-- DAILY JAPANESE PHRASES VIEW (v7.0 - 100% Built-in Offline) -->
+    <section id="view-phrases" class="hidden max-w-2xl mx-auto space-y-4 pb-6">
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <button id="phrasesDrawerBtn" class="w-9 h-9 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 shadow-sm flex items-center justify-center font-bold text-base shrink-0" title="Menu">☰</button>
+          <div class="min-w-0">
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 truncate">Daily Japanese Phrases <span class="text-pink-600 text-xs font-extrabold">💬</span></h2>
+            <p class="text-xs text-slate-500">Essential N5 Expressions · 1-Tap Offline Audio</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button id="phrasesLangToggleBtn" type="button" class="px-2.5 py-1.5 rounded-xl bg-pink-50 border border-pink-200 text-[11px] font-bold text-pink-700 hover:bg-pink-100 transition">EN + हिन्दी</button>
+          <button id="phrasesBackHomeBtn" type="button" class="px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition">← Home</button>
+        </div>
+      </div>
+
+      <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm space-y-2.5">
+        <div id="phrasesCatTabs" class="flex items-center gap-1.5 overflow-x-auto pb-0.5"></div>
+        <div class="relative">
+          <input id="phrasesSearchInput" type="text" placeholder="Search English, Hindi, Romaji, or Japanese phrase..." class="w-full pl-9 pr-8 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-500" />
+          <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <button id="phrasesClearSearchBtn" class="hidden absolute right-2.5 top-2 text-slate-400 hover:text-slate-600 text-sm font-bold">&times;</button>
+        </div>
+      </div>
+
+      <div id="phrasesListContainer" class="space-y-2.5"></div>
     </section>
 
     <!-- RADICALS VIEW (Opened from Left ☰ Drawer) -->
@@ -1353,6 +1426,25 @@
           <button id="radClearSearchBtn" class="hidden absolute right-2.5 top-2 text-slate-400 hover:text-slate-600 text-sm font-bold">&times;</button>
         </div>
       </div>
+
+      <!-- Radicals Interactive Study Modes (v7.0) -->
+      <div class="grid grid-cols-3 gap-2">
+        <button id="radOpenQuizBtn" type="button" class="py-2.5 px-2 rounded-2xl bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 text-xs font-extrabold flex flex-col items-center justify-center gap-0.5 shadow-xs transition">
+          <span class="text-base">📝</span>
+          <span>Radical Quiz</span>
+        </button>
+        <button id="radOpenFlashBtn" type="button" class="py-2.5 px-2 rounded-2xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-700 text-xs font-extrabold flex flex-col items-center justify-center gap-0.5 shadow-xs transition">
+          <span class="text-base">🃏</span>
+          <span>Flashcards</span>
+        </button>
+        <button id="radOpenWriteBtn" type="button" class="py-2.5 px-2 rounded-2xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 text-xs font-extrabold flex flex-col items-center justify-center gap-0.5 shadow-xs transition">
+          <span class="text-base">✍️</span>
+          <span>Write Radical</span>
+        </button>
+      </div>
+
+      <!-- Radicals Study Arena (Hidden when browsing grid) -->
+      <div id="radStudyArena" class="hidden bg-white rounded-3xl border border-slate-200 p-4 sm:p-5 shadow-sm space-y-4"></div>
 
       <div id="radicalsContainer" class="space-y-4"></div>
     </section>
@@ -1829,10 +1921,11 @@
         <div class="space-y-3">
           <div>
             <label class="block text-xs font-semibold text-slate-700 mb-1.5">Quiz Type</label>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2" id="quizTypeGroup">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="quizTypeGroup">
               <button data-qtype="kanji-to-meaning" class="qtype-btn py-2.5 px-3 rounded-xl border text-xs font-semibold transition">Kanji → Meaning</button>
               <button data-qtype="meaning-to-kanji" class="qtype-btn py-2.5 px-3 rounded-xl border text-xs font-semibold transition">Meaning → Kanji</button>
               <button data-qtype="kanji-to-reading" class="qtype-btn py-2.5 px-3 rounded-xl border text-xs font-semibold transition">Kanji → Reading</button>
+              <button data-qtype="audio-to-char" class="qtype-btn py-2.5 px-3 rounded-xl border text-xs font-semibold transition">🎧 Listening (Audio → Kanji)</button>
             </div>
           </div>
 
@@ -2304,7 +2397,7 @@
   </main>
 
   <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6 space-y-1">
-    <div>Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v6.9</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan &amp; Its Team</span></div>
+    <div>Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v7.0</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan &amp; Its Team</span></div>
     <div>
       <button id="footerPrivacyBtn" type="button" class="text-[11px] font-semibold text-indigo-500 hover:underline">Privacy Policy</button>
       <span class="mx-1.5 text-slate-300">·</span>
@@ -2669,7 +2762,7 @@
       <div class="px-5 py-3.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
         <div>
           <h3 class="text-sm font-bold text-slate-900">📜 Privacy Policy &amp; Terms</h3>
-          <p class="text-[11px] text-slate-500">Nihonify (漢字学習) · v6.9 · Created by Zishan &amp; Its Team</p>
+          <p class="text-[11px] text-slate-500">Nihonify (漢字学習) · v7.0 · Created by Zishan &amp; Its Team</p>
         </div>
         <button id="legalModalCloseBtn" type="button" class="p-1.5 rounded-lg hover:bg-slate-200 text-slate-500 font-bold text-lg leading-none">&times;</button>
       </div>
@@ -6739,7 +6832,7 @@
     }
 
     function renderModeTabs() {
-      ["home", "kanji-folders", "settings", "settings-themes", "settings-mascot", "aboutjp", "practice-tracker", "radicals", "customsets", "lookalikes", "speedwrite", "mocktest", "browse", "setview", "detail", "flashcards", "quiz", "writing", "reading"].forEach(m => {
+      ["home", "kanji-folders", "settings", "settings-themes", "settings-mascot", "aboutjp", "practice-tracker", "phrases", "radicals", "customsets", "lookalikes", "speedwrite", "mocktest", "browse", "setview", "detail", "flashcards", "quiz", "writing", "reading"].forEach(m => {
         const sec = document.getElementById(`view-${m}`);
         if (sec) sec.classList.add("hidden");
       });
@@ -6783,6 +6876,8 @@
         document.getElementById("view-aboutjp").classList.remove("hidden");
       } else if (state.activeTab === "practice-tracker") {
         document.getElementById("view-practice-tracker").classList.remove("hidden");
+      } else if (state.activeTab === "phrases") {
+        document.getElementById("view-phrases").classList.remove("hidden");
       } else if (state.activeTab === "radicals") {
         document.getElementById("view-radicals").classList.remove("hidden");
       } else if (state.activeTab === "customsets") {
@@ -6981,6 +7076,7 @@
         else if (state.activeTab === "settings-mascot" && typeof window.renderSettingsMascot === "function") window.renderSettingsMascot();
         else if (state.activeTab === "aboutjp" && typeof window.renderAboutJpView === "function") window.renderAboutJpView();
         else if (state.activeTab === "practice-tracker" && typeof window.renderPracticeTrackerView === "function") window.renderPracticeTrackerView();
+        else if (state.activeTab === "phrases" && typeof window.renderPhrasesView === "function") window.renderPhrasesView();
         else if (state.activeTab === "radicals" && typeof window.renderRadicalsView === "function") window.renderRadicalsView();
         else if (state.activeTab === "customsets" && typeof window.renderCustomSetsView === "function") window.renderCustomSetsView();
         else if (state.activeTab === "lookalikes" && typeof window.renderLookalikesView === "function") window.renderLookalikesView();
@@ -7692,7 +7788,7 @@
       }
       const qGroup = document.getElementById("quizTypeGroup");
       if (qGroup) {
-        qGroup.className = isKana ? "grid grid-cols-1 sm:grid-cols-2 gap-2" : "grid grid-cols-1 sm:grid-cols-3 gap-2";
+        qGroup.className = isKana ? "grid grid-cols-1 sm:grid-cols-3 gap-2" : "grid grid-cols-1 sm:grid-cols-2 gap-2";
       }
 
       document.querySelectorAll(".qtype-btn").forEach(btn => {
@@ -7700,11 +7796,13 @@
         if (isKana) {
           if (qt === "kanji-to-meaning") btn.textContent = `${state.activeLevel} → Romaji`;
           else if (qt === "meaning-to-kanji") btn.textContent = `Romaji → ${state.activeLevel}`;
+          else if (qt === "audio-to-char") btn.textContent = `🎧 Listening (Audio → ${state.activeLevel})`;
           btn.classList.toggle("hidden", qt === "kanji-to-reading");
         } else {
           if (qt === "kanji-to-meaning") btn.textContent = "Kanji → Meaning";
           else if (qt === "meaning-to-kanji") btn.textContent = "Meaning → Kanji";
           else if (qt === "kanji-to-reading") btn.textContent = "Kanji → Reading";
+          else if (qt === "audio-to-char") btn.textContent = "🎧 Listening (Audio → Kanji)";
           btn.classList.remove("hidden");
         }
         const active = qt === state.quizType;
@@ -7775,6 +7873,16 @@
         promptLabel.textContent = isKanaTarget ? `Select the ${q.target.level} for this sound:` : "Select the kanji for this meaning:";
         promptMain.textContent = q.target.meaning;
         promptMain.className = "text-xl sm:text-2xl font-bold text-slate-900 px-2";
+      } else if (state.quizType === "audio-to-char") {
+        promptLabel.textContent = isKanaTarget ? `Listen & pick the matching ${q.target.level}:` : "Listen & pick the matching Kanji:";
+        promptMain.className = "flex flex-col items-center justify-center gap-1.5 py-1";
+        promptMain.innerHTML = `<button id="quizListenReplayBtn" type="button" class="inline-flex items-center gap-2.5 px-6 py-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-extrabold text-base shadow-md transition">
+          <span class="text-2xl">🔊</span><span>Play Audio</span>
+        </button><span class="text-[11px] font-semibold text-slate-400">Tap anytime to replay</span>`;
+        const replayBtn = document.getElementById("quizListenReplayBtn");
+        const speakText = isKanaTarget ? q.target.char : ((q.target.kun && q.target.kun !== "—") ? q.target.kun.split(",")[0].split("·")[0].trim() : (q.target.on && q.target.on !== "—" ? q.target.on.split(",")[0].trim() : q.target.char));
+        if (replayBtn) replayBtn.addEventListener("click", () => speakJapanese(speakText || q.target.char));
+        setTimeout(() => speakJapanese(speakText || q.target.char), 80);
       } else {
         promptLabel.textContent = isKanaTarget ? `Which sound matches this ${q.target.level}?` : "Which reading matches this kanji?";
         promptMain.textContent = q.target.char;
@@ -7790,7 +7898,7 @@
         btn.className = "quiz-opt-btn p-3.5 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-indigo-50 hover:border-indigo-300 text-sm font-semibold text-slate-800 transition text-center";
         if (state.quizType === "kanji-to-meaning") {
           btn.textContent = opt.meaning;
-        } else if (state.quizType === "meaning-to-kanji") {
+        } else if (state.quizType === "meaning-to-kanji" || state.quizType === "audio-to-char") {
           btn.textContent = opt.char;
           btn.className += " kanji-font text-3xl py-4";
         } else {
@@ -7842,7 +7950,7 @@
       state.quizAnswered = true;
       const q = state.quizQuestions[state.quizIdx];
       const isCorrect = chosenChar === q.target.char;
-      const extraSize = state.quizType === "meaning-to-kanji" ? " kanji-font text-3xl py-4" : " text-sm";
+      const extraSize = (state.quizType === "meaning-to-kanji" || state.quizType === "audio-to-char") ? " kanji-font text-3xl py-4" : " text-sm";
 
       document.querySelectorAll("#quizOptions .quiz-opt-btn").forEach(b => {
         b.disabled = true;
@@ -7889,6 +7997,11 @@
       const total = state.quizQuestions.length;
       document.getElementById("quizFinalScore").textContent = `${state.quizScore} / ${total}`;
       document.getElementById("quizFinalPct").textContent = `${Math.round((state.quizScore / total) * 100)}%`;
+      if (typeof window.recordBadgeEvent === "function") {
+        if (total > 0 && state.quizScore === total) window.recordBadgeEvent("perfectQuiz");
+        if (state.quizType === "audio-to-char") window.recordBadgeEvent("listeningQuiz");
+        window.checkAndAwardBadges && window.checkAndAwardBadges();
+      }
 
       const missedBox = document.getElementById("quizMissedBox");
       const missedList = document.getElementById("quizMissedList");
@@ -10872,6 +10985,8 @@
       function closeLeftDrawer() {
         leftDrawerBackdrop.classList.add("hidden");
       }
+      window.openLeftDrawer = openLeftDrawer;
+      window.closeLeftDrawer = closeLeftDrawer;
 
       document.getElementById("leftDrawerOpenBtn").addEventListener("click", openLeftDrawer);
       document.getElementById("radicalsDrawerBtn").addEventListener("click", openLeftDrawer);
@@ -11197,6 +11312,14 @@
             state.activeTab = "speedwrite";
           } else if (act === "mocktest") {
             state.activeTab = "mocktest";
+          } else if (act === "phrases") {
+            state.activeTab = "phrases";
+          } else if (act === "badges") {
+            if (typeof window.openBadgesFrom === "function") {
+              window.openBadgesFrom("home");
+              return;
+            }
+            state.activeTab = "practice-tracker";
           } else if (act === "home") {
             state.activeTab = "home";
           } else if (act === "kanji-folders") {
@@ -11349,7 +11472,7 @@
         if (titleEl) {
           titleEl.innerHTML = aboutActiveFolder === "jp"
             ? `About Japanese <span class="kanji-font text-rose-600">日本語ガイド</span>`
-            : `About Nihonify <span class="kanji-font text-indigo-600">v6.9</span>`;
+            : `About Nihonify <span class="kanji-font text-indigo-600">v7.0</span>`;
         }
         if (subEl) {
           if (aboutActiveFolder === "jp") {
@@ -11548,9 +11671,10 @@
             <!-- 6. Latest Updates (v6.1) -->
             <div class="bg-indigo-50/70 rounded-3xl border border-indigo-200 p-4 sm:p-5 space-y-2">
               <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-700">
-                🆕 ${hi ? "Latest Updates · वर्ज़न v6.9 में नया क्या है?" : "Latest Updates · What's New (v5.0 → v6.9)"}
+                🆕 ${hi ? "Latest Updates · वर्ज़न v7.0 में नया क्या है?" : "Latest Updates · What's New (v5.0 → v7.0)"}
               </div>
               <ul class="text-xs sm:text-sm text-slate-700 space-y-1.5 list-disc list-inside font-medium">
+                <li><strong>v7.0:</strong> ${hi ? "नया Listening Quiz (Audio → Character), Daily Japanese Phrases (EN + हिन्दी + ऑफ़लाइन ऑडियो), 15 Achievement Badges (प्रोग्रेस ट्रैकर में), और Radicals में Quiz + Flashcards + Writing प्रैक्टिस!" : "New Listening Quiz (Audio → Character), Daily Japanese Phrases (EN + Hindi + Offline Audio), 15 Achievement Badges inside Progress Tracker, and Radicals Quiz + Flashcards + Writing Practice!"}</li>
                 <li><strong>v6.9:</strong> ${hi ? "100% Built-in ऑफ़लाइन इंजन (Airplane Mode में भी ज़ीरो लैग), तुरंत बजने वाला Zero-Lag जापानी ऑडियो, ऑटो-सेव वोकैबुलरी कैश और नेट ऑन होते ही ऑटो-सिंक।" : "100% Built-in Offline Engine (zero-lag Airplane Mode), Instant Zero-Lag Japanese Audio engine, persistent offline vocabulary cache & auto-sync on reconnect."}</li>
                 <li><strong>v6.8:</strong> ${hi ? "Hiragana/Katakana में सही लेबल्स (Hiragana/Katakana → Romaji), Daily Goal में 'Characters today', और Flashcards/Quiz Summary में स्मार्ट Kana/Kanji टेक्स्ट।" : "Accurate Hiragana/Katakana labels in Quiz (Hiragana/Katakana → Romaji), 'Characters today' in Daily Goal, and smart Kana/Kanji text across Flashcards & Quiz Summary."}</li>
                 <li><strong>v6.7:</strong> ${hi ? "MCQ Quiz और Detail Writing में Mascot का साइज बड़ा करके Writing Challenge के बराबर कर दिया गया है।" : "Matched Anime Mascot size in MCQ Quiz & Detail Writing to full Writing Challenge size."}</li>
@@ -11825,6 +11949,7 @@
         });
         return { w, q, pinkOrRed, total: items.length };
       }
+      window.computeSectionPracticeTotals = computeSectionPracticeTotals;
 
       function renderPracticeTrackerView() {
         const sumGrid = document.getElementById("trackerSummaryGrid");
@@ -12023,6 +12148,7 @@
         renderActiveView();
       }
 
+      window.openPracticeTrackerFrom = openPracticeTrackerFrom;
       const homeTrkBtn = document.getElementById("homePracticeTrackerBtn");
       if (homeTrkBtn) homeTrkBtn.addEventListener("click", () => openPracticeTrackerFrom("home"));
       const setTrkBtn = document.getElementById("settingsPracticeTrackerBtn");
@@ -13390,6 +13516,745 @@
       document.documentElement.classList.remove("ks-booting", "ks-pre-dark");
       document.documentElement.style.backgroundColor = "";
     });
+  </script>
+
+  <!-- ===================================================================== -->
+  <!-- NIHONIFY v7.0: DAILY PHRASES, ACHIEVEMENT BADGES & RADICALS STUDIO    -->
+  <!-- ===================================================================== -->
+  <div id="ksBadgeToast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[120] pointer-events-none opacity-0 -translate-y-4 transition-all duration-300">
+    <div class="bg-slate-900 text-white px-4 py-2.5 rounded-2xl shadow-xl border border-amber-400/50 flex items-center gap-2.5 max-w-[90vw]">
+      <span id="ksBadgeToastIcon" class="text-xl">🏆</span>
+      <div class="min-w-0">
+        <div class="text-[10px] font-extrabold uppercase tracking-wider text-amber-400">Badge Unlocked!</div>
+        <div id="ksBadgeToastTitle" class="text-xs font-bold truncate">First Step</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function initNihonifyV70() {
+    // -----------------------------------------------------------------------
+    // 1. DAILY JAPANESE PHRASES (100% Built-in Offline Dataset: EN + Hindi)
+    // -----------------------------------------------------------------------
+    const DAILY_PHRASES_DATA = [
+      // Greetings
+      { cat: "greetings", jp: "おはようございます", romaji: "Ohayou gozaimasu", en: "Good morning (polite)", hi: "सुप्रभात (विनम्र)" },
+      { cat: "greetings", jp: "こんにちは", romaji: "Konnichiwa", en: "Hello / Good afternoon", hi: "नमस्ते / शुभ दोपहर" },
+      { cat: "greetings", jp: "こんばんは", romaji: "Konbanwa", en: "Good evening", hi: "शुभ संध्या" },
+      { cat: "greetings", jp: "おやすみなさい", romaji: "Oyasuminasai", en: "Good night", hi: "शुभ रात्रि" },
+      { cat: "greetings", jp: "さようなら", romaji: "Sayounara", en: "Goodbye", hi: "अलविदा" },
+      { cat: "greetings", jp: "またね", romaji: "Mata ne", en: "See you later (casual)", hi: "फिर मिलते हैं" },
+      { cat: "greetings", jp: "はじめまして", romaji: "Hajimemashite", en: "Nice to meet you", hi: "आपसे मिलकर खुशी हुई" },
+      { cat: "greetings", jp: "よろしくお願いします", romaji: "Yoroshiku onegaishimasu", en: "Please treat me well / Nice to work with you", hi: "कृपया मेरा ख्याल रखें / मिलकर खुशी हुई" },
+      { cat: "greetings", jp: "お元気ですか", romaji: "Ogenki desu ka?", en: "How are you?", hi: "आप कैसे हैं?" },
+      { cat: "greetings", jp: "元気です", romaji: "Genki desu", en: "I'm fine / doing well", hi: "मैं ठीक हूँ" },
+
+      // Polite & Essential
+      { cat: "polite", jp: "ありがとうございます", romaji: "Arigatou gozaimasu", en: "Thank you very much", hi: "बहुत-बहुत धन्यवाद" },
+      { cat: "polite", jp: "どういたしまして", romaji: "Dou itashimashite", en: "You're welcome", hi: "कोई बात नहीं / आपका स्वागत है" },
+      { cat: "polite", jp: "すみません", romaji: "Sumimasen", en: "Excuse me / I'm sorry", hi: "माफ़ कीजिए / सुनिए" },
+      { cat: "polite", jp: "ごめんなさい", romaji: "Gomennasai", en: "I'm sorry (apology)", hi: "मुझे माफ़ कर दो" },
+      { cat: "polite", jp: "お願いします", romaji: "Onegaishimasu", en: "Please (when requesting)", hi: "कृपया" },
+      { cat: "polite", jp: "はい / いいえ", romaji: "Hai / Iie", en: "Yes / No", hi: "हाँ / नहीं" },
+      { cat: "polite", jp: "大丈夫です", romaji: "Daijoubu desu", en: "It's okay / I'm fine", hi: "सब ठीक है / कोई दिक्कत नहीं" },
+      { cat: "polite", jp: "ちょっと待ってください", romaji: "Chotto matte kudasai", en: "Please wait a moment", hi: "कृपया थोड़ा इंतज़ार करें" },
+      { cat: "polite", jp: "もう一度お願いします", romaji: "Mou ichido onegaishimasu", en: "One more time, please", hi: "कृपया एक बार फिर बोलें" },
+      { cat: "polite", jp: "ゆっくり話してください", romaji: "Yukkuri hanashite kudasai", en: "Please speak slowly", hi: "कृपया धीरे बोलें" },
+
+      // Daily Conversation
+      { cat: "daily", jp: "わかりました", romaji: "Wakarimashita", en: "I understand / Got it", hi: "मैं समझ गया" },
+      { cat: "daily", jp: "わかりません", romaji: "Wakarimasen", en: "I don't understand", hi: "मुझे समझ नहीं आया" },
+      { cat: "daily", jp: "日本語を勉強しています", romaji: "Nihongo o benkyou shite imasu", en: "I am studying Japanese", hi: "मैं जापानी सीख रहा हूँ" },
+      { cat: "daily", jp: "これは何ですか", romaji: "Kore wa nan desu ka?", en: "What is this?", hi: "यह क्या है?" },
+      { cat: "daily", jp: "お名前は何ですか", romaji: "Onamae wa nan desu ka?", en: "What is your name?", hi: "आपका नाम क्या है?" },
+      { cat: "daily", jp: "私の名前は…です", romaji: "Watashi no namae wa ... desu", en: "My name is ...", hi: "मेरा नाम ... है" },
+      { cat: "daily", jp: "インドから来ました", romaji: "Indo kara kimashita", en: "I came from India", hi: "मैं भारत से आया हूँ" },
+      { cat: "daily", jp: "すごいですね", romaji: "Sugoi desu ne!", en: "That's amazing!", hi: "यह कमाल का है!" },
+      { cat: "daily", jp: "頑張ってください", romaji: "Ganbatte kudasai", en: "Good luck / Do your best!", hi: "शुभकामनाएँ / पूरी कोशिश करो!" },
+      { cat: "daily", jp: "お疲れ様です", romaji: "Otsukaresama desu", en: "Good work today / Thank you for your effort", hi: "आज की मेहनत के लिए धन्यवाद" },
+
+      // Food & Travel
+      { cat: "travel", jp: "いただきます", romaji: "Itadakimasu", en: "Thank you for the meal (before eating)", hi: "खाने से पहले धन्यवाद" },
+      { cat: "travel", jp: "ごちそうさまでした", romaji: "Gochisousama deshita", en: "Thank you for the meal (after eating)", hi: "स्वादिष्ट भोजन के लिए धन्यवाद" },
+      { cat: "travel", jp: "おいしいです", romaji: "Oishii desu", en: "It's delicious!", hi: "यह बहुत स्वादिष्ट है!" },
+      { cat: "travel", jp: "いくらですか", romaji: "Ikura desu ka?", en: "How much is this?", hi: "यह कितने का है?" },
+      { cat: "travel", jp: "これをください", romaji: "Kore o kudasai", en: "I'll take this, please", hi: "कृपया मुझे यह दीजिए" },
+      { cat: "travel", jp: "お水をください", romaji: "Omizu o kudasai", en: "Water, please", hi: "कृपया पानी दीजिए" },
+      { cat: "travel", jp: "トイレはどこですか", romaji: "Toire wa doko desu ka?", en: "Where is the restroom?", hi: "टॉयलेट कहाँ है?" },
+      { cat: "travel", jp: "駅はどこですか", romaji: "Eki wa doko desu ka?", en: "Where is the train station?", hi: "स्टेशन कहाँ है?" },
+      { cat: "travel", jp: "お会計お願いします", romaji: "Okaikei onegaishimasu", en: "Check / Bill, please", hi: "कृपया बिल दे दीजिए" },
+      { cat: "travel", jp: "助けてください", romaji: "Tasukete kudasai", en: "Please help me", hi: "कृपया मेरी मदद करें" },
+
+      // Numbers & Time
+      { cat: "numbers", jp: "一・二・三・四・五", romaji: "Ichi, Ni, San, Yon, Go", en: "1, 2, 3, 4, 5", hi: "१, २, ३, ४, ५" },
+      { cat: "numbers", jp: "六・七・八・九・十", romaji: "Roku, Nana, Hachi, Kyuu, Juu", en: "6, 7, 8, 9, 10", hi: "६, ७, ८, ९, १०" },
+      { cat: "numbers", jp: "百・千・万", romaji: "Hyaku (100), Sen (1,000), Man (10,000)", en: "100 · 1,000 · 10,000", hi: "सौ · हज़ार · दस हज़ार" },
+      { cat: "numbers", jp: "今何時ですか", romaji: "Ima nanji desu ka?", en: "What time is it now?", hi: "अभी कितने बजे हैं?" },
+      { cat: "numbers", jp: "今日・明日・昨日", romaji: "Kyou / Ashita / Kinou", en: "Today · Tomorrow · Yesterday", hi: "आज · कल (आने वाला) · कल (बीता हुआ)" },
+      { cat: "numbers", jp: "毎日勉強します", romaji: "Mainichi benkyou shimasu", en: "I study every day", hi: "मैं रोज़ पढ़ाई करता हूँ" }
+    ];
+
+    const PHRASE_CATS = [
+      { id: "all", label: "✨ All" },
+      { id: "greetings", label: "👋 Greetings" },
+      { id: "polite", label: "🙏 Polite" },
+      { id: "daily", label: "🗣️ Daily Talk" },
+      { id: "travel", label: "🍜 Food & Travel" },
+      { id: "numbers", label: "🔢 Numbers & Time" }
+    ];
+
+    let activePhraseCat = "all";
+    let phraseSearchQ = "";
+    let phraseShowHindi = true;
+
+    function renderPhrasesView() {
+      const catBox = document.getElementById("phrasesCatTabs");
+      const listBox = document.getElementById("phrasesListContainer");
+      const langBtn = document.getElementById("phrasesLangToggleBtn");
+      if (!catBox || !listBox) return;
+
+      if (langBtn) langBtn.textContent = phraseShowHindi ? "EN + हिन्दी" : "EN Only";
+
+      catBox.innerHTML = PHRASE_CATS.map(c => {
+        const active = c.id === activePhraseCat;
+        return `<button data-pcat="${c.id}" type="button" class="px-3 py-1.5 rounded-xl text-xs font-extrabold border shrink-0 transition ${
+          active ? "bg-pink-600 text-white border-pink-600 shadow-sm" : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+        }">${c.label}</button>`;
+      }).join("");
+
+      catBox.querySelectorAll("[data-pcat]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activePhraseCat = btn.dataset.pcat;
+          renderPhrasesView();
+        });
+      });
+
+      const q = phraseSearchQ.trim().toLowerCase();
+      const filtered = DAILY_PHRASES_DATA.filter(p => {
+        if (activePhraseCat !== "all" && p.cat !== activePhraseCat) return false;
+        if (!q) return true;
+        return `${p.jp} ${p.romaji} ${p.en} ${p.hi}`.toLowerCase().includes(q);
+      });
+
+      if (!filtered.length) {
+        listBox.innerHTML = `<div class="bg-white rounded-2xl border border-slate-200 p-8 text-center text-xs text-slate-500">No phrases found for "${phraseSearchQ}".</div>`;
+        return;
+      }
+
+      listBox.innerHTML = "";
+      filtered.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "bg-white rounded-2xl border border-slate-200 p-3.5 shadow-xs flex items-center justify-between gap-3";
+        card.innerHTML = `
+          <div class="min-w-0 flex-1 space-y-0.5">
+            <div class="kanji-font text-base sm:text-lg font-extrabold text-slate-900 leading-snug">${p.jp}</div>
+            <div class="text-xs font-bold text-pink-600">${p.romaji}</div>
+            <div class="text-xs font-semibold text-slate-700">${p.en}</div>
+            ${phraseShowHindi ? `<div class="text-[11px] font-medium text-slate-500">${p.hi}</div>` : ""}
+          </div>
+          <button type="button" class="phrase-speak-btn w-11 h-11 rounded-2xl bg-pink-50 hover:bg-pink-100 active:scale-95 border border-pink-200 text-pink-700 flex items-center justify-center text-lg shrink-0 transition" title="Listen Offline">🔊</button>
+        `;
+        const speakBtn = card.querySelector(".phrase-speak-btn");
+        speakBtn.addEventListener("click", () => {
+          const cleanSpeak = p.jp.replace(/[・\/…]/g, " ");
+          if (typeof speakJapanese === "function") speakJapanese(cleanSpeak);
+          recordBadgeEvent("phraseListen");
+        });
+        listBox.appendChild(card);
+      });
+    }
+    window.renderPhrasesView = renderPhrasesView;
+
+    const homePhrasesBtn = document.getElementById("homePhrasesBtn");
+    if (homePhrasesBtn) {
+      homePhrasesBtn.addEventListener("click", () => {
+        if (typeof pushUserNav === "function") pushUserNav();
+        state.activeTab = "phrases";
+        state.activeMode = "browse";
+        if (typeof saveState === "function") saveState();
+        if (typeof renderActiveView === "function") renderActiveView();
+      });
+    }
+    const phrasesBackBtn = document.getElementById("phrasesBackHomeBtn");
+    if (phrasesBackBtn) {
+      phrasesBackBtn.addEventListener("click", () => {
+        if (typeof pushUserNav === "function") pushUserNav();
+        state.activeTab = "home";
+        state.activeMode = "browse";
+        if (typeof saveState === "function") saveState();
+        if (typeof renderActiveView === "function") renderActiveView();
+      });
+    }
+    const phrasesDrawerBtn = document.getElementById("phrasesDrawerBtn");
+    if (phrasesDrawerBtn) {
+      phrasesDrawerBtn.addEventListener("click", () => {
+        if (typeof window.openLeftDrawer === "function") window.openLeftDrawer();
+      });
+    }
+    const phrasesLangBtn = document.getElementById("phrasesLangToggleBtn");
+    if (phrasesLangBtn) {
+      phrasesLangBtn.addEventListener("click", () => {
+        phraseShowHindi = !phraseShowHindi;
+        renderPhrasesView();
+      });
+    }
+    const phrasesSearchInput = document.getElementById("phrasesSearchInput");
+    const phrasesClearBtn = document.getElementById("phrasesClearSearchBtn");
+    if (phrasesSearchInput) {
+      phrasesSearchInput.addEventListener("input", () => {
+        phraseSearchQ = phrasesSearchInput.value;
+        if (phrasesClearBtn) phrasesClearBtn.classList.toggle("hidden", !phraseSearchQ);
+        renderPhrasesView();
+      });
+    }
+    if (phrasesClearBtn) {
+      phrasesClearBtn.addEventListener("click", () => {
+        phrasesSearchInput.value = "";
+        phraseSearchQ = "";
+        phrasesClearBtn.classList.add("hidden");
+        renderPhrasesView();
+      });
+    }
+
+    // -----------------------------------------------------------------------
+    // 2. ACHIEVEMENT BADGES (15 Milestones inside Practice Progress Tracker)
+    // -----------------------------------------------------------------------
+    const BADGE_STORE_KEY = "nihonify_badges_v1";
+    function loadBadgeMeta() {
+      try {
+        const raw = localStorage.getItem(BADGE_STORE_KEY);
+        const parsed = raw ? JSON.parse(raw) : {};
+        return {
+          unlocked: Array.isArray(parsed.unlocked) ? parsed.unlocked : [],
+          perfectQuiz: Number(parsed.perfectQuiz || 0),
+          listeningQuiz: Number(parsed.listeningQuiz || 0),
+          radicalQuiz: Number(parsed.radicalQuiz || 0),
+          phraseListen: Number(parsed.phraseListen || 0)
+        };
+      } catch (e) {
+        return { unlocked: [], perfectQuiz: 0, listeningQuiz: 0, radicalQuiz: 0, phraseListen: 0 };
+      }
+    }
+    function saveBadgeMeta(meta) {
+      try { localStorage.setItem(BADGE_STORE_KEY, JSON.stringify(meta)); } catch (e) {}
+    }
+
+    function getBadgeDefinitions() {
+      const hira = typeof window.computeSectionPracticeTotals === "function" ? window.computeSectionPracticeTotals(["Hiragana"]) : { w: 0, q: 0, pinkOrRed: 0, total: 71 };
+      const kata = typeof window.computeSectionPracticeTotals === "function" ? window.computeSectionPracticeTotals(["Katakana"]) : { w: 0, q: 0, pinkOrRed: 0, total: 71 };
+      const kanji = typeof window.computeSectionPracticeTotals === "function" ? window.computeSectionPracticeTotals(["N5", "N4", "N3", "N2", "N1"]) : { w: 0, q: 0, pinkOrRed: 0, total: 2137 };
+      const n5 = typeof window.computeSectionPracticeTotals === "function" ? window.computeSectionPracticeTotals(["N5"]) : { w: 0, q: 0, pinkOrRed: 0, total: 100 };
+      const totalW = hira.w + kata.w + kanji.w;
+      const totalQ = hira.q + kata.q + kanji.q;
+      const streak = Number((state && (state.bestStreak || state.streak)) || 0);
+      const mockDone = (state && state.mockHistory && state.mockHistory.length) ? state.mockHistory.length : 0;
+      const meta = loadBadgeMeta();
+
+      return [
+        { id: "first_step", icon: "🌱", title: "First Step", desc: "Complete your first Writing or Quiz rep", cur: Math.min(1, totalW + totalQ), target: 1 },
+        { id: "hira_10", icon: "あ", title: "Hiragana Starter", desc: "Earn Pink/Red ★ on 10 Hiragana", cur: Math.min(10, hira.pinkOrRed), target: 10 },
+        { id: "hira_all", icon: "🌸", title: "Hiragana Master", desc: "Earn Pink/Red ★ on all 71 Hiragana", cur: Math.min(71, hira.pinkOrRed), target: 71 },
+        { id: "kata_10", icon: "ア", title: "Katakana Starter", desc: "Earn Pink/Red ★ on 10 Katakana", cur: Math.min(10, kata.pinkOrRed), target: 10 },
+        { id: "kata_all", icon: "⚡", title: "Katakana Master", desc: "Earn Pink/Red ★ on all 71 Katakana", cur: Math.min(71, kata.pinkOrRed), target: 71 },
+        { id: "kanji_25", icon: "漢", title: "Kanji Apprentice", desc: "Earn Pink/Red ★ on 25 Kanji", cur: Math.min(25, kanji.pinkOrRed), target: 25 },
+        { id: "n5_hero", icon: "🏯", title: "JLPT N5 Conqueror", desc: "Earn Pink/Red ★ on 80 N5 Kanji", cur: Math.min(80, n5.pinkOrRed), target: 80 },
+        { id: "ink_100", icon: "✍️", title: "Ink Master", desc: "Complete 100 total Writing reps", cur: Math.min(100, totalW), target: 100 },
+        { id: "quiz_100", icon: "📝", title: "Quiz Whiz", desc: "Complete 100 total Quiz reps", cur: Math.min(100, totalQ), target: 100 },
+        { id: "perfect_quiz", icon: "💯", title: "Perfectionist", desc: "Score 100% in any Multiple-Choice Quiz", cur: Math.min(1, meta.perfectQuiz), target: 1 },
+        { id: "sharp_ears", icon: "🎧", title: "Sharp Ears", desc: "Complete a Listening (Audio → Char) Quiz", cur: Math.min(1, meta.listeningQuiz), target: 1 },
+        { id: "radical_explorer", icon: "部", title: "Radical Explorer", desc: "Complete a Radicals Quiz", cur: Math.min(1, meta.radicalQuiz), target: 1 },
+        { id: "conversationalist", icon: "💬", title: "Conversationalist", desc: "Listen to 10 Daily Japanese Phrases", cur: Math.min(10, meta.phraseListen), target: 10 },
+        { id: "streak_7", icon: "🔥", title: "7-Day Streak", desc: "Reach a 7-day study streak", cur: Math.min(7, streak), target: 7 },
+        { id: "mock_hero", icon: "🎯", title: "Mock Exam Hero", desc: "Complete a JLPT Timed Mock Test", cur: Math.min(1, mockDone), target: 1 }
+      ];
+    }
+
+    let badgeToastTimer = null;
+    function showBadgeToast(icon, title) {
+      const el = document.getElementById("ksBadgeToast");
+      const ic = document.getElementById("ksBadgeToastIcon");
+      const ti = document.getElementById("ksBadgeToastTitle");
+      if (!el || !ic || !ti) return;
+      ic.textContent = icon;
+      ti.textContent = title;
+      el.classList.remove("opacity-0", "-translate-y-4");
+      el.classList.add("opacity-100", "translate-y-0");
+      clearTimeout(badgeToastTimer);
+      badgeToastTimer = setTimeout(() => {
+        el.classList.add("opacity-0", "-translate-y-4");
+        el.classList.remove("opacity-100", "translate-y-0");
+      }, 3200);
+    }
+
+    function updateBadgeCountLabels(unlockedCount) {
+      const homePill = document.getElementById("homeBadgesCountPill");
+      if (homePill) homePill.textContent = `🏆 ${unlockedCount}/15`;
+      const trkCount = document.getElementById("trackerBadgesCount");
+      if (trkCount) trkCount.textContent = String(unlockedCount);
+      const drwSub = document.getElementById("drawerBadgesSub");
+      if (drwSub) drwSub.textContent = `${unlockedCount} / 15 Unlocked`;
+    }
+
+    function checkAndAwardBadges(silent) {
+      const meta = loadBadgeMeta();
+      const defs = getBadgeDefinitions();
+      let newlyUnlocked = null;
+      defs.forEach(b => {
+        if (b.cur >= b.target && !meta.unlocked.includes(b.id)) {
+          meta.unlocked.push(b.id);
+          newlyUnlocked = b;
+        }
+      });
+      saveBadgeMeta(meta);
+      updateBadgeCountLabels(meta.unlocked.length);
+      if (newlyUnlocked && !silent) {
+        showBadgeToast(newlyUnlocked.icon, newlyUnlocked.title);
+      }
+      return { defs, meta };
+    }
+    window.checkAndAwardBadges = checkAndAwardBadges;
+
+    function recordBadgeEvent(eventKey) {
+      const meta = loadBadgeMeta();
+      meta[eventKey] = (meta[eventKey] || 0) + 1;
+      saveBadgeMeta(meta);
+      checkAndAwardBadges(false);
+    }
+    window.recordBadgeEvent = recordBadgeEvent;
+
+    let trackerActiveSubMode = "sets"; // "sets" | "badges"
+    function renderBadgesPanel() {
+      const { defs, meta } = checkAndAwardBadges(true);
+      const banner = document.getElementById("badgesSummaryBanner");
+      const grid = document.getElementById("badgesGrid");
+      if (!banner || !grid) return;
+
+      const unlockedCount = meta.unlocked.length;
+      const pct = Math.round((unlockedCount / defs.length) * 100);
+      banner.innerHTML = `
+        <div>
+          <div class="text-sm font-extrabold text-amber-900">🏆 ${unlockedCount} / ${defs.length} Badges Unlocked</div>
+          <div class="text-[11px] font-medium text-amber-700 mt-0.5">Keep practicing Writing, Quiz, Radicals &amp; Phrases to unlock all!</div>
+        </div>
+        <div class="text-xl font-black text-amber-600 shrink-0">${pct}%</div>
+      `;
+
+      grid.innerHTML = defs.map(b => {
+        const done = meta.unlocked.includes(b.id) || b.cur >= b.target;
+        const barPct = Math.min(100, Math.round((b.cur / b.target) * 100));
+        return `
+          <div class="rounded-2xl border p-3.5 flex items-start gap-3 transition ${
+            done ? "bg-amber-50/70 border-amber-300 shadow-xs" : "bg-white border-slate-200 opacity-85"
+          }">
+            <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-xl shrink-0 ${
+              done ? "bg-amber-400/25 border border-amber-300" : "bg-slate-100 grayscale"
+            }">${b.icon}</div>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center justify-between gap-1">
+                <div class="text-xs font-extrabold text-slate-900 truncate">${b.title}</div>
+                <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full shrink-0 ${
+                  done ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-500"
+                }">${done ? "✓ Unlocked" : `${b.cur}/${b.target}`}</span>
+              </div>
+              <div class="text-[11px] text-slate-500 mt-0.5 leading-snug">${b.desc}</div>
+              <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mt-2">
+                <div class="h-full rounded-full ${done ? "bg-amber-500" : "bg-indigo-400"}" style="width:${barPct}%"></div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function setTrackerSubMode(mode) {
+      trackerActiveSubMode = mode;
+      const setsPanel = document.getElementById("trackerSetsPanel");
+      const badgesPanel = document.getElementById("trackerBadgesPanel");
+      const setsBtn = document.getElementById("trackerModeSetsBtn");
+      const badgesBtn = document.getElementById("trackerModeBadgesBtn");
+      if (!setsPanel || !badgesPanel || !setsBtn || !badgesBtn) return;
+
+      if (mode === "badges") {
+        setsPanel.classList.add("hidden");
+        badgesPanel.classList.remove("hidden");
+        badgesBtn.className = "py-2 px-3 rounded-xl text-xs font-extrabold bg-amber-500 text-white shadow-sm transition";
+        setsBtn.className = "py-2 px-3 rounded-xl text-xs font-extrabold bg-slate-100 text-slate-600 hover:bg-slate-200 transition";
+        renderBadgesPanel();
+      } else {
+        badgesPanel.classList.add("hidden");
+        setsPanel.classList.remove("hidden");
+        setsBtn.className = "py-2 px-3 rounded-xl text-xs font-extrabold bg-indigo-600 text-white shadow-sm transition";
+        badgesBtn.className = "py-2 px-3 rounded-xl text-xs font-extrabold bg-slate-100 text-slate-600 hover:bg-slate-200 transition";
+      }
+    }
+
+    const trkSetsBtn = document.getElementById("trackerModeSetsBtn");
+    const trkBadgesBtn = document.getElementById("trackerModeBadgesBtn");
+    if (trkSetsBtn) trkSetsBtn.addEventListener("click", () => setTrackerSubMode("sets"));
+    if (trkBadgesBtn) trkBadgesBtn.addEventListener("click", () => setTrackerSubMode("badges"));
+
+    window.openBadgesFrom = function(originTab) {
+      if (typeof window.openPracticeTrackerFrom === "function") {
+        window.openPracticeTrackerFrom(originTab || "home");
+      } else {
+        state.activeTab = "practice-tracker";
+        state.activeMode = "browse";
+        renderActiveView();
+      }
+      setTrackerSubMode("badges");
+    };
+
+    // Hook into renderPracticeTrackerView to keep badges synced
+    const origRenderTracker = window.renderPracticeTrackerView;
+    if (typeof origRenderTracker === "function") {
+      window.renderPracticeTrackerView = function() {
+        origRenderTracker();
+        checkAndAwardBadges(true);
+        if (trackerActiveSubMode === "badges") renderBadgesPanel();
+      };
+    }
+
+    // -----------------------------------------------------------------------
+    // 3. RADICALS INTERACTIVE STUDY STUDIO (Quiz + Flashcards + Writing)
+    // -----------------------------------------------------------------------
+    function getRadStudyPool() {
+      const impBtn = document.getElementById("radFilterImpBtn");
+      const isImp = impBtn && impBtn.className.includes("bg-purple-600");
+      return isImp ? RADICALS_DATA.filter(r => r[6] === 1) : RADICALS_DATA.slice();
+    }
+
+    function extractRadJapaneseAudio(r) {
+      // r[4] is e.g. "hito / ninben (ひと・にんべん)" -> extract kana inside () if available
+      const m = String(r[4] || "").match(/\(([^)]+)\)/);
+      if (m && m[1]) return m[1].split(/[・\/,]/)[0].trim();
+      return r[1];
+    }
+
+    function showRadArena(htmlContent) {
+      const arena = document.getElementById("radStudyArena");
+      const grid = document.getElementById("radicalsContainer");
+      if (!arena || !grid) return;
+      arena.innerHTML = htmlContent;
+      arena.classList.remove("hidden");
+      grid.classList.add("hidden");
+    }
+
+    function closeRadArena() {
+      const arena = document.getElementById("radStudyArena");
+      const grid = document.getElementById("radicalsContainer");
+      if (arena) { arena.classList.add("hidden"); arena.innerHTML = ""; }
+      if (grid) grid.classList.remove("hidden");
+    }
+
+    // --- 3A. Radical Multiple-Choice Quiz ---
+    let rqType = "rad-to-meaning";
+    let rqCount = 10;
+    let rqQuestions = [];
+    let rqIdx = 0;
+    let rqScore = 0;
+    let rqAnswered = false;
+
+    function openRadQuizSetup() {
+      const pool = getRadStudyPool();
+      showRadArena(`
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-extrabold text-slate-900">📝 Radicals Quiz</h3>
+          <button id="radArenaCloseBtn" type="button" class="px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700">✕ Back to Grid</button>
+        </div>
+        <p class="text-xs text-slate-500">Testing from <strong>${pool.length}</strong> radicals in your current filter.</p>
+        <div class="space-y-2">
+          <div class="text-xs font-bold text-slate-700">Quiz Mode</div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <button data-rqtype="rad-to-meaning" class="rqtype-btn py-2 px-3 rounded-xl border text-xs font-bold ${rqType === "rad-to-meaning" ? "bg-purple-600 text-white border-purple-600" : "bg-slate-50 text-slate-700 border-slate-200"}">Radical → Meaning</button>
+            <button data-rqtype="meaning-to-rad" class="rqtype-btn py-2 px-3 rounded-xl border text-xs font-bold ${rqType === "meaning-to-rad" ? "bg-purple-600 text-white border-purple-600" : "bg-slate-50 text-slate-700 border-slate-200"}">Meaning → Radical</button>
+            <button data-rqtype="audio-to-rad" class="rqtype-btn py-2 px-3 rounded-xl border text-xs font-bold ${rqType === "audio-to-rad" ? "bg-purple-600 text-white border-purple-600" : "bg-slate-50 text-slate-700 border-slate-200"}">🎧 Audio → Radical</button>
+          </div>
+        </div>
+        <div class="space-y-2">
+          <div class="text-xs font-bold text-slate-700">Questions</div>
+          <div class="flex gap-2">
+            ${[10, 20, 30].map(n => `<button data-rqcnt="${n}" class="rqcnt-btn px-4 py-2 rounded-xl border text-xs font-bold ${rqCount === n ? "bg-purple-600 text-white border-purple-600" : "bg-slate-50 text-slate-700 border-slate-200"}">${n}</button>`).join("")}
+          </div>
+        </div>
+        <button id="radQuizStartBtn" type="button" class="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-sm shadow-sm transition">Start Radicals Quiz</button>
+      `);
+      document.getElementById("radArenaCloseBtn").addEventListener("click", closeRadArena);
+      document.querySelectorAll(".rqtype-btn").forEach(b => b.addEventListener("click", () => { rqType = b.dataset.rqtype; openRadQuizSetup(); }));
+      document.querySelectorAll(".rqcnt-btn").forEach(b => b.addEventListener("click", () => { rqCount = Number(b.dataset.rqcnt); openRadQuizSetup(); }));
+      document.getElementById("radQuizStartBtn").addEventListener("click", startRadQuiz);
+    }
+
+    function startRadQuiz() {
+      const pool = getRadStudyPool();
+      const shuffled = typeof shuffle === "function" ? shuffle(pool) : pool.slice().sort(() => Math.random() - 0.5);
+      const count = Math.min(rqCount, shuffled.length);
+      rqQuestions = shuffled.slice(0, count).map(target => {
+        const others = (typeof shuffle === "function" ? shuffle(pool.filter(x => x[0] !== target[0])) : pool.filter(x => x[0] !== target[0])).slice(0, 3);
+        const options = typeof shuffle === "function" ? shuffle([target, ...others]) : [target, ...others];
+        return { target, options };
+      });
+      rqIdx = 0;
+      rqScore = 0;
+      renderRadQuizQuestion();
+    }
+
+    function renderRadQuizQuestion() {
+      const q = rqQuestions[rqIdx];
+      rqAnswered = false;
+      const total = rqQuestions.length;
+      const isCharOpt = rqType === "meaning-to-rad" || rqType === "audio-to-rad";
+      const audioText = extractRadJapaneseAudio(q.target);
+
+      let promptHtml = "";
+      if (rqType === "rad-to-meaning") {
+        promptHtml = `<div class="text-xs uppercase font-bold text-slate-400">What does this radical mean?</div>
+          <div class="kanji-font text-6xl font-black text-slate-900 mt-1">${q.target[1]}</div>
+          ${q.target[2] ? `<div class="kanji-font text-xs font-bold text-purple-600 mt-1">Variants: ${q.target[2]}</div>` : ""}`;
+      } else if (rqType === "meaning-to-rad") {
+        promptHtml = `<div class="text-xs uppercase font-bold text-slate-400">Pick the radical for this meaning:</div>
+          <div class="text-xl font-extrabold text-slate-900 mt-2 capitalize">${q.target[3]}</div>`;
+      } else {
+        promptHtml = `<div class="text-xs uppercase font-bold text-slate-400">Listen &amp; pick the matching radical:</div>
+          <button id="rqAudioReplayBtn" type="button" class="mt-2 inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-sm shadow-sm">🔊 Play Japanese Name</button>`;
+      }
+
+      showRadArena(`
+        <div class="flex items-center justify-between text-xs font-bold text-slate-500">
+          <span>Question ${rqIdx + 1} / ${total}</span>
+          <span class="text-emerald-600">Score: ${rqScore}</span>
+          <button id="radArenaCloseBtn" type="button" class="px-2 py-1 rounded-lg bg-slate-100 text-slate-600">✕ Exit</button>
+        </div>
+        <div class="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+          <div class="h-full bg-purple-600 transition-all" style="width:${Math.round(((rqIdx + 1) / total) * 100)}%"></div>
+        </div>
+        <div class="text-center py-3">${promptHtml}</div>
+        <div id="rqOptsBox" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
+        <div id="rqFeedbackBox" class="hidden p-3 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2">
+          <div class="text-xs">
+            <div id="rqFbMsg" class="font-extrabold"></div>
+            <div id="rqFbDetail" class="text-slate-600 mt-0.5"></div>
+          </div>
+          <button id="rqNextBtn" type="button" class="px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-extrabold shrink-0">${rqIdx + 1 >= total ? "Results" : "Next →"}</button>
+        </div>
+      `);
+
+      document.getElementById("radArenaCloseBtn").addEventListener("click", closeRadArena);
+      if (rqType === "audio-to-rad") {
+        const ab = document.getElementById("rqAudioReplayBtn");
+        if (ab) ab.addEventListener("click", () => speakJapanese(audioText));
+        setTimeout(() => speakJapanese(audioText), 80);
+      }
+
+      const optsBox = document.getElementById("rqOptsBox");
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.dataset.rnum = String(opt[0]);
+        btn.className = `p-3.5 rounded-2xl border border-slate-200 bg-slate-50 hover:bg-purple-50 hover:border-purple-300 font-bold text-slate-800 transition text-center ${isCharOpt ? "kanji-font text-3xl py-4" : "text-sm capitalize"}`;
+        btn.textContent = isCharOpt ? opt[1] : opt[3];
+        btn.addEventListener("click", () => {
+          if (rqAnswered) return;
+          rqAnswered = true;
+          const ok = opt[0] === q.target[0];
+          optsBox.querySelectorAll("button").forEach(b => b.disabled = true);
+          if (ok) {
+            if (typeof sfx !== "undefined" && sfx.correct) sfx.correct();
+            rqScore++;
+            btn.className = `p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 font-extrabold text-center ${isCharOpt ? "kanji-font text-3xl py-4" : "text-sm capitalize"}`;
+            btn.textContent = "✓ " + btn.textContent;
+            document.getElementById("rqFbMsg").textContent = "Correct!";
+            document.getElementById("rqFbMsg").className = "font-extrabold text-emerald-700";
+          } else {
+            if (typeof sfx !== "undefined" && sfx.wrong) sfx.wrong();
+            btn.className = `p-3.5 rounded-2xl border-2 border-rose-500 bg-rose-50 text-rose-900 font-extrabold text-center ${isCharOpt ? "kanji-font text-3xl py-4" : "text-sm capitalize"}`;
+            btn.textContent = "✕ " + btn.textContent;
+            optsBox.querySelectorAll("button").forEach(b => {
+              if (b.dataset.rnum === String(q.target[0])) {
+                b.className = `p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-emerald-900 font-extrabold text-center ${isCharOpt ? "kanji-font text-3xl py-4" : "text-sm capitalize"}`;
+                b.textContent = "✓ " + b.textContent;
+              }
+            });
+            document.getElementById("rqFbMsg").textContent = `Incorrect — Answer: ${q.target[1]}`;
+            document.getElementById("rqFbMsg").className = "font-extrabold text-rose-700";
+          }
+          document.getElementById("rqFbDetail").textContent = `${q.target[1]} · ${q.target[3]} · ${q.target[4]}`;
+          document.getElementById("rqFeedbackBox").classList.remove("hidden");
+        });
+        optsBox.appendChild(btn);
+      });
+
+      document.getElementById("rqNextBtn").addEventListener("click", () => {
+        if (rqIdx + 1 < total) {
+          rqIdx++;
+          renderRadQuizQuestion();
+        } else {
+          if (typeof sfx !== "undefined" && sfx.complete) sfx.complete();
+          recordBadgeEvent("radicalQuiz");
+          const pct = Math.round((rqScore / total) * 100);
+          showRadArena(`
+            <div class="text-center space-y-3 py-3">
+              <div class="text-4xl">🎉</div>
+              <h3 class="text-lg font-extrabold text-slate-900">Radicals Quiz Complete!</h3>
+              <p class="text-sm font-bold text-purple-600">Score: ${rqScore} / ${total} (${pct}%)</p>
+              <div class="flex gap-2 justify-center pt-2">
+                <button id="rqRetryBtn" type="button" class="px-4 py-2.5 rounded-xl bg-purple-600 text-white text-xs font-extrabold">New Quiz</button>
+                <button id="radArenaCloseBtn" type="button" class="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 text-xs font-extrabold">Back to Grid</button>
+              </div>
+            </div>
+          `);
+          document.getElementById("rqRetryBtn").addEventListener("click", openRadQuizSetup);
+          document.getElementById("radArenaCloseBtn").addEventListener("click", closeRadArena);
+        }
+      });
+    }
+
+    // --- 3B. Radical Flashcards ---
+    let rfList = [];
+    let rfIdx = 0;
+    let rfFlipped = false;
+
+    function openRadFlashcards() {
+      rfList = getRadStudyPool();
+      rfIdx = 0;
+      rfFlipped = false;
+      renderRadFlashcard();
+    }
+
+    function renderRadFlashcard() {
+      const r = rfList[rfIdx];
+      if (!r) return;
+      const audioText = extractRadJapaneseAudio(r);
+      const exKanji = (typeof RADICAL_TO_KANJI !== "undefined" && RADICAL_TO_KANJI[r[0]]) ? RADICAL_TO_KANJI[r[0]].slice(0, 6).join(" ") : "";
+
+      showRadArena(`
+        <div class="flex items-center justify-between text-xs font-bold text-slate-500">
+          <span>🃏 Radical Flashcard ${rfIdx + 1} / ${rfList.length}</span>
+          <div class="flex gap-1.5">
+            <button id="rfShuffleBtn" type="button" class="px-2.5 py-1 rounded-lg bg-purple-50 text-purple-700 font-bold">🔀 Shuffle</button>
+            <button id="radArenaCloseBtn" type="button" class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-bold">✕ Grid</button>
+          </div>
+        </div>
+        <div id="rfCardBox" class="cursor-pointer select-none rounded-3xl border-2 border-purple-200 bg-purple-50/40 p-6 min-h-[210px] flex flex-col items-center justify-center text-center gap-2 transition active:scale-[0.99]">
+          ${!rfFlipped ? `
+            <span class="text-[11px] font-bold text-purple-500">Radical #${r[0]} · ${r[5]} ${r[5] === 1 ? "Stroke" : "Strokes"}</span>
+            <div class="kanji-font text-7xl font-black text-slate-900">${r[1]}</div>
+            ${r[2] ? `<div class="kanji-font text-sm font-bold text-purple-600">Variants: ${r[2]}</div>` : ""}
+            <div class="text-[11px] text-slate-400 mt-2">Tap card to reveal meaning &amp; reading</div>
+          ` : `
+            <div class="kanji-font text-4xl font-black text-purple-700">${r[1]}</div>
+            <div class="text-lg font-extrabold text-slate-900 capitalize">${r[3]}</div>
+            <div class="text-xs font-bold text-purple-600">${r[4]}</div>
+            ${exKanji ? `<div class="text-xs text-slate-500 mt-1">Used in: <span class="kanji-font font-bold text-slate-800">${exKanji}</span></div>` : ""}
+          `}
+        </div>
+        <div class="flex items-center justify-between gap-2">
+          <button id="rfPrevBtn" type="button" class="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-extrabold text-slate-700">← Prev</button>
+          <button id="rfAudioBtn" type="button" class="px-4 py-2.5 rounded-xl bg-purple-100 hover:bg-purple-200 text-purple-700 text-xs font-extrabold">🔊 Listen</button>
+          <button id="rfNextBtn" type="button" class="flex-1 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-xs font-extrabold text-white">Next →</button>
+        </div>
+      `);
+
+      document.getElementById("radArenaCloseBtn").addEventListener("click", closeRadArena);
+      document.getElementById("rfCardBox").addEventListener("click", () => { rfFlipped = !rfFlipped; renderRadFlashcard(); });
+      document.getElementById("rfAudioBtn").addEventListener("click", () => speakJapanese(audioText));
+      document.getElementById("rfShuffleBtn").addEventListener("click", () => {
+        rfList = typeof shuffle === "function" ? shuffle(rfList) : rfList.sort(() => Math.random() - 0.5);
+        rfIdx = 0; rfFlipped = false; renderRadFlashcard();
+      });
+      document.getElementById("rfPrevBtn").addEventListener("click", () => { rfIdx = (rfIdx - 1 + rfList.length) % rfList.length; rfFlipped = false; renderRadFlashcard(); });
+      document.getElementById("rfNextBtn").addEventListener("click", () => { rfIdx = (rfIdx + 1) % rfList.length; rfFlipped = false; renderRadFlashcard(); });
+    }
+
+    // --- 3C. Radical Writing Practice Canvas ---
+    let rwList = [];
+    let rwIdx = 0;
+    let rwShowGuide = true;
+
+    function openRadWriting() {
+      rwList = getRadStudyPool();
+      rwIdx = 0;
+      renderRadWriting();
+    }
+
+    function renderRadWriting() {
+      const r = rwList[rwIdx];
+      if (!r) return;
+      const audioText = extractRadJapaneseAudio(r);
+
+      showRadArena(`
+        <div class="flex items-center justify-between text-xs font-bold text-slate-500">
+          <span>✍️ Write Radical ${rwIdx + 1} / ${rwList.length}</span>
+          <button id="radArenaCloseBtn" type="button" class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-bold">✕ Grid</button>
+        </div>
+        <div class="flex items-center justify-between bg-emerald-50/70 border border-emerald-200 rounded-2xl p-3">
+          <div>
+            <div class="text-sm font-extrabold text-slate-900 capitalize">${r[3]}</div>
+            <div class="text-[11px] font-bold text-emerald-700">${r[4]} · ${r[5]} ${r[5] === 1 ? "stroke" : "strokes"}</div>
+          </div>
+          <button id="rwAudioBtn" type="button" class="px-3 py-2 rounded-xl bg-white border border-emerald-200 text-emerald-700 text-xs font-extrabold">🔊 Listen</button>
+        </div>
+        <div class="relative mx-auto w-[260px] h-[260px] rounded-3xl border-2 border-slate-200 bg-white overflow-hidden touch-none select-none shadow-inner">
+          <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+            <div class="w-full h-px border-t border-dashed border-slate-200"></div>
+          </div>
+          <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+            <div class="h-full w-px border-l border-dashed border-slate-200"></div>
+          </div>
+          <div id="rwGuideChar" class="absolute inset-0 pointer-events-none flex items-center justify-center kanji-font text-[180px] leading-none font-bold text-slate-200/80 ${rwShowGuide ? "" : "hidden"}">${r[1]}</div>
+          <canvas id="rwCanvas" width="260" height="260" class="relative z-10 w-full h-full cursor-crosshair"></canvas>
+        </div>
+        <div class="flex items-center justify-between gap-2">
+          <button id="rwClearBtn" type="button" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-700">Clear</button>
+          <button id="rwGuideBtn" type="button" class="px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-700">${rwShowGuide ? "Hide Trace" : "Show Trace"}</button>
+          <button id="rwPrevBtn" type="button" class="px-3 py-2 rounded-xl bg-slate-100 text-xs font-bold text-slate-700">←</button>
+          <button id="rwNextBtn" type="button" class="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-xs font-extrabold text-white">Next Radical →</button>
+        </div>
+      `);
+
+      document.getElementById("radArenaCloseBtn").addEventListener("click", closeRadArena);
+      document.getElementById("rwAudioBtn").addEventListener("click", () => speakJapanese(audioText));
+      document.getElementById("rwGuideBtn").addEventListener("click", () => { rwShowGuide = !rwShowGuide; renderRadWriting(); });
+      document.getElementById("rwPrevBtn").addEventListener("click", () => { rwIdx = (rwIdx - 1 + rwList.length) % rwList.length; renderRadWriting(); });
+      document.getElementById("rwNextBtn").addEventListener("click", () => { rwIdx = (rwIdx + 1) % rwList.length; renderRadWriting(); });
+
+      const canvas = document.getElementById("rwCanvas");
+      const ctx = canvas.getContext("2d");
+      ctx.lineWidth = 10;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = "#1e293b";
+      let drawing = false;
+      const getPos = e => {
+        const rect = canvas.getBoundingClientRect();
+        return { x: (e.clientX - rect.left) * (canvas.width / rect.width), y: (e.clientY - rect.top) * (canvas.height / rect.height) };
+      };
+      canvas.addEventListener("pointerdown", e => {
+        drawing = true;
+        canvas.setPointerCapture(e.pointerId);
+        const p = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+      });
+      canvas.addEventListener("pointermove", e => {
+        if (!drawing) return;
+        const p = getPos(e);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+      });
+      canvas.addEventListener("pointerup", () => { drawing = false; });
+      canvas.addEventListener("pointercancel", () => { drawing = false; });
+      document.getElementById("rwClearBtn").addEventListener("click", () => ctx.clearRect(0, 0, canvas.width, canvas.height));
+    }
+
+    const rQuizBtn = document.getElementById("radOpenQuizBtn");
+    const rFlashBtn = document.getElementById("radOpenFlashBtn");
+    const rWriteBtn = document.getElementById("radOpenWriteBtn");
+    if (rQuizBtn) rQuizBtn.addEventListener("click", openRadQuizSetup);
+    if (rFlashBtn) rFlashBtn.addEventListener("click", openRadFlashcards);
+    if (rWriteBtn) rWriteBtn.addEventListener("click", openRadWriting);
+
+    // Initial silent badge count sync on load
+    setTimeout(() => checkAndAwardBadges(true), 600);
+  })();
   </script>
 </body>
 </html>

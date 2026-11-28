@@ -1,6 +1,6 @@
-// Nihonify (漢字学習) Service Worker — v6.9 (100% Built-in Offline Engine)
-const CACHE_NAME = "nihonify-v6.9";
-const RUNTIME_CACHE = "nihonify-runtime-v6.9";
+// Nihonify (漢字学習) Service Worker — v7.0 (100% Built-in Offline Engine)
+const CACHE_NAME = "nihonify-v7.0";
+const RUNTIME_CACHE = "nihonify-runtime-v7.0";
 
 const STATIC_ASSETS = [
   "./",
