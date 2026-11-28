@@ -1074,7 +1074,7 @@
           <div class="min-w-0">
             <div class="flex items-center gap-1.5">
               <span class="ks-home-title text-xs sm:text-sm font-bold text-slate-900 truncate">Practice Progress Tracker</span>
-              <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 shrink-0">v6.8</span>
+              <span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 shrink-0">v6.9</span>
             </div>
             <div id="homePracticeTrackerSub" class="ks-home-muted text-[11px] text-slate-500 truncate">See Writing &amp; Quiz counts per Set · Next Set unlock status</div>
           </div>
@@ -1214,7 +1214,7 @@
             <div class="min-w-0 flex-1">
               <div class="flex items-center gap-2 flex-wrap">
                 <h3 class="text-sm sm:text-base font-extrabold text-slate-900">Privacy &amp; Terms</h3>
-                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">v6.8</span>
+                <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">v6.9</span>
               </div>
               <p class="text-xs text-slate-500 mt-0.5">Data privacy, security &amp; fair usage terms</p>
             </div>
@@ -2304,7 +2304,7 @@
   </main>
 
   <footer id="appFooter" class="py-4 pb-20 text-center text-xs text-slate-400 border-t border-slate-200 bg-white mt-6 space-y-1">
-    <div>Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v6.8</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan &amp; Its Team</span></div>
+    <div>Nihonify (<span class="kanji-font">漢字学習</span>) · <span class="ks-footer-ver font-semibold text-indigo-500">v6.9</span> · Created by <span class="ks-footer-author font-semibold text-slate-700">Zishan &amp; Its Team</span></div>
     <div>
       <button id="footerPrivacyBtn" type="button" class="text-[11px] font-semibold text-indigo-500 hover:underline">Privacy Policy</button>
       <span class="mx-1.5 text-slate-300">·</span>
@@ -2669,7 +2669,7 @@
       <div class="px-5 py-3.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
         <div>
           <h3 class="text-sm font-bold text-slate-900">📜 Privacy Policy &amp; Terms</h3>
-          <p class="text-[11px] text-slate-500">Nihonify (漢字学習) · v6.8 · Created by Zishan &amp; Its Team</p>
+          <p class="text-[11px] text-slate-500">Nihonify (漢字学習) · v6.9 · Created by Zishan &amp; Its Team</p>
         </div>
         <button id="legalModalCloseBtn" type="button" class="p-1.5 rounded-lg hover:bg-slate-200 text-slate-500 font-bold text-lg leading-none">&times;</button>
       </div>
@@ -5871,21 +5871,71 @@
     }
 
     // =========================================================================
-    // SPEECH SYNTHESIS (ja-JP)
+    // ZERO-LAG OFFLINE SPEECH SYNTHESIS (ja-JP — v6.9 Built-in Engine)
     // =========================================================================
+    let _cachedJaVoice = null;
+    let _ttsWarmedUp = false;
+
+    function pickBestJapaneseVoice() {
+      if (!("speechSynthesis" in window)) return null;
+      const voices = window.speechSynthesis.getVoices() || [];
+      if (!voices.length) return _cachedJaVoice;
+      const jaVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith("ja"));
+      // Strongly prefer on-device offline localService voices for zero network delay
+      _cachedJaVoice =
+        jaVoices.find(v => v.localService && v.lang.toLowerCase() === "ja-jp") ||
+        jaVoices.find(v => v.localService) ||
+        jaVoices.find(v => v.lang.toLowerCase() === "ja-jp") ||
+        jaVoices[0] ||
+        null;
+      return _cachedJaVoice;
+    }
+
+    if ("speechSynthesis" in window) {
+      pickBestJapaneseVoice();
+      if (typeof window.speechSynthesis.addEventListener === "function") {
+        window.speechSynthesis.addEventListener("voiceschanged", pickBestJapaneseVoice);
+      }
+      // Silently warm up Android Chrome TTS engine on first user tap to eliminate 1.5s cold-start gap
+      const _warmTtsOnce = () => {
+        if (_ttsWarmedUp) return;
+        _ttsWarmedUp = true;
+        try {
+          pickBestJapaneseVoice();
+          const u = new SpeechSynthesisUtterance("");
+          u.lang = "ja-JP";
+          u.volume = 0;
+          if (_cachedJaVoice) u.voice = _cachedJaVoice;
+          window.speechSynthesis.speak(u);
+        } catch (e) {}
+      };
+      window.addEventListener("pointerdown", _warmTtsOnce, { once: true, passive: true });
+    }
+
     function speakJapanese(text, customRate) {
       try {
         if (!("speechSynthesis" in window)) {
           showToast("Audio pronunciation is not supported in this browser.");
           return;
         }
-        window.speechSynthesis.cancel();
-        // Clean parenthetical okurigana markers for natural pronunciation
-        const clean = text.split(",")[0].replace(/[()\-]/g, "").trim();
+        const synth = window.speechSynthesis;
+        // Only cancel if actively speaking/pending (avoids Android Chrome 1.5s reset & dropped-first-tap bug)
+        if (synth.speaking || synth.pending) {
+          synth.cancel();
+        }
+        if (synth.paused) {
+          synth.resume();
+        }
+        const clean = String(text || "").split(",")[0].replace(/[()\-]/g, "").trim();
+        if (!clean) return;
         const utter = new SpeechSynthesisUtterance(clean);
         utter.lang = "ja-JP";
-        utter.rate = typeof customRate === "number" ? customRate : 0.85;
-        window.speechSynthesis.speak(utter);
+        const voice = _cachedJaVoice || pickBestJapaneseVoice();
+        if (voice) utter.voice = voice;
+        utter.rate = typeof customRate === "number" ? customRate : 0.92;
+        utter.pitch = 1.0;
+        window._activeUtter = utter;
+        synth.speak(utter);
       } catch (e) {
         showToast("Could not play audio.");
       }
@@ -7282,7 +7332,19 @@
     // =========================================================================
     // KANJI DETAIL MODAL & LIVE DICTIONARY LOOKUP (kanjiapi.dev)
     // =========================================================================
-    const apiCache = {};
+    const VOCAB_CACHE_KEY = "nihonify_vocab_cache_v1";
+    const apiCache = (() => {
+      try { return JSON.parse(localStorage.getItem(VOCAB_CACHE_KEY) || "{}") || {}; } catch (e) { return {}; }
+    })();
+    function persistVocabCache() {
+      try {
+        const keys = Object.keys(apiCache);
+        if (keys.length > 400) {
+          keys.slice(0, keys.length - 400).forEach(k => delete apiCache[k]);
+        }
+        localStorage.setItem(VOCAB_CACHE_KEY, JSON.stringify(apiCache));
+      } catch (e) {}
+    }
 
     async function fetchExtraKanjiInfo(char) {
       const wordsList = document.getElementById("modalWordsList");
@@ -7347,13 +7409,17 @@
           stroke_count: kData ? kData.stroke_count : null,
           words: topWords
         };
+        persistVocabCache();
         if (state.selectedKanji === char) {
           renderExtraInfo(apiCache[char]);
         }
       } catch (e) {
         if (state.selectedKanji === char) {
-          wordsStatus.textContent = "Offline mode";
-          wordsList.innerHTML = '<div class="col-span-full text-slate-400 py-1">Connect to the internet to load extra JMdict compound words.</div>';
+          const kObj = KANJI_MAP[char];
+          wordsStatus.textContent = "✈️ Offline Ready";
+          wordsList.innerHTML = kObj
+            ? `<div class="col-span-full p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 text-xs">Offline study active for <strong class="kanji-font text-slate-900">${kObj.char}</strong> (${kObj.meaning}). Tap <strong>Pronounce</strong> above to hear audio offline.</div>`
+            : '<div class="col-span-full text-slate-400 py-1">Offline mode active.</div>';
           strokeBadge.textContent = "";
         }
       }
@@ -9599,6 +9665,15 @@
             cloudSyncTimer = setTimeout(() => pushCloudState(false), 1500);
           };
 
+          window.addEventListener("offline", () => {
+            setCloudSyncBadge("offline", "✈️ Offline Mode · Local Saved");
+          });
+          window.addEventListener("online", () => {
+            if (activeCloudUid) {
+              setCloudSyncBadge("syncing", "☁️ Reconnected · Syncing...");
+              pushCloudState(false);
+            }
+          });
           const syncNowBtn = document.getElementById("syncCloudNowBtn");
           if (syncNowBtn) {
             syncNowBtn.addEventListener("click", () => pushCloudState(true));
@@ -11274,7 +11349,7 @@
         if (titleEl) {
           titleEl.innerHTML = aboutActiveFolder === "jp"
             ? `About Japanese <span class="kanji-font text-rose-600">日本語ガイド</span>`
-            : `About Nihonify <span class="kanji-font text-indigo-600">v6.8</span>`;
+            : `About Nihonify <span class="kanji-font text-indigo-600">v6.9</span>`;
         }
         if (subEl) {
           if (aboutActiveFolder === "jp") {
@@ -11473,9 +11548,10 @@
             <!-- 6. Latest Updates (v6.1) -->
             <div class="bg-indigo-50/70 rounded-3xl border border-indigo-200 p-4 sm:p-5 space-y-2">
               <div class="text-xs font-extrabold uppercase tracking-wider text-indigo-700">
-                🆕 ${hi ? "Latest Updates · वर्ज़न v6.8 में नया क्या है?" : "Latest Updates · What's New (v5.0 → v6.8)"}
+                🆕 ${hi ? "Latest Updates · वर्ज़न v6.9 में नया क्या है?" : "Latest Updates · What's New (v5.0 → v6.9)"}
               </div>
               <ul class="text-xs sm:text-sm text-slate-700 space-y-1.5 list-disc list-inside font-medium">
+                <li><strong>v6.9:</strong> ${hi ? "100% Built-in ऑफ़लाइन इंजन (Airplane Mode में भी ज़ीरो लैग), तुरंत बजने वाला Zero-Lag जापानी ऑडियो, ऑटो-सेव वोकैबुलरी कैश और नेट ऑन होते ही ऑटो-सिंक।" : "100% Built-in Offline Engine (zero-lag Airplane Mode), Instant Zero-Lag Japanese Audio engine, persistent offline vocabulary cache & auto-sync on reconnect."}</li>
                 <li><strong>v6.8:</strong> ${hi ? "Hiragana/Katakana में सही लेबल्स (Hiragana/Katakana → Romaji), Daily Goal में 'Characters today', और Flashcards/Quiz Summary में स्मार्ट Kana/Kanji टेक्स्ट।" : "Accurate Hiragana/Katakana labels in Quiz (Hiragana/Katakana → Romaji), 'Characters today' in Daily Goal, and smart Kana/Kanji text across Flashcards & Quiz Summary."}</li>
                 <li><strong>v6.7:</strong> ${hi ? "MCQ Quiz और Detail Writing में Mascot का साइज बड़ा करके Writing Challenge के बराबर कर दिया गया है।" : "Matched Anime Mascot size in MCQ Quiz & Detail Writing to full Writing Challenge size."}</li>
                 <li><strong>v6.6:</strong> ${hi ? "MCQ Quiz में Mascot अब बिल्कुल Writing Challenge की तरह सिर्फ़ जवाब देने पर (सही/गलत रिएक्शन के लिए) दिखेगा और अगले सवाल पर अपने आप छुप जाएगा।" : "MCQ Quiz Mascot now stays hidden while thinking and pops up only on right/wrong answers (just like Writing Challenge)."}</li>
